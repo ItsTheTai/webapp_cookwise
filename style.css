@@ -1,0 +1,174 @@
+/* BODY-EINSTELLUNGEN */
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* NAVBAR & SUCHLEISTE */
+
+/* Fix für die Geometrie der Suchleiste / Strikte Stabilisierung */
+.input-group.flex-nowrap {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+/* Zentriert das Lupe-Icon exakt innerhalb des Buttons */
+.input-group .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* GRÖSSENOPTIMIERUNG FÜR NAVBAR-ELEMENTE */
+
+/* Verkleinert die Funktions-Icons (Herz, Einkaufswagen, etc.) */
+.nav-icon-small {
+    font-size: 16px !important; /* Von 20px auf 16px verkleinert */
+    padding: 0 4px; /* Seitliche Abstände verringert */
+}
+
+/* Macht den Registrierungs-Button kompakter */
+.btn-register-compact {
+    font-size: 12px !important; /* Kleinere Schriftgröße */
+    padding: 4px 12px !important; /* Weniger Padding */
+}
+
+/* Verringert die Abstände im rechten Block */
+.nav-right-compact {
+    gap: 10px !important; /* Elemente stehen näher zueinander */
+}
+
+/* NAVBAR INTERAKTIONEN (HOVERN) */
+
+/* Sanfte Farbanimation für die Icons in der Navbar beim Hovern */
+.nav-custom-icon {
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+/* Icon-Farbe beim Hovern (sanfter korallenroter Akzent) */
+.nav-custom-icon:hover {
+    color: #ff6b6b !important;
+}
+
+/* Textfarbenänderung für den "Anmelden"-Button beim Hovern */
+.btn-login-text:hover {
+    color: #2c3e50 !important;
+}
+
+/* INHALTSBEREICH UND REZEPT-SLIDER */
+
+/* Hauptinhaltscontainer für eine kompakte und saubere Darstellung */
+.content-container {
+    padding: 20px 40px; /* Reduzierte Abstände */
+    max-width: 1200px; /* Maximale Seitenbreite */
+    margin: 0 auto; /* Zentrierung auf dem Bildschirm */
+}
+
+/* Design der Überschrift "Rezepte" */
+.main-title {
+    font-size: 24px; /* Kompakte Schriftgröße */
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Slider-Wrapper: Notwendig für die absolute Positionierung der Pfeiltasten */
+.slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Horizontaler Container für die Rezeptkarten */
+.recipe-slider {
+    display: flex;
+    gap: 20px; /* Abstand zwischen den Karten */
+    overflow-x: auto; /* Aktiviert horizontales Scrollen */
+    scroll-behavior: smooth; /* Sanftes Scrollen aktivieren */
+    padding: 10px 5px;
+    width: 100%;
+}
+
+/* Ausblenden der standardmäßigen, unschönen horizontalen Browser-Scrollbar */
+.recipe-slider::-webkit-scrollbar {
+    display: none;
+}
+
+/* REZEPTKARTEN */
+
+/* Design einer einzelnen, kompakten Rezeptkarte */
+.recipe-card {
+    min-width: 180px; /* Karten sind kompakter */
+    flex: 1;
+    background: #fff;
+    border-radius: 10px; /* Abrundung der Kartenecken */
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05); /* Leichter Schatten */
+    transition: transform 0.2s ease; /* Sanfter Effekt */
+}
+
+/* Interaktives leichtes Anheben der Karte beim Hovern */
+.recipe-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Bildbereich innerhalb der Rezeptkarte */
+.recipe-img {
+    height: 140px; /* Optimierte Bildhöhe */
+    background-size: cover; /* Bild füllt den Bereich komplett aus */
+    background-position: center;
+    background-color: #ddd; /* Platzhalter-Farbe */
+}
+
+/* Text mit dem Rezeptnamen unter dem Foto */
+.recipe-name {
+    padding: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    color: #444;
+    margin-bottom: 0; /* Bootstrap-Margin zurücksetzen */
+}
+
+
+/* SLIDER-NAVIGATION (BUTTONS) */
+
+
+/* Allgemeine Styles für die runden Slider-Navigationsbuttons (< und >) */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px; /* Kleiner, eleganter Durchmesser */
+    height: 36px;
+    border-radius: 50%; /* Perfekter Kreis */
+    background: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+/* Aufhellungseffekt beim Hovern über den Button */
+.slider-btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Positionierung des linken Pfeils leicht außerhalb des Inhaltsrands */
+.btn-left {
+    left: -18px;
+}
+
+/* Positionierung des rechten Pfeils leicht außerhalb des Inhaltsrands */
+.btn-right {
+    right: -18px;
+}
