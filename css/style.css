@@ -1,8 +1,67 @@
+/* Default Theme (Dark Mode) */
+:root {
+    /* primary colors */
+    --prime-yellow: #b58900;
+    --prime-red: #dc322f;
+    --prime-violet: #6c71c4;
+    --prime-cyan: #2aa198;
+    --prime-dark-gray: #1a1a1a;
+    --prime-mid-gray: #444444;
+    --prime-light-gray: #7a7a7a;
+    --prime-pale-gray: #a3a3a3;
+    --prime-white: #fafafa;
+
+    /* main body background color */
+    --bg-landing: linear-gradient(to bottom,
+            var(--prime-dark-gray) 0%,
+            var(--prime-dark-gray) 5%,
+            color-mix(in srgb, var(--prime-violet) 100%, white));
+    --bg-favourites: linear-gradient(to bottom,
+            var(--prime-dark-gray) 0%,
+            var(--prime-dark-gray) 5%,
+            color-mix(in srgb, var(--prime-red) 80%, white));
+    --bg-planner: linear-gradient(to bottom,
+            var(--prime-dark-gray) 0%,
+            var(--prime-dark-gray) 5%,
+            color-mix(in srgb, var(--prime-cyan) 90%, white));
+    --bg-shopping: linear-gradient(to bottom,
+            var(--prime-dark-gray) 0%,
+            var(--prime-dark-gray) 5%,
+            color-mix(in srgb, var(--prime-yellow) 75%, white));
+    --bg-settings: linear-gradient(to bottom,
+            var(--prime-dark-gray) 0%,
+            var(--prime-dark-gray) 5%,
+            color-mix(in srgb, var(--prime-mid-gray) 55%, white));
+
+    /* main component colors */
+    /* --bg-surface: #1a1d20; */
+    --border-color: #444444;
+    --card-glow: rgba(0, 0, 0, 0.4);
+
+    /* fonts */
+    --text-standard: #fafafa;
+    --text-muted: ;
+
+    /* recipe tile background image */
+
+    /* recipe tile smileys */
+}
+
+/* Light Mode Overrides (Keeps layout identical, just shifts colors) */
+[data-theme="light"] {
+    --bg-global: #f8f9fa;
+    --bg-surface: #ffffff;
+    --text-main: #212529;
+    --text-muted: #6c757d;
+    --border-color: #dee2e6;
+    --card-glow: rgba(0, 0, 0, 0.08);
+}
+
+
 /* --- 1) Global Grayscale Theme --- */
 body {
-    background: linear-gradient(#3b3b3b, #6284a3);
-    /* background-color: #3b3b3b; */
-    color: #f8f9fa;
+    background: var(--bg-landing);
+    color: var(--text-standard);
     font-family: system-ui, -apple-system, sans-serif;
     background-attachment: fixed;
     /* 1) Keeps the gradient locked beautifully in place as you scroll */
@@ -14,27 +73,21 @@ body {
     padding-right: 10px;
 }
 
-.navbar {
-    border-bottom: 1px solid #444444;
-    background-color: #1a1a1a !important;
-}
-
 .avatar-placeholder {
     width: 38px;
     height: 38px;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid #495057;
 }
 
 .nav-link-icon {
     font-size: 1.25rem;
-    color: #bdbdbd !important;
+    color: var(--prime-light-gray);
     transition: color 0.2s ease;
 }
 
 .nav-link-icon:hover {
-    color: #ffffff !important;
+    color: var(--prime-white);
 }
 
 .navbar-floating-wrapper {
@@ -44,15 +97,15 @@ body {
 }
 
 .search-custom {
-    background-color: #2b2b2b;
+    background-color: color-mix(in srgb, var(--prime-dark-gray) 95%, white);
 }
 
 .search-icon {
-    color: #bdbdbd !important;
+    color: var(--prime-light-gray);
 }
 
 .border-custom {
-    border-color: #bdbdbd;
+    border-color: var(--prime-light-gray);
     border-width: 1.5px;
 }
 
@@ -78,11 +131,11 @@ body {
     max-width: 1300px;
     margin-right: auto;
     margin-left: auto;
-    padding-right: 1rem;
-    padding-left: 1rem;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
 }
 
-/* --- 3) Custom Dynamic Grid & Fixed 4mm Gaps --- */
+/* --- 3) Custom Dynamic Grid & Fixed 5mm Gaps --- */
 .responsive-recipe-row {
     --bs-gutter-x: 5mm;
     --bs-gutter-y: 5mm;
@@ -97,7 +150,7 @@ body {
 /* --- 4) Compact Recipe Card Styling --- */
 .recipe-card {
     position: relative;
-    border: none;
+    border: 1px solid var(--prime-mid-gray);
     overflow: hidden;
     background-color: #272727;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
@@ -134,7 +187,7 @@ body {
 
 .recipe-meta {
     font-weight: 500;
-    color: #adadad;
+    color: var(--prime-pale-gray);
     margin-bottom: auto;
     font-size: 0.75rem;
 }
@@ -142,7 +195,7 @@ body {
 .smiley-group {
     display: flex;
     gap: 0.4rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 /* --- Responsive Scale Up for Tablet and Web --- */
@@ -172,7 +225,7 @@ body {
 
     .smiley-group {
         gap: 0.45rem;
-        font-size: 1.15rem;
+        font-size: 1.4rem;
     }
 }
 
@@ -192,14 +245,103 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(70%) brightness(25%) blur(2px);
+    filter: grayscale(20%) brightness(25%) blur(2px);
     z-index: 1;
 }
 
 .smiley-group i {
-    color: #757575;
+    color: var(--prime-light-gray);
 }
 
 .smiley-group i.active {
-    color: #ffffff;
+    color: color-mix(in srgb, var(--prime-violet) 80%, white);
+}
+
+/* --- Custom Elevated Carousel Styles --- */
+#recipeHeroCarousel {
+    display: block;
+    width: 100%;
+    clear: both;
+    /* Prevents floating elements from breaking the layout container */
+}
+
+.custom-carousel-inner {
+    border-radius: 1.2rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--prime-mid-gray);
+
+    /* FIX: Force an explicit, uniform box height on Mobile View */
+    height: 180px !important;
+}
+
+/* FIX: Ensure the carousel items completely fill out the forced height box */
+.custom-carousel-inner .carousel-item {
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-hero-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center;
+    filter: grayscale(10%) brightness(40%);
+}
+
+/* Elegant Text Overlay Adjustments */
+/* .custom-caption {
+    text-align: left !important;
+    left: 8% !important;
+    right: 8% !important;
+    bottom: 12% !important;
+    z-index: 10;
+} */
+
+.custom-caption,
+.custom-caption h2 {
+    text-align: left;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+}
+
+.custom-badge {
+    background-color: var(--prime-violet);
+}
+
+.tracking-wider {
+    letter-spacing: 1px;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+}
+
+/* --- Responsive Scale-Up (Resolves Desktop Bugs) --- */
+@media (min-width: 768px) {
+    .custom-carousel-inner {
+        height: 320px !important;
+        /* Stable framework height for tablets */
+        border-radius: 1.5rem;
+    }
+
+    .custom-caption {
+        bottom: 18% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .custom-carousel-inner {
+        height: 400px !important;
+        /* Perfect widescreen cinematic banner height for desktops */
+    }
+
+    .custom-caption {
+        bottom: 22% !important;
+        left: 6% !important;
+    }
+
+    .custom-caption h2 {
+        font-size: 2.5rem;
+        /* Scales typography beautifully up for big screens */
+    }
 }
