@@ -5,6 +5,6 @@ async function includeHTML(selector, file) {
     initializeThemeToggle();
 }
 
-includeHTML("#navbar", "./components/navbar2.html");
+includeHTML("#navbar", "./components/navbar.html");
 includeHTML("#carousel", "./components/carousel.html");
 includeHTML("#recipes", "./components/recipes.html");
