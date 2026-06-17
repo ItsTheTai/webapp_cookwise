@@ -1,0 +1,448 @@
+/* Default Theme (Dark Mode) */
+:root {
+    /* logo */
+    --logo: invert();
+
+    /* main colors */
+    --yellow: #b58900;
+    --red: #dc322f;
+    --violet: #6c71c4;
+    --cyan: #2aa198;
+    --dark-gray: #181818;
+    --mid-gray: #444444;
+    --light-gray: #7a7a7a;
+    --pale-gray: #a3a3a3;
+    --white: #fafafa;
+
+    /* main body background color */
+    --bg-landing: linear-gradient(to bottom,
+            var(--dark-gray) 0%,
+            var(--dark-gray) 5%,
+            color-mix(in srgb, var(--violet) 100%, white));
+    --bg-favourites: linear-gradient(to bottom,
+            var(--dark-gray) 0%,
+            var(--dark-gray) 5%,
+            color-mix(in srgb, var(--red) 80%, white));
+    --bg-planner: linear-gradient(to bottom,
+            var(--dark-gray) 0%,
+            var(--dark-gray) 5%,
+            color-mix(in srgb, var(--cyan) 90%, white));
+    --bg-shopping: linear-gradient(to bottom,
+            var(--dark-gray) 0%,
+            var(--dark-gray) 5%,
+            color-mix(in srgb, var(--yellow) 75%, white));
+    --bg-settings: linear-gradient(to bottom,
+            var(--dark-gray) 0%,
+            var(--dark-gray) 5%,
+            color-mix(in srgb, var(--mid-gray) 55%, white));
+
+    /* daynamic component colors -> continue here */
+    --prime-color1: var(--dark-gray);
+    --prime-color2: var(--mid-gray);
+    --prime-color3: var(--light-gray);
+    --prime-color4: var(--pale-gray);
+    --prime-color5: var(--white);
+
+    --border-color: var(--mid-gray);
+    /* --card-glow: rgba(0, 0, 0, 0.4); */
+    --recipe-img-bg: opacity(20%) blur(10px) grayscale(20%);
+    --recipe-hero: grayscale(10%) brightness(40%);
+    --smiley-color: var(--light-gray);
+    --color-smiley-active: color-mix(in srgb, var(--violet) 80%, white)
+        /* fonts */
+        /* --text-standard: #fafafa;
+    --text-muted: ; */
+
+        /* recipe tile background image */
+
+        /* recipe tile smileys */
+}
+
+/* Light Mode Overrides (Keeps layout identical, just shifts colors) */
+[data-theme="light"] {
+    --logo: contrast(70%);
+    --prime-color1: var(--white);
+    --prime-color2: var(--pale-gray);
+    --prime-color3: var(--light-gray);
+    --prime-color4: var(--mid-gray);
+    --prime-color5: var(--dark-gray);
+
+    --border-color: var(--light-gray);
+    /* --card-glow: rgba(0, 0, 0, 0.1); */
+    --recipe-img-bg: blur(10px) opacity(45%);
+    --recipe-hero: brightness(70%);
+    --smiley-color: color-mix(in srgb, var(--pale-gray) 10%, lightgray);
+    --color-smiley-active: color-mix(in srgb, var(--pale-gray) 10%, lightgray);
+
+    /* Light Mode Gradients (Your original mixtures using white backgrounds!) */
+    --bg-landing: linear-gradient(to bottom,
+            color-mix(in srgb, var(--pale-gray) 30%, white) 0%,
+            color-mix(in srgb, var(--pale-gray) 30%, white) 5%,
+            color-mix(in srgb, var(--violet) 90%, white));
+    ;
+}
+
+
+/* --- 1) Global Grayscale Theme --- */
+body {
+    background: var(--bg-landing);
+    color: var(--white);
+    font-family: system-ui, -apple-system, sans-serif;
+    background-attachment: fixed;
+    /* 1) Keeps the gradient locked beautifully in place as you scroll */
+    background-repeat: no-repeat;
+}
+
+.main-logo {
+    filter: var(--logo);
+    padding-right: 10px;
+}
+
+.main-logo-font {
+    color: var(--prime-color5);
+}
+
+.avatar-placeholder {
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.nav-link-icon {
+    font-size: 1.25rem;
+    color: var(--prime-color3);
+    transition: color 0.2s ease;
+}
+
+.nav-link-icon:hover {
+    color: var(--prime-color5);
+}
+
+/* .navbar-floating-wrapper {
+    position: fixed;
+    top: 35em;
+} */
+
+
+.search-custom {
+    background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
+}
+
+.search-icon {
+    color: var(--prime-color3);
+}
+
+.border-custom {
+    border: 0.08rem solid var(--prime-color3);
+}
+
+.form-control:focus {
+    background-color: #2c2c2c !important;
+    /* Forces it to stay a sleek dark gray */
+    color: #f8f9fa !important;
+    /* Keeps the text color crisp white */
+    box-shadow: 0 0 0 0.25rem rgba(90, 90, 90, 0.25) !important;
+    /* Replaces the blue glow with a subtle dark gray shadow halo */
+}
+
+/* seasrch filter */
+.slider-icon {
+    color: var(--prime-color3);
+}
+
+/* Target your filter toggle button on hover */
+.input-group .btn.search-custom:hover {
+    background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
+}
+
+/* Target the icon inside the button when the button is hovered */
+.input-group .btn.search-custom:hover i {
+    color: var(--prime-color5)
+}
+
+/* Optional: Smoothly fade the icon color in and out */
+.input-group .btn.search-custom i {
+    transition: color 0.2s ease-in-out;
+}
+
+.text-filter {
+    color: var(--prime-color3);
+}
+
+/* Optional: Softens background layer behind nested filter menus */
+.dashboard-custom {
+    background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
+    border: 1px solid var(--prime-color3);
+}
+
+.dashboard-filter {
+    border: 1px solid var(--prime-color3);
+    color: var(--prime-color4);
+}
+
+.dashboard-filter:hover {
+    background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
+    border: 1px solid var(--prime-color3);
+    color: var(--prime-color5);
+}
+
+/* --- 2) Centered Layout Constraints --- */
+.custom-center-container {
+    max-width: 1300px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+/* --- 3) Custom Dynamic Grid & Fixed 5mm Gaps --- */
+.responsive-recipe-row {
+    --bs-gutter-x: 5mm;
+    --bs-gutter-y: 5mm;
+}
+
+.col-custom-grid {
+    flex: 0 0 auto;
+    width: 50%;
+    /* Stays exactly 2 columns wide on mobile */
+}
+
+/* --- 4) Compact Recipe Card Styling --- */
+.recipe-card {
+    position: relative;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    background-color: #272727;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+
+    /* Mobile View Setup: Short, compact height to match your reference image ratio */
+    height: 115px;
+    border-radius: 1.2rem;
+}
+
+.recipe-card:hover {
+    transform: scale(1.03);
+}
+
+.recipe-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0.85rem;
+    /* Clean text padding inside the tile */
+}
+
+.recipe-title {
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.2px;
+    font-size: 0.95rem;
+    /* Highly readable but scaled-down title */
+    margin-bottom: 0.1rem;
+}
+
+.recipe-meta {
+    font-weight: 500;
+    color: var(--pale-gray);
+    margin-bottom: auto;
+    font-size: 0.75rem;
+}
+
+.smiley-group {
+    display: flex;
+    gap: 0.4rem;
+    font-size: 1.2rem;
+}
+
+/* --- Responsive Scale Up for Tablet and Web --- */
+@media (min-width: 768px) {
+    .col-custom-grid {
+        width: 33.333%;
+    }
+
+    /* 3 columns on tablet */
+    .recipe-card {
+        height: 165px;
+        border-radius: 1.8rem;
+    }
+
+    .recipe-content {
+        padding: 1.15rem;
+    }
+
+    .recipe-title {
+        font-size: 1.1rem;
+        margin-bottom: 0.15rem;
+    }
+
+    .recipe-meta {
+        font-size: 0.85rem;
+    }
+
+    .smiley-group {
+        gap: 0.45rem;
+        font-size: 1.4rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-custom-grid {
+        width: 20%;
+    }
+
+    /* 5 columns on desktop */
+}
+
+/* Background image controller */
+.recipe-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: var(--recipe-img-bg);
+    z-index: 1;
+}
+
+.smiley-group i {
+    color: var(--smiley-color);
+}
+
+.smiley-group i.active {
+    color: var(--color-smiley-active);
+}
+
+/* --- Custom Elevated Carousel Styles --- */
+#recipeHeroCarousel {
+    display: block;
+    width: 100%;
+    clear: both;
+    /* Prevents floating elements from breaking the layout container */
+}
+
+.custom-carousel-inner {
+    border-radius: 1.2rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+
+    /* FIX: Force an explicit, uniform box height on Mobile View */
+    height: 180px !important;
+}
+
+/* FIX: Ensure the carousel items completely fill out the forced height box */
+.custom-carousel-inner .carousel-item {
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-hero-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: center;
+    filter: var(--recipe-hero);
+}
+
+/* Elegant Text Overlay Adjustments */
+/* .custom-caption {
+    text-align: left !important;
+    left: 8% !important;
+    right: 8% !important;
+    bottom: 12% !important;
+    z-index: 10;
+} */
+
+.custom-caption,
+.custom-caption h2 {
+    text-align: left;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+}
+
+.custom-badge {
+    background-color: var(--violet);
+}
+
+.tracking-wider {
+    letter-spacing: 1px;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+}
+
+/* --- Responsive Scale-Up (Resolves Desktop Bugs) --- */
+@media (min-width: 768px) {
+    .custom-carousel-inner {
+        height: 320px !important;
+        /* Stable framework height for tablets */
+        border-radius: 1.8rem;
+    }
+
+    .custom-caption {
+        bottom: 18% !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .custom-carousel-inner {
+        height: 400px !important;
+        /* Perfect widescreen cinematic banner height for desktops */
+    }
+
+    .custom-caption {
+        bottom: 22% !important;
+        left: 6% !important;
+    }
+
+    .custom-caption h2 {
+        font-size: 2.5rem;
+        /* Scales typography beautifully up for big screens */
+    }
+}
+
+/* TOGGLE */
+/* .dropdown-menu-dark {
+    --bs-dropdown-bg: #2b2b2b;
+    --bs-dropdown-border-color: #3f3f3f;
+    padding: 0.5rem 0;
+} */
+
+.dropdown-menu {
+    border-radius: 1.2rem;
+    padding: 0.5rem;
+    border: 1px solid var(--prime-color3);
+    background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Style the individual link items inside the dropdown */
+.dropdown-item {
+    border-radius: 1.2rem;
+    /* Rounds the hover-state highlight box */
+    padding: 0.3rem 1.75rem;
+    color: var(--prime-color4);
+    transition: all 0.15s ease;
+}
+
+/* Change color instantly when hovered */
+.dropdown-item:hover {
+    background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
+    color: var(--prime-color5);
+}
+
+.dropdown-toggle {
+    color: var(--prime-color3);
+}
+
+.dropdown-toggle:hover {
+    color: var(--prime-color5);
+}
