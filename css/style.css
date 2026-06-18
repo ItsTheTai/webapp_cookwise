@@ -148,7 +148,7 @@ body {
     background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
 }
 
-/* 2. THEME LAG FIX: Explicitly strip layout/background transitions from the slider button container */
+/* THEME LAG FIX: Explicitly strip layout/background transitions from the slider button container */
 .input-group .btn.search-custom {
     transition: none !important;
 }
