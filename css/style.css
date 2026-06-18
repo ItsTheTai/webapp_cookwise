@@ -32,14 +32,14 @@
     --recipe-img-bg: opacity(20%) blur(10px) grayscale(20%);
     --recipe-hero: grayscale(10%) brightness(40%);
     --smiley-color: var(--light-gray);
-    --color-smiley-active: color-mix(in srgb, var(--violet) 80%, white);
+    --color-smiley-active: color-mix(in srgb, var(--pale-gray) 90%, white);
 
     /* Dynamic Landing Gradients */
     --bg-landing: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--violet) 100%, white));
-    --bg-favourites: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--red) 80%, white));
-    --bg-planner: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--cyan) 90%, white));
-    --bg-shopping: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--yellow) 75%, white));
-    --bg-settings: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--mid-gray) 55%, white));
+    --bg-favorites: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--red) 80%, darkgray));
+    --bg-planner: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--cyan) 90%, darkgray));
+    --bg-shopping: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--yellow) 80%, dimgray));
+    --bg-settings: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--mid-gray) 50%, white));
 }
 
 /* --- Light Mode Overrides --- */
@@ -62,6 +62,10 @@
 
     /* Light Mode Landing Gradient */
     --bg-landing: linear-gradient(to bottom, color-mix(in srgb, var(--pale-gray) 30%, white) 0%, color-mix(in srgb, var(--pale-gray) 30%, white) 5%, color-mix(in srgb, var(--violet) 90%, white));
+    --bg-favorites: linear-gradient(to bottom, color-mix(in srgb, var(--pale-gray) 30%, white) 0%, color-mix(in srgb, var(--pale-gray) 30%, white) 5%, color-mix(in srgb, var(--red) 70%, white));
+    --bg-planner: linear-gradient(to bottom, color-mix(in srgb, var(--pale-gray) 30%, white) 0%, color-mix(in srgb, var(--pale-gray) 30%, white) 5%, color-mix(in srgb, var(--cyan) 80%, white));
+    --bg-shopping: linear-gradient(to bottom, color-mix(in srgb, var(--pale-gray) 30%, white) 0%, color-mix(in srgb, var(--pale-gray) 30%, white) 5%, color-mix(in srgb, var(--yellow) 70%, white));
+    --bg-settings: linear-gradient(to bottom, color-mix(in srgb, var(--pale-gray) 30%, white) 0%, color-mix(in srgb, var(--pale-gray) 30%, white) 5%, color-mix(in srgb, var(--mid-gray) 55%, white));
 }
 
 /* ==========================================================================
