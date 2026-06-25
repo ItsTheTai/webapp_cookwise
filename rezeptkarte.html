@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookWise - Rezeptkarte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="rezeptkarte.css">
+</head>
+<body>
+
+   <nav class="navbar navbar-expand-sm navbar-dark py-3 mt-4">
+    <div class="container-fluid custom-center-container flex-wrap"> <a
+            class="navbar-brand d-flex align-items-center fw-bold main-logo-font" href="#">
+            <img src="chef-2.png" alt="Icon" width="35" class="main-logo"> CookWise
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            
+            <div class="d-flex flex-column ms-lg-4 my-3 my-lg-0 me-auto search-filter-wrapper pe-3"
+                style="max-width: 380px; width: 100%;">
+                <div class="input-group">
+                    <span class="input-group-text search-custom border-custom text-secondary rounded-pill rounded-end-0"
+                        id="search-addon">
+                        <i class="bi bi-search search-icon"></i>
+                    </span>
+                    <input class="form-control search-custom border-custom rounded-0" type="search" placeholder=""
+                        aria-label="Search" aria-describedby="search-addon">
+
+                    <button
+                        class="btn btn-outline-secondary search-custom border-custom rounded-pill rounded-start-0 px-3 text-light"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#filterDashboard" aria-expanded="false"
+                        aria-controls="filterDashboard">
+                        <i class="bi bi-sliders slider-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <ul class="navbar-nav d-flex align-items-lg-center gap-2">
+                <li class="nav-item"><a class="nav-link nav-link-icon"><i class="bi bi-heart"></i></a></li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon position-relative">
+                        <i class="bi bi-cart3"></i>
+                    </a>
+                </li>
+                <li class="nav-item"><a class="nav-link nav-link-icon"><i class="bi bi-clock"></i></a></li>
+                <li class="nav-item dropdown ms-lg-2">
+                    <a class="nav-link p-0 dropdown-toggle" id="profileDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?&fit=crop&w=150&q=80"
+                            alt="Account Profile" class="avatar-placeholder">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark mt-3">
+                        <li><button class="dropdown-item">Mein Profil</button></li>
+                        <li><button class="dropdown-item">Einstellungen</button></li>
+                        <li>
+                            <button class="dropdown-item" id="theme-toggle" type="button">
+                                <i class="bi bi-cloud-moon me-2"></i> Farbmodus ändern
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="collapse w-100 mt-3" id="filterDashboard">
+            <div class="p-3 dashboard-custom rounded-4 d-flex flex-wrap gap-2 align-items-center">
+
+                <span class="text-filter small me-2"><i class="bi bi-filter-left"></i> Filtern nach:</span>
+
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle rounded-pill px-3 dashboard-filter"
+                        type="button" data-bs-toggle="dropdown">
+                        Gerichttyp
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow">
+                        <li><button class="dropdown-item" type="button">Vorspeise</button></li>
+                        <li><button class="dropdown-item" type="button">Hauptspeise</button></li>
+                        <li><button class="dropdown-item" type="button">Nachspeise</button></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle rounded-pill px-3 dashboard-filter"
+                        type="button" data-bs-toggle="dropdown">
+                        Länderküche
+                    </button>
+                    <ul class="dropdown-menu shadow">
+                        <li><button class="dropdown-item" type="button">Asien</button></li>
+                        <li><button class="dropdown-item" type="button">Europa</button></li>
+                        <li><button class="dropdown-item" type="button">Afrika</button></li>
+                        <li><button class="dropdown-item" type="button">Nordamerika</button></li>
+                        <li><button class="dropdown-item" type="button">Südamerika</button></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle rounded-pill px-3 dashboard-filter"
+                        type="button" data-bs-toggle="dropdown">
+                        Zubereitungszeit
+                    </button>
+                    <ul class="dropdown-menu shadow">
+                        <li><button class="dropdown-item" type="button">15 Min</button></li>
+                        <li><button class="dropdown-item" type="button">30 Min</button></li>
+                        <li><button class="dropdown-item" type="button">45 Min</button></li>
+                        <li><button class="dropdown-item" type="button">60 Min</button></li>
+                        <li><button class="dropdown-item" type="button">90-120 Min</button></li>
+                        <li><button class="dropdown-item" type="button">&gt; 120 Min</button></li>
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle rounded-pill px-3 dashboard-filter"
+                        type="button" data-bs-toggle="dropdown">
+                        Ökobilanz
+                    </button>
+                    <ul class="dropdown-menu shadow dashboard-smiley">
+                        <li><button class="dropdown-item" type="button"><i class="bi bi-emoji-smile-fill me-2"></i>
+                                Gut</button></li>
+                        <li><button class="dropdown-item" type="button"><i class="bi bi-emoji-neutral-fill me-2"></i>
+                                Neutral</button></li>
+                        <li><button class="dropdown-item" type="button"><i class="bi bi-emoji-frown-fill me-2"></i>
+                                Schlecht</button></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+    <div class="recipe-container-wrapper">
+        <div class="recipe-card-layout">
+            
+            <div class="recipe-pane-left">
+                <div class="recipe-header-block">
+                    <span class="recipe-nav-back">&larr; Linsen-Curry</span>
+                </div>
+            <div class="recipe-photo-area">
+                <img src="https://images.unsplash.com/photo-1582576163090-09d3b6f8a969?auto=format&fit=crop&w=500&q=80" alt="Linsen-Curry" class="recipe-photo">
+            </div>
+            </div>
+            
+
+            <div class="recipe-pane-right">
+                
+                <ul class="nav nav-pills process-tabs" id="recipeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="pill" data-bs-target="#info-pane" type="button" role="tab" aria-controls="info-pane" aria-selected="true">Info</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="prep-tab" data-bs-toggle="pill" data-bs-target="#prep-pane" type="button" role="tab" aria-controls="prep-pane" aria-selected="false">Prep</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="cook-tab" data-bs-toggle="pill" data-bs-target="#cook-pane" type="button" role="tab" aria-controls="cook-pane" aria-selected="false">Cook</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="serve-tab" data-bs-toggle="pill" data-bs-target="#serve-pane" type="button" role="tab" aria-controls="serve-pane" aria-selected="false">Serve</button>
+                    </li>
+                </ul>
+
+                <div class="recipe-info-scrollable">
+                    <div class="tab-content" id="recipeTabContent">
+                        
+                        <div class="tab-pane fade show active" id="info-pane" role="tabpanel" aria-labelledby="info-tab">
+                            <h5 class="tab-section-title">Allgemein</h5>
+                            <ul class="list-unstyled recipe-meta-list">
+                                <li><strong><i class="bi bi-hourglass-split me-2"></i>Kochdauer:</strong> 35 Min.</li>
+                                <li><strong><i class="bi bi-layer-forward me-2"></i>Schwierigkeit:</strong> Leicht</li>
+                                <li><strong><i class="bi bi-egg-fried me-2"></i>Gerichttyp:</strong> Hauptgericht</li>
+                                <li><strong><i class="bi bi-globe2 me-2"></i>Länderküche:</strong> Indisch</li>
+                            </ul>
+                            <div class="recipe-description-card">
+                                <p class="mb-0">Ein herrlich cremiges und aromatisches Linsen-Curry mit Kokosmilch. Perfekt für ein wärmendes Mittag- oder Abendessen.</p>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="prep-pane" role="tabpanel" aria-labelledby="prep-tab">
+                            <h5 class="tab-section-title">Vorbereiten (Zutaten)</h5>
+                            <h6 class="recipe-sub-title">Basics:</h6>
+                            <ul class="ingredients-list">
+                                <li><i class="bi bi-circle me-2"></i> 200g Rote Linsen</li>
+                                <li><i class="bi bi-circle me-2"></i> 400ml Kokosmilch</li>
+                                <li><i class="bi bi-circle me-2"></i> 1 Zwiebel & 2 Knoblauchzehen</li>
+                                <li><i class="bi bi-circle me-2"></i> 1 Dose gehackte Tomaten</li>
+                            </ul>
+                            <h6 class="recipe-sub-title">Gewürze:</h6>
+                            <ul class="ingredients-list">
+                                <li><i class="bi bi-circle me-2"></i> 2 TL Currypulver</li>
+                                <li><i class="bi bi-circle me-2"></i> 1 TL Kreuzkümmel (Kumin)</li>
+                                <li><i class="bi bi-circle me-2"></i> 1 Stück frischer Ingwer</li>
+                                <li><i class="bi bi-circle me-2"></i> Salz und Pfeffer</li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-pane fade" id="cook-pane" role="tabpanel" aria-labelledby="cook-tab">
+                            <h5 class="tab-section-title">Kochen</h5>
+                            <ol class="cooking-steps">
+                                <li>Zwiebel, Knoblauch und Ingwer fein würfeln und in etwas Öl in einem Topf andünsten.</li>
+                                <li>Die Gewürze hinzufügen und kurz mitrösten, bis sie duften.</li>
+                                <li>Die roten Linsen, gehackten Tomaten und Kokosmilch dazugeben. Alles gut umrühren.</li>
+                                <li>Bei mittlerer Hitze ca. 20-25 Minuten köcheln lassen, bis die Linsen weich sind. Gelegentlich umrühren.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tab-pane fade" id="serve-pane" role="tabpanel" aria-labelledby="serve-tab">
+                            <h5 class="tab-section-title">Anrichten & Servieren</h5>
+                            <p class="recipe-text-block">Das Curry heiß mit frischem Koriander garnieren. Schmeckt hervorragend zu Basmati-Reis oder warmem Naan-Brot.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="recipe-footer-panel">
+                    <span class="footer-label">Ökobilanz:</span>
+                    <div class="smiley-flex">
+                        <i class="bi bi-emoji-smile-fill active" title="Gut"></i>
+                        <i class="bi bi-emoji-neutral-fill" title="Neutral"></i>
+                        <i class="bi bi-emoji-frown-fill" title="Schlecht"></i>
+                    </div>
+                </div>
+                
+            </div> </div> </div> 
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            themeToggle.addEventListener('click', () => {
+                
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                
+                if (currentTheme === 'light') {
+                    
+                    document.documentElement.removeAttribute('data-theme');
+                } else {
+                    
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
