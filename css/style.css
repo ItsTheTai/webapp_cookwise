@@ -101,6 +101,10 @@ body {
     color: var(--prime-color5);
 }
 
+.navbar-brand:hover {
+    color: var(--prime-color5)
+}
+
 .avatar-placeholder {
     width: 38px;
     height: 38px;
