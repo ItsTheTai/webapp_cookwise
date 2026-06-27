@@ -1,22 +1,21 @@
-async function includeHTML(selector, file) {
+function includeHTML(selector, file, callback) {
     const container = document.querySelector(selector);
-    if (!container) return; // Added safety check so it doesn't crash on recipe card pages
-    
-    const html = await fetch(file).then(r => r.text());
-    container.innerHTML = html;
+    if (!container) return;
+
+    fetch(file)
+        .then(response => response.text())
+        .then(html => {
+            container.innerHTML = html;
+            if (callback) callback();
+        });
 }
 
-// Wrap the loading in an async sequence so we can control the order
-async function loadAllComponents() {
-    // 1. Load the navbar first and immediately initialize the theme
-    await includeHTML("#navbar", "./components/navbar.html");
+includeHTML("#navbar", "./components/navbar_api.html", function () {
+
     if (typeof initializeThemeToggle === "function") {
         initializeThemeToggle();
     }
 
-    // 2. Load the remaining components afterwards
-    await includeHTML("#carousel", "./components/carousel.html");
-    await includeHTML("#recipes", "./components/recipes.html");
-}
-
-loadAllComponents();
+    includeHTML("#carousel", "./components/carousel.html");
+    includeHTML("#recipes", "./components/recipes_api.html");
+});

@@ -188,7 +188,8 @@ body {
     transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-.dashboard-filter:hover {
+.dashboard-filter:hover,
+.dashboard-filter.active {
     background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
     border: 1px solid var(--prime-color3);
     color: var(--prime-color5);
@@ -233,7 +234,6 @@ body {
 }
 
 .navbar .dropdown-toggle.show::after {
-    color: var(--prime-color5) !important;
     transform: rotate(180deg);
 }
 
@@ -296,6 +296,7 @@ body {
 }
 
 .col-custom-grid {
+    display: block;
     flex: 0 0 auto;
     width: 50%;
     /* 2 Columns on mobile */

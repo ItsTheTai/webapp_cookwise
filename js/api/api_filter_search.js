@@ -1,0 +1,99 @@
+// 1. Storage for our selected filters and search term
+const activeFilters = {
+    kategorie: '',
+    kueche: '',
+    schwierigkeitsgrad: '',
+    oekobilanz: '',
+    max_zeit: '',
+    min_portionen: '',
+    max_portionen: '',
+    zutat: ''
+};
+
+const baseUrl = "https://recipes.digitalhumanities.io/api/rezepte/";
+
+const defaultButtonTexts = {
+    kategorie: 'Gerichttyp',
+    kueche: 'Länderküche',
+    schwierigkeitsgrad: 'Schwierigkeit',
+    oekobilanz: 'Ökobilanz',
+    max_zeit: 'Zubereitungszeit'
+};
+
+// 2. Toggles a filter on/off when a user clicks a dropdown option
+// 2. Click handler stages the options in memory and switches button text
+function filterBy(key, value) {
+    const buttonElement = document.getElementById(`btn-${key}`);
+
+    if (activeFilters[key] === value) {
+        activeFilters[key] = '';
+        if (buttonElement) {
+            buttonElement.textContent = defaultButtonTexts[key];
+            // Remove the active style when filter is cleared
+            buttonElement.classList.remove('active');
+        }
+    } else {
+        activeFilters[key] = value;
+        if (buttonElement) {
+            if (key === 'max_zeit') {
+                buttonElement.textContent = `<${value} Min`;
+            } else {
+                buttonElement.textContent = value;
+            }
+            // Add the active style when a filter is applied
+            buttonElement.classList.add('active');
+        }
+    }
+    console.log("Staged filters:", activeFilters);
+}
+
+// 3. Main search function - triggered when clicking the magnifying glass
+async function sendSearchRequest() {
+    const searchInput = document.querySelector('input[type="search"]')?.value || '';
+    activeFilters.zutat = searchInput.trim();
+
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(activeFilters)) {
+        if (value) params.append(key, value);
+    }
+
+    let nextUrl = `${baseUrl}?${params.toString()}`;
+    let allRecipes = [];
+
+    // The loop runs perfectly fine on its own
+    while (nextUrl) {
+        const response = await fetch(nextUrl);
+        const data = await response.json();
+
+        const pageResults = data.results || data;
+        allRecipes = allRecipes.concat(pageResults);
+
+        nextUrl = data.next || null;
+    }
+
+    if (typeof renderRecipes === 'function') {
+        renderRecipes(allRecipes);
+    } else {
+        console.error("renderRecipes() function is missing.");
+    }
+}
+
+// Add this at the bottom of your script
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Find the search input element on the page
+    const searchInput = document.querySelector('input[type="search"]');
+
+    // 2. Make sure the input actually exists before adding the listener
+    if (searchInput) {
+        searchInput.addEventListener("keydown", (event) => {
+            // 3. Check if the key pressed was 'Enter'
+            if (event.key === "Enter") {
+                // 4. Prevent the default browser behavior (like reloading the page)
+                event.preventDefault();
+
+                // 5. Run your existing search function!
+                sendSearchRequest();
+            }
+        });
+    }
+});
