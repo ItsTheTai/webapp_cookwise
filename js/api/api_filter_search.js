@@ -20,8 +20,7 @@ const defaultButtonTexts = {
     max_zeit: 'Zubereitungszeit'
 };
 
-// 2. Toggles a filter on/off when a user clicks a dropdown option
-// 2. Click handler stages the options in memory and switches button text
+// Toggles a filter on/off when a user clicks a dropdown option. Click handler stages the options in memory and switches button text
 function filterBy(key, value) {
     const buttonElement = document.getElementById(`btn-${key}`);
 
@@ -47,7 +46,7 @@ function filterBy(key, value) {
     console.log("Staged filters:", activeFilters);
 }
 
-// 3. Main search function - triggered when clicking the magnifying glass
+// Main search function triggered when clicking the magnifying glass
 async function sendSearchRequest() {
     const searchInput = document.querySelector('input[type="search"]')?.value || '';
     activeFilters.zutat = searchInput.trim();
@@ -60,7 +59,6 @@ async function sendSearchRequest() {
     let nextUrl = `${baseUrl}?${params.toString()}`;
     let allRecipes = [];
 
-    // The loop runs perfectly fine on its own
     while (nextUrl) {
         const response = await fetch(nextUrl);
         const data = await response.json();
@@ -78,20 +76,20 @@ async function sendSearchRequest() {
     }
 }
 
-// Add this at the bottom of your script
+
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Find the search input element on the page
+    // Find the search input element on the page
     const searchInput = document.querySelector('input[type="search"]');
 
-    // 2. Make sure the input actually exists before adding the listener
+    // Make sure the input actually exists before adding the listener
     if (searchInput) {
         searchInput.addEventListener("keydown", (event) => {
-            // 3. Check if the key pressed was 'Enter'
+            // Check if the key pressed was 'Enter'
             if (event.key === "Enter") {
-                // 4. Prevent the default browser behavior (like reloading the page)
+                // Prevent the default browser behavior (like reloading the page)
                 event.preventDefault();
 
-                // 5. Run your existing search function!
+                // Run your existing search function!
                 sendSearchRequest();
             }
         });

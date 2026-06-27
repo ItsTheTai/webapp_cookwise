@@ -1,4 +1,4 @@
-// 1. The Master Function (This is what you call when your API data arrives)
+// The Master Function (This is what you call when your API data arrives)
 function populateDropdowns(recipes) {
 
     // If the navbar HTML hasn't finished loading yet, wait 100ms and try again
@@ -14,7 +14,7 @@ function populateDropdowns(recipes) {
     setupSingleDropdown("dropdown-eco", "oekobilanz", recipes);
 }
 
-// 2. The Reusable Helper (It does all the heavy lifting for ONE dropdown)
+// The Reusable Helper (It does all the heavy lifting for ONE dropdown)
 function setupSingleDropdown(elementId, keyName, recipes) {
     const listElement = document.getElementById(elementId);
     let uniqueItems = [];
@@ -28,7 +28,7 @@ function setupSingleDropdown(elementId, keyName, recipes) {
         }
     }
 
-    // 🌟 FIXED: Start with an empty string instead of the "Alle anzeigen" button
+    // Start with an empty string instead of the "Alle anzeigen" button
     let dropdownHtml = "";
 
     // Build out only the actual categories found in your data
