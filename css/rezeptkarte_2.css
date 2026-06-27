@@ -240,9 +240,9 @@ body {
     flex-grow: 1;
     height: calc(100vh - 46px); /* Clean management of remaining window viewport height */
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 1rem;
+    padding: 5rem;
     box-sizing: border-box;
 }
 
@@ -252,14 +252,14 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 0.8rem; 
     
-    max-width: 960px; 
+    max-width: 95vw; 
     width: 100%;
     height: auto;
-    min-height: 480px;
+    min-height: 550px;
     max-height: calc(100vh - 80px);
     
     display: grid;
-    grid-template-columns: 42% 58%; 
+    grid-template-columns: 50% 50%; 
     overflow: hidden;
 }
 
@@ -290,7 +290,7 @@ body {
     background-color: var(--violet); 
     color: #fafafa; 
     font-weight: 600; 
-    font-size: 0.8rem; 
+    font-size: 1.1rem; 
     padding: 6px 22px; 
     border-radius: 30px; 
     cursor: pointer; 
@@ -323,7 +323,7 @@ body {
    ========================================================================== */
 
 .recipe-pane-right {
-    padding: 1.5rem; 
+    padding: 2rem; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
@@ -350,9 +350,9 @@ body {
 .process-tabs .nav-link {
     color: var(--prime-color4);
     font-weight: 600;
-    font-size: 0.85rem; 
+    font-size: 1rem; 
     border-radius: 30px;
-    padding: 8px 12px;
+    padding: 10px 15px;
     text-align: center;
     width: 100%;
     border: none;
@@ -375,39 +375,39 @@ body {
    ========================================================================== */
 
 .tab-section-title {
-    font-size: 0.8rem; 
+    font-size: 1rem; 
     font-weight: 700;
     text-transform: uppercase;
     color: var(--violet);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 4px;
-    margin-bottom: 0.6rem;
+    padding-bottom: 6px;
+    margin-bottom: 1rem;
 }
 
 .recipe-meta-list li {
-    padding: 3px 0; 
-    font-size: 0.9rem; 
+    padding: 6px 0; 
+    font-size: 1.1rem; 
     color: var(--prime-color5);
 }
 
 .recipe-meta-list li i {
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     color: var(--prime-color3);
 }
 
 .recipe-description-card {
-    margin-top: 0.6rem;
-    padding: 0.6rem 0.8rem;
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
     background-color: color-mix(in srgb, var(--prime-color2) 20%, transparent);
     border: 1px solid var(--prime-color3);
-    border-radius: 0.4rem;
-    font-size: 0.85rem; 
+    border-radius: 0.6rem;
+    font-size: 1rem; 
     color: var(--prime-color5);
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .recipe-sub-title {
-    font-size: 0.85rem; 
+    font-size: 1.1rem; 
     font-weight: 700;
     margin-top: 0.6rem;
     margin-bottom: 0.25rem;
@@ -419,7 +419,7 @@ body {
     padding-left: 0;
     list-style: none;
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--prime-color5);
 }
 
@@ -430,11 +430,11 @@ body {
 
 .ingredients-list li, 
 .cooking-steps li {
-    padding: 3px 0; 
+    padding: 6px 0; 
 }
 
 .recipe-text-block {
-    font-size: 0.9rem; /* Увеличено с 0.74rem */
+    font-size: 1.1rem; 
     color: var(--prime-color5);
     margin: 0;
     line-height: 1.4;
@@ -455,7 +455,7 @@ body {
 }
 
 .footer-label {
-    font-size: 0.8rem; 
+    font-size: 1.1rem; 
     font-weight: 700;
     color: var(--prime-color5);
 }
