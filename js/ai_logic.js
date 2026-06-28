@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btnPlanner.classList.remove('active');
             viewChat.classList.remove('d-none');
             viewPlanner.classList.add('d-none');
-            // FIXED: Keep the cyan planner background active on the chat view
         });
 
         btnPlanner.addEventListener('click', () => {
@@ -28,13 +27,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Das gesamte Menü im Kochplaner leeren
+    // 2. Das gesamte Menü leeren (und Speicher leeren)
     if (btnClearAll) {
         btnClearAll.addEventListener('click', () => {
+            localStorage.removeItem('cookwise_temporary_recipes'); // Speicher löschen
             resetPlannerViews();
         });
     }
+
+    // NEU: Beim Laden der Seite Rezepte aus dem Speicher laden
+    loadRecipesFromStorage();
 });
+
+/**
+ * Holt die Rezepte aus dem LocalStorage und rendert sie im Planer
+ */
+function loadRecipesFromStorage() {
+    const storageData = localStorage.getItem('cookwise_temporary_recipes');
+    if (!storageData) return;
+
+    const recipes = JSON.parse(storageData);
+    const list = document.getElementById('selected-recipes-list');
+    const msg = document.getElementById('no-recipes-msg');
+
+    if (recipes.length > 0 && list) {
+        if (msg) msg.remove();
+        list.innerHTML = ''; // Vorherige statische Mockups entfernen
+
+        recipes.forEach(recipe => {
+            const newItem = document.createElement('div');
+            newItem.className = 'selected-recipe-item';
+            // Wir nutzen recipe.titel aus unserem JSON-Speicher-Objekt
+            newItem.innerHTML = `
+                <span><i class="bi bi-check-circle-fill text-success me-2"></i>${recipe.titel}</span>
+                <button class="btn-remove-recipe" onclick="removeRecipe(this)"><i class="bi bi-x-circle"></i></button>`;
+            list.appendChild(newItem);
+        });
+        updateMockSteps();
+    }
+}
 
 function resetPlannerViews() {
     const selectedRecipesList = document.getElementById('selected-recipes-list');
@@ -55,14 +86,23 @@ function resetPlannerViews() {
 }
 
 /**
- * Entfernt ein einzelnes Rezept aus der Liste der ausgewählten Rezepte.
+ * Entfernt ein einzelnes Rezept aus der Liste und dem Speicher
  */
 function removeRecipe(element) {
     const item = element.closest('.selected-recipe-item');
     if (item) {
+        const recipeName = item.querySelector('span').textContent.trim();
         const parent = item.parentNode;
         item.remove();
         
+        // Aus LocalStorage entfernen
+        const storageData = localStorage.getItem('cookwise_temporary_recipes');
+        if (storageData) {
+            let recipes = JSON.parse(storageData);
+            recipes = recipes.filter(r => r.titel.trim() !== recipeName);
+            localStorage.setItem('cookwise_temporary_recipes', JSON.stringify(recipes));
+        }
+
         if (parent && parent.querySelectorAll('.selected-recipe-item').length === 0) {
             resetPlannerViews();
         } else {
@@ -72,14 +112,13 @@ function removeRecipe(element) {
 }
 
 /**
- * Fügt ein neues Rezept aus dem verfügbaren Pool hinzu.
+ * Fügt ein neues Rezept aus dem verfügbaren Pool hinzu (und synchronisiert den Speicher)
  */
 function addRecipe(recipeName) {
     const list = document.getElementById('selected-recipes-list');
     const msg = document.getElementById('no-recipes-msg');
     if (msg) msg.remove();
 
-    // Prüfen mit .some() anstelle einer manuellen Schleife
     const currentItems = Array.from(list.querySelectorAll('.selected-recipe-item span'));
     if (currentItems.some(item => item.textContent.trim() === recipeName)) {
         alert('Dieses Rezept ist bereits in deinem Menü!');
@@ -93,12 +132,20 @@ function addRecipe(recipeName) {
         <button class="btn-remove-recipe" onclick="removeRecipe(this)"><i class="bi bi-x-circle"></i></button>`;
     
     list.appendChild(newItem);
+
+    // Im LocalStorage ergänzen (simuliert API-Objekt Struktur)
+    const storageData = localStorage.getItem('cookwise_temporary_recipes');
+    let recipes = storageData ? JSON.parse(storageData) : [];
+    recipes.push({
+        id: recipeName.replace(/\s+/g, '-').toLowerCase(),
+        titel: recipeName,
+        zubereitungszeit: { gesamt_min: 30 }
+    });
+    localStorage.setItem('cookwise_temporary_recipes', JSON.stringify(recipes));
+
     updateMockSteps();
 }
 
-/**
- * Simuliert das Aktualisieren der optimierten Kochschritte durch die KI
- */
 function updateMockSteps() {
     const steps = document.getElementById('ki-steps-container');
     const items = Array.from(document.querySelectorAll('.selected-recipe-item span'));

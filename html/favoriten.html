@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../css/style.css">
 
     <style>
-        /* 1. FIXES THE BACKGROUND CUTOFF */
         html, body {
             min-height: 100vh !important;
             margin: 0;
@@ -22,7 +21,6 @@
             background-attachment: fixed !important;
         }
 
-        /* 2. MAKE SURE THE CARD CAN CONTAIN AN ABSOLUTE CONTAINER */
         .recipe-card {
             position: relative !important;
         }
@@ -46,18 +44,15 @@
     <script>
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Laden der externen buttons.html
                 const response = await fetch('../html/components/buttons.html');
                 const buttonsTemplateHtml = await response.text();
 
                 const parser = new DOMParser();
                 const templateDoc = parser.parseFromString(buttonsTemplateHtml, 'text/html');
                 
-                // Styles extrahieren und in das Dokument hängen
                 const embeddedStyle = templateDoc.querySelector('style');
                 if (embeddedStyle) document.head.appendChild(embeddedStyle);
 
-                // Skript extrahieren und global ausführbar machen
                 const embeddedScript = templateDoc.querySelector('script');
                 if (embeddedScript) {
                     const scriptTag = document.createElement('script');
@@ -68,26 +63,21 @@
                 const actionContainerTemplate = templateDoc.querySelector('.recipe-actions-container');
                 if (!actionContainerTemplate) return;
 
-                // Warten, bis die Rezeptkarten geladen wurden
                 const checkExist = setInterval(() => {
                     const cards = document.querySelectorAll('.recipe-card');
                     
                     if (cards.length > 0) {
                         clearInterval(checkExist);
-                        
-                        // Ruft die nun geladene globale Funktion aus buttons.html auf
                         if (typeof window.initRecipeButtons === 'function') {
                             window.initRecipeButtons(cards, actionContainerTemplate);
                         }
                     }
-                }, 100); // Check every 100ms
+                }, 100);
                 
             } catch (error) {
                 console.error("Error loading external action buttons template:", error);
             }
         });
     </script>
-
 </body>
-
 </html>

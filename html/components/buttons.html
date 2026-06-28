@@ -1,12 +1,11 @@
 <style>
-    /* STYLING FOR THE ACTIONS WRAPPER & REUSABLE BUTTONS */
     .recipe-actions-container {
         position: absolute !important;
         top: 10px !important;
         right: 10px !important;
         z-index: 9999 !important;
         display: flex !important;
-        flex-direction: column !important; /* Standardmäßig vertikal */
+        flex-direction: column !important;
         gap: 8px !important;
     }
 
@@ -43,20 +42,18 @@
         background-color: #0dcaf0 !important;
     }
 
-    /* GRÖSSENOPTIMIERUNG: Bei kleinerem Fenster Anordnung horizontal spiegeln */
+    /* Wechselt zu Zeile auf Mobilgeräten, um vertikale Überläufe zu verhindern */
     @media (max-width: 575.98px) {
         .recipe-actions-container {
-            flex-direction: row !important; /* Horizontal statt vertikal */
+            flex-direction: row !important;
             top: 8px !important;
             right: 8px !important;
             gap: 6px !important;
         }
-
         .recipe-action-btn {
-            width: 28px !important; /* Leicht verkleinern, damit nichts überlappt */
+            width: 28px !important;
             height: 28px !important;
         }
-
         .recipe-action-btn i {
             font-size: 14px !important;
         }
@@ -76,7 +73,6 @@
 </div>
 
 <script>
-    // Globale Initialisierungsfunktion, die von den HTML-Seiten aufgerufen wird
     window.initRecipeButtons = function(cards, templateContainer) {
         if (!cards || !templateContainer) return;
 
@@ -85,7 +81,7 @@
 
             const actionGroup = templateContainer.cloneNode(true);
 
-            // 1. Hook up the Trash/Delete functionality
+            // 1. Aus Favoriten löschen
             const deleteBtn = actionGroup.querySelector('.delete-recipe-btn');
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', (e) => {
@@ -95,17 +91,17 @@
                 });
             }
 
-            // 2. Hook up the Shopping Cart functionality
+            // 2. Warenkorb
             const cartBtn = actionGroup.querySelector('.cart-recipe-btn');
             if (cartBtn) {
                 cartBtn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Recipe added to shopping list!');
+                    console.log('In Einkaufsliste verschoben');
                 });
             }
 
-            // 3. Hook up the Clock/Timer functionality (Speichern im LocalStorage)
+            // 3. Uhr-Symbol: Speichert im localStorage für den KI-Planer
             const clockBtn = actionGroup.querySelector('.clock-recipe-btn');
             if (clockBtn) {
                 clockBtn.addEventListener('click', (e) => {
@@ -116,7 +112,7 @@
                         const recipeData = extractDataFromHTMLCard(card);
                         saveRecipeToTemporaryStorage(recipeData);
                     } else {
-                        console.error('recipe_storage.js wurde nicht geladen!');
+                        console.error('recipe_storage.js nicht gefunden.');
                     }
                 });
             }
