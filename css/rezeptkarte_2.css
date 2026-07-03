@@ -238,28 +238,29 @@ body {
 
 .recipe-container-wrapper {
     flex-grow: 1;
-    height: calc(100vh - 46px); /* Clean management of remaining window viewport height */
+    min-height: calc(100vh - 46px); /* Clean management of remaining window viewport height */
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 0.5rem;
+    padding: 5rem;
     box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .recipe-card-layout {
     background-color: var(--prime-color1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.6rem;
+    border-radius: 0.8rem; 
     
-    max-width: 680px; 
+    max-width: 95vw; 
     width: 100%;
-    height: auto;
-    min-height: 350px; 
-    max-height: calc(100vh - 70px);
+    height: calc(100vh - 150px);
+    min-height: 550px;
+    max-height: calc(100vh - 80px);
     
     display: grid;
-    grid-template-columns: 38% 62%;
+    grid-template-columns: 50% 50%; 
     overflow: hidden;
 }
 
@@ -269,11 +270,11 @@ body {
 
 .recipe-pane-left {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: block;
     height: 100%;
-    padding: 0; /* Forced to zero so images seamlessly touch card outer bounds */
+    padding: 0; 
     background-color: rgba(0, 0, 0, 0.15);
+    border-right: 1px solid var(--border-color);
 }
 
 .recipe-header-block {
@@ -290,8 +291,8 @@ body {
     background-color: var(--violet); 
     color: #fafafa; 
     font-weight: 600; 
-    font-size: 0.74rem; 
-    padding: 5px 20px; 
+    font-size: 1.1rem; 
+    padding: 6px 22px; 
     border-radius: 30px; 
     cursor: pointer; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -318,12 +319,25 @@ body {
     display: block;
 }
 
+.recipe-info-block {
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.recipe-info-block h4 {
+    color: var(--prime-color5);
+    font-weight: 700;
+}
+
 /* ==========================================================================
    8. RECIPE CARD - RIGHT PANELS (Interactive Tab Infrastructure)
    ========================================================================== */
 
 .recipe-pane-right {
-    padding: 0.85rem;
+    padding: 2rem; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
@@ -333,11 +347,11 @@ body {
 /* Segmented Custom Controls (Process Navigation Pills) */
 .process-tabs {
     background-color: color-mix(in srgb, var(--prime-color2) 30%, transparent);
-    padding: 1px;
+    padding: 2px;
     border-radius: 30px;
     border: 1px solid var(--border-color);
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     display: flex;
     flex-wrap: nowrap;
 }
@@ -350,9 +364,9 @@ body {
 .process-tabs .nav-link {
     color: var(--prime-color4);
     font-weight: 600;
-    font-size: 0.68rem;
+    font-size: 1rem; 
     border-radius: 30px;
-    padding: 5px 10px;
+    padding: 10px 15px;
     text-align: center;
     width: 100%;
     border: none;
@@ -365,8 +379,8 @@ body {
 }
 
 .recipe-info-scrollable {
-    margin-bottom: 0.5rem;
-    overflow: visible;
+    margin-bottom: 0.8rem;
+    overflow-y: auto; 
     flex-grow: 1; 
 }
 
@@ -375,68 +389,72 @@ body {
    ========================================================================== */
 
 .tab-section-title {
-    font-size: 0.68rem;
+    font-size: 1rem; 
     font-weight: 700;
     text-transform: uppercase;
     color: var(--violet);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 2px;
-    margin-bottom: 0.35rem;
+    padding-bottom: 6px;
+    margin-bottom: 1rem;
 }
 
 .recipe-meta-list li {
-    padding: 1px 0; 
-    font-size: 0.74rem; 
+    padding: 6px 0; 
+    font-size: 1.1rem; 
     color: var(--prime-color5);
 }
 
 .recipe-meta-list li i {
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     color: var(--prime-color3);
 }
 
 .recipe-description-card {
-    margin-top: 0.35rem;
-    padding: 0.35rem 0.5rem;
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
     background-color: color-mix(in srgb, var(--prime-color2) 20%, transparent);
     border: 1px solid var(--prime-color3);
-    border-radius: 0.3rem;
-    font-size: 0.72rem;
+    border-radius: 0.6rem;
+    font-size: 1rem; 
     color: var(--prime-color5);
-    line-height: 1.25;
+    line-height: 1.5;
 }
 
 .recipe-sub-title {
-    font-size: 0.72rem;
+    font-size: 1.1rem; 
     font-weight: 700;
-    margin-top: 0.25rem;
-    margin-bottom: 0.1rem;
-    color: var(--prime-color5); /* Tied to variable instead of #ffffff to match Light Mode adjustments */
+    margin-top: 0.6rem;
+    margin-bottom: 0.25rem;
+    color: var(--prime-color5); 
 }
 
 .ingredients-list, 
 .cooking-steps {
-    padding-left: 0;
+    padding-left: 2.1rem !important;
     list-style: none;
     margin: 0;
-    font-size: 0.74rem;
+    font-size: 1.1rem;
     color: var(--prime-color5);
 }
 
 .cooking-steps {
-    padding-left: 0.9rem;
+    padding-left: 1.1rem;
     list-style-type: decimal;
+    flex-grow: 1; 
+    overflow-y: auto; /* scrolling */
+    padding-right: 1rem;
 }
 
 .ingredients-list li, 
 .cooking-steps li {
-    padding: 1px 0;
+    padding: 6px 0; 
 }
 
 .recipe-text-block {
-    font-size: 0.74rem;
+    font-size: 1.1rem; 
     color: var(--prime-color5);
     margin: 0;
+    line-height: 1.4;
 }
 
 /* ==========================================================================
@@ -448,21 +466,21 @@ body {
     align-items: center;
     justify-content: space-between;
     border-top: 1px solid var(--border-color);
-    padding-top: 0.4rem;
+    padding-top: 0.6rem;
     margin-top: auto;
     color: var(--prime-color5);
 }
 
 .footer-label {
-    font-size: 0.68rem;
+    font-size: 1.1rem; 
     font-weight: 700;
     color: var(--prime-color5);
 }
 
 .smiley-flex {
     display: flex;
-    gap: 0.35rem;
-    font-size: 0.95rem;
+    gap: 0.5rem;
+    font-size: 1.15rem;
 }
 
 .smiley-flex i {
@@ -491,6 +509,7 @@ body {
 .smiley-group i.active {
     color: #ffffff;
 }
+
 /* ==========================================================================
    PORTIONS SELECTOR COMPONENTS
    ========================================================================== */
@@ -513,24 +532,105 @@ body {
     color: var(--prime-color4);
 }
 
-
 .text-hover-light {
     transition: color 0.15s ease-in-out;
 }
-
 
 .text-hover-light:hover .bi {
     color: var(--prime-color5) !important;
     cursor: pointer;
 }
 
-
 .text-hover-light:active .bi {
     transform: scale(0.9);
 }
 
-
 .select-none {
     user-select: none;
     -webkit-user-select: none;
+}
+
+/* ==========================================================================
+   FLOATING ACTION BUTTONS ON IMAGE (Fav, Shopping List, Timer)
+   ========================================================================== */
+
+/* Container for positioning the actions on the right side of the photo area */
+.recipe-image-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 3;
+}
+
+/* Base style for the round floating buttons */
+.action-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.9); /* Default light aesthetic */
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Custom individual styles matching your layout accents */
+.btn-favorite {
+    color: #dc322f; /* Red heart */
+}
+
+.btn-shopping {
+    color: #b58900; /* Yellow cart */
+}
+
+.btn-timer {
+    color: #2aa198; /* Cyan clock */
+}
+
+/* ==========================================================================
+   12. MOBILE RESPONSIVE ADAPTATION (Image Top, Content Bottom)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* 1. Remove strict viewport height limits from wrapper to allow vertical layout scrolling */
+    .recipe-container-wrapper {
+        height: auto;
+        padding: 1rem; /* Scale down large spacing for mobile screens */
+    }
+
+    /* 2. Switch from a two-column desktop grid (50% 50%) to a single vertical stack layout */
+    .recipe-card-layout {
+        grid-template-columns: 1fr; 
+        max-height: none; /* Strip max-height restrictions so the card expands naturally downward */
+        height: auto;
+    }
+
+    /* 3. Assign a fixed height boundary to the photo container so it does not scale infinitely */
+    .recipe-pane-left {
+        height: 300px; /* Adjust mobile image presentation height as desired */
+        border-right: none;
+        border-bottom: 1px solid var(--border-color); /* Transfer border separation line to the bottom border */
+    }
+
+    /* 4. Text and info panel inherits fluid auto-height matching the global mobile viewport flow */
+    .recipe-pane-right {
+        height: auto;
+        padding: 1.5rem; /* Compact container paddings for clean mobile structure */
+    }
+
+    /* 5. Disable dedicated panel overflow scrolling as entire document now handles layout scroll */
+    .recipe-info-scrollable {
+        overflow-y: visible; 
+    }
 }
