@@ -1,0 +1,1082 @@
+<title>CookWise – Code-Walkthrough</title>
+<style>
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --cream: #1c1712;
+      --paper: #241d17;
+      --ink: #f1e6d8;
+      --ink-soft: #c7b6a4;
+      --terracotta: #e0885a;
+      --terracotta-dark: #f0a578;
+      --sage: #9dbf88;
+      --sage-soft: #253023;
+      --line: #3a2f26;
+      --code-bg: #14100c;
+      --code-ink: #f3e9de;
+      --code-accent: #e5a273;
+      --shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root {
+    --cream: #fbf5ee;
+    --paper: #ffffff;
+    --ink: #2c221b;
+    --ink-soft: #6b5d52;
+    --terracotta: #b4552f;
+    --terracotta-dark: #8a3f21;
+    --sage: #4f6b41;
+    --sage-soft: #eaf0e4;
+    --line: #e7dccd;
+    --code-bg: #221b16;
+    --code-ink: #f3e9de;
+    --code-accent: #e2a074;
+    --shadow: 0 8px 24px rgba(90, 60, 40, 0.12);
+  }
+
+  :root[data-theme="dark"] {
+    --cream: #1c1712;
+    --paper: #241d17;
+    --ink: #f1e6d8;
+    --ink-soft: #c7b6a4;
+    --terracotta: #e0885a;
+    --terracotta-dark: #f0a578;
+    --sage: #9dbf88;
+    --sage-soft: #253023;
+    --line: #3a2f26;
+    --code-bg: #14100c;
+    --code-ink: #f3e9de;
+    --code-accent: #e5a273;
+    --shadow: 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  :root[data-theme="light"] {
+    --cream: #fbf5ee;
+    --paper: #ffffff;
+    --ink: #2c221b;
+    --ink-soft: #6b5d52;
+    --terracotta: #b4552f;
+    --terracotta-dark: #8a3f21;
+    --sage: #4f6b41;
+    --sage-soft: #eaf0e4;
+    --line: #e7dccd;
+    --code-bg: #221b16;
+    --code-ink: #f3e9de;
+    --code-accent: #e2a074;
+    --shadow: 0 8px 24px rgba(90, 60, 40, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 {
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", serif;
+    color: var(--ink);
+    text-wrap: balance;
+    margin: 0 0 0.4em;
+  }
+
+  h1 { font-size: clamp(2.1rem, 4vw, 3rem); font-weight: 600; }
+  h2 { font-size: clamp(1.4rem, 2.6vw, 1.9rem); font-weight: 600; }
+  h3 { font-size: 1.15rem; font-weight: 600; color: var(--terracotta-dark); }
+
+  p { max-width: 66ch; }
+
+  a { color: var(--terracotta-dark); }
+
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 700;
+    margin-bottom: 0.6em;
+  }
+
+  /* ---------- Layout ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.25rem 6rem;
+  }
+
+  @media (min-width: 900px) {
+    .layout {
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 3rem;
+      padding: 0 2rem 6rem;
+    }
+  }
+
+  nav.toc {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+
+  @media (min-width: 900px) {
+    nav.toc {
+      position: sticky;
+      top: 1.5rem;
+      align-self: start;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      padding: 1.1rem 0.9rem;
+      margin-top: 5.5rem;
+    }
+  }
+
+  @media (max-width: 899px) {
+    nav.toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 0.6rem 0.8rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    nav.toc ul { display: inline-flex; gap: 0.4rem; }
+    nav.toc li { display: inline-block; }
+  }
+
+  nav.toc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+  nav.toc a {
+    display: block;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+  nav.toc a:hover { background: var(--sage-soft); color: var(--sage); }
+
+  main { min-width: 0; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 3.5rem 0 2.5rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 2.5rem;
+  }
+  .hero .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Iowan Old Style", Palatino, serif;
+    font-weight: 700;
+    color: var(--terracotta);
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+  }
+  .hero .version {
+    display: inline-block;
+    margin-left: 0.6rem;
+    padding: 0.1rem 0.55rem;
+    border-radius: 999px;
+    background: var(--sage-soft);
+    color: var(--sage);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+  }
+  .hero p.lede { font-size: 1.1rem; color: var(--ink-soft); max-width: 62ch; }
+
+  /* ---------- Sections ---------- */
+  section {
+    padding-top: 3rem;
+    margin-top: -1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  section:first-of-type { border-top: none; }
+
+  section > p, section > .prose p { max-width: 66ch; }
+
+  /* ---------- Flow diagram ---------- */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin: 1.5rem 0 2rem;
+    overflow-x: auto;
+  }
+  .flow-step {
+    flex: 0 0 auto;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.85rem;
+    max-width: 11rem;
+    color: var(--ink);
+  }
+  .flow-step strong { display: block; color: var(--terracotta-dark); font-size: 0.8rem; }
+  .flow-arrow { color: var(--sage); font-size: 1.3rem; flex: 0 0 auto; }
+
+  /* ---------- Glossary (Vokabular) ---------- */
+  .glossary {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+  @media (min-width: 700px) { .glossary { grid-template-columns: 1fr 1fr; } }
+  .gterm {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    box-shadow: var(--shadow);
+    font-size: 0.88rem;
+  }
+  .gterm .term {
+    display: inline-block;
+    background: var(--sage-soft);
+    color: var(--sage);
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-family: "Cascadia Code", "Cascadia Mono", ui-monospace, Consolas, monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .gterm p { margin: 0.4rem 0 0; color: var(--ink-soft); max-width: none; }
+  .gterm code { font-size: 0.85em; }
+
+  /* ---------- Code block ---------- */
+  .code {
+    background: var(--code-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.2rem 0 1.8rem;
+    box-shadow: var(--shadow);
+  }
+  .code-tab {
+    background: rgba(255,255,255,0.06);
+    color: var(--code-accent);
+    font-family: "Cascadia Code", "Cascadia Mono", ui-monospace, Consolas, monospace;
+    font-size: 0.78rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .code pre {
+    margin: 0;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+  }
+  .code code {
+    font-family: "Cascadia Code", "Cascadia Mono", ui-monospace, Consolas, monospace;
+    font-size: 0.86rem;
+    color: var(--code-ink);
+    line-height: 1.55;
+    tab-size: 2;
+    white-space: pre;
+  }
+  .code .c { color: var(--code-accent); opacity: 0.75; } /* Kommentare */
+  .code .k { color: var(--code-accent); }                /* Schlüsselwörter */
+  .code .s { color: #c9d98a; }                            /* Strings */
+
+  /* ---------- Annotierter Code: Zeile/Chunk links, Erklärung rechts (bzw. darunter auf Mobil) ---------- */
+  .code .ann {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .code .ann:first-child { border-top: none; }
+  @media (min-width: 860px) {
+    .code .ann { grid-template-columns: minmax(0, 1fr) 260px; align-items: center; }
+  }
+  .code .ann-code { padding: 0.55rem 1.2rem; overflow-x: auto; }
+  .code .ann-code pre { margin: 0; padding: 0.1rem 0; overflow-x: visible; }
+  .code .ann-note {
+    padding: 0 1.2rem 0.7rem;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--code-accent);
+  }
+  .code .ann-note code {
+    font-family: "Cascadia Code", "Cascadia Mono", ui-monospace, Consolas, monospace;
+    font-size: 0.82em;
+    color: var(--code-ink);
+    background: rgba(255,255,255,0.08);
+    padding: 0.03rem 0.3rem;
+    border-radius: 3px;
+  }
+  @media (min-width: 860px) {
+    .code .ann-note {
+      padding: 0.6rem 1.1rem;
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+  }
+  .code .ann-note a { color: var(--code-accent); text-decoration: underline; }
+
+  /* ---------- Cards / grids ---------- */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+  }
+  @media (min-width: 700px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.1rem 1.3rem;
+    box-shadow: var(--shadow);
+  }
+  .card h3 { margin-top: 0; }
+
+  /* ---------- Formula box ---------- */
+  .formula {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    box-shadow: var(--shadow);
+    margin: 1.5rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    align-items: center;
+  }
+  .formula .num { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--terracotta); font-size: 1.3rem; }
+  .formula .line { font-size: 0.95rem; color: var(--ink-soft); }
+  .formula .result { font-size: 1.1rem; color: var(--sage); font-weight: 700; }
+
+  /* ---------- Merge diagram ---------- */
+  .merge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .merge-box {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow);
+  }
+  .merge-plus, .merge-arrow { color: var(--sage); font-size: 1.4rem; font-weight: 700; }
+  .merge-box.result { border-color: var(--sage); background: var(--sage-soft); font-weight: 600; }
+
+  /* ---------- Table ---------- */
+  .tablewrap { overflow-x: auto; margin: 1.5rem 0; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+
+  .pill {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill.done { background: var(--sage-soft); color: var(--sage); }
+  .pill.todo { background: rgba(180, 85, 47, 0.12); color: var(--terracotta-dark); }
+
+  /* ---------- File tree ---------- */
+  .tree {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    font-family: "Cascadia Code", "Cascadia Mono", ui-monospace, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+  .tree .dim { color: var(--ink-soft); }
+  .tree .hi { color: var(--terracotta-dark); font-weight: 600; }
+
+  footer.end {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+</style>
+
+<div class="layout">
+  <nav class="toc" aria-label="Inhaltsverzeichnis">
+    <ul>
+      <li><a href="#ueberblick">0 · Überblick</a></li>
+      <li><a href="#vokabular">1 · JS-Vokabular</a></li>
+      <li><a href="#struktur">2 · Projektstruktur</a></li>
+      <li><a href="#server">3 · Warum ein Server?</a></li>
+      <li><a href="#datenquelle">4 · Datenquelle & api.js</a></li>
+      <li><a href="#kacheln">5 · Kacheln bauen</a></li>
+      <li><a href="#rendern">6 · Rendern & leere Treffer</a></li>
+      <li><a href="#filter">7 · Filter & Suche</a></li>
+      <li><a href="#verlinkung">8 · Übersicht → Detail</a></li>
+      <li><a href="#portionen">9 · Portionsrechner</a></li>
+      <li><a href="#edgecase">10 · Zutaten ohne Menge</a></li>
+      <li><a href="#einkaufsliste-add">11 · Zur Liste hinzufügen</a></li>
+      <li><a href="#einkaufsliste-show">12 · Liste anzeigen & löschen</a></li>
+      <li><a href="#fehler">13 · Fehlerbehandlung</a></li>
+      <li><a href="#kriterien">14 · Kriterienkatalog-Abgleich</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <header class="hero" id="ueberblick">
+      <span class="brand">🍳 CookWise — Code-Walkthrough <span class="version">2.0</span></span>
+      <h1>Wie die Demo wirklich funktioniert</h1>
+      <p class="lede">Diese Seite begleitet die Live-Erklärung des Codes: jeder Abschnitt zeigt echten Code aus <code>Kochwebsite-Demo/</code> — keine vereinfachten Beispiele, sondern genau das, was im Projekt liegt. <strong>Neu in 2.0:</strong> die Code-Blöcke sind jetzt zeilenweise kommentiert — rechts daneben (auf Mobilgeräten darunter) steht in Klartext, was <code>response</code>, <code>=&gt;</code> & Co. jeweils bedeuten.</p>
+
+      <div class="flow" aria-label="Gesamtablauf der App">
+        <div class="flow-step"><strong>1. Seite öffnen</strong>index.html lädt Bootstrap + eigenes CSS</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>2. fetch()</strong>api.js holt die Rezepte von der API</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>3. Kacheln</strong>uebersicht.js baut Karten ins DOM</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>4. Klick</strong>Link mit ?id=… zu rezept.html</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>5. Detailseite</strong>rezept.js liest ID, zeigt Rezept</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>6. Portionen</strong>Menge live neu berechnet</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>7. Einkaufsliste</strong>localStorage speichert Zutaten</div>
+      </div>
+    </header>
+
+    <section id="vokabular">
+      <span class="eyebrow">1 · Nachschlagewerk</span>
+      <h2>JavaScript-Vokabular für diesen Code</h2>
+      <p>Diese Bausteine tauchen in fast jedem Code-Block wieder auf. Einmal hier nachlesen — die Annotationen in den folgenden Abschnitten verweisen darauf zurück, statt alles jedes Mal neu zu erklären.</p>
+      <div class="glossary">
+        <div class="gterm">
+          <span class="term">const</span> <span class="term">let</span>
+          <p>Variable, die man <strong>nicht</strong> (<code>const</code>) bzw. <strong>doch</strong> (<code>let</code>) später neu zuweisen kann.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">x =&gt; { … }</span>
+          <p>Arrow-Funktion — Kurzschreibweise für eine Funktion. <code>response =&gt; {…}</code> heißt: „eine Funktion, die einen Parameter namens <code>response</code> entgegennimmt“.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">fetch(url)</span>
+          <p>Schickt eine Anfrage los und liefert <strong>sofort</strong> ein <em>Promise</em> zurück — ein „Versprechen“ auf eine Antwort, die erst später ankommt.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">.then(fn)</span>
+          <p>„Wenn das Promise fertig ist, führe <code>fn</code> mit dem Ergebnis aus.“ Mehrere <code>.then()</code> lassen sich aneinanderhängen (Kette).</p>
+        </div>
+        <div class="gterm">
+          <span class="term">response.ok</span> <span class="term">.status</span>
+          <p><code>ok</code> ist true/false, ob die HTTP-Antwort ein Erfolg war (Status 200–299). <code>status</code> ist die genaue Zahl, z. B. <code>404</code>.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">response.json()</span>
+          <p>Wandelt den Antworttext in ein echtes JavaScript-Objekt um — liefert selbst wieder ein Promise, deshalb meist mit <code>return</code> in einem <code>.then()</code>.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">`Text ${variable}`</span>
+          <p>Template-String (Backticks): Text und Variablenwerte kombinieren, ohne <code>+</code>-Verkettung.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">.map .filter .find .some .forEach</span>
+          <p>Eingebaute Array-Methoden: verwandeln, aussieben, ersten Treffer suchen, „gibt's mindestens einen Treffer?“, „für jedes Element etwas tun“.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">?.</span> Optional Chaining
+          <p>„Greif nur zu, wenn links davon nicht <code>null</code>/<code>undefined</code> ist“ — sonst <code>undefined</code> statt Programmabsturz.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">??</span> Nullish Coalescing
+          <p>„Nimm den rechten Wert nur, wenn der linke <code>null</code> oder <code>undefined</code> ist.“</p>
+        </div>
+        <div class="gterm">
+          <span class="term">el.addEventListener("click", fn)</span>
+          <p>„Wenn X passiert (Klick, Eingabe, Änderung …), führe <code>fn</code> aus.“</p>
+        </div>
+        <div class="gterm">
+          <span class="term">JSON.parse()</span> <span class="term">JSON.stringify()</span>
+          <p>Text → JS-Objekt bzw. JS-Objekt → Text. Gebraucht, weil <code>localStorage</code> nur Text speichern kann.</p>
+        </div>
+        <div class="gterm">
+          <span class="term">a ? b : c</span> Ternärer Operator
+          <p>Kurzform für „wenn a, dann b, sonst c“ — als Ausdruck, der direkt einen Wert liefert (nicht als ganze <code>if</code>-Anweisung).</p>
+        </div>
+        <div class="gterm">
+          <span class="term">localStorage</span>
+          <p>Speicher im Browser, der Neuladen und sogar Schließen des Browsers übersteht.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="struktur">
+      <span class="eyebrow">2 · Projektstruktur</span>
+      <h2>Wo liegt was</h2>
+      <p>HTML, CSS und JavaScript sind sauber getrennt; die Daten liegen separat unter <code>data/</code>.</p>
+      <div class="tree">
+<div>Kochwebsite-Demo/</div>
+<div>├── <span class="hi">index.html</span> <span class="dim">— Übersicht mit Kacheln, Filter, Suche</span></div>
+<div>├── <span class="hi">rezept.html</span> <span class="dim">— Detailseite mit Portionsrechner</span></div>
+<div>├── <span class="hi">einkaufsliste.html</span> <span class="dim">— Einkaufsliste (localStorage)</span></div>
+<div>├── css/style.css <span class="dim">— eigenes Styling über Bootstrap</span></div>
+<div>├── js/</div>
+<div>│&nbsp;&nbsp;&nbsp;├── <span class="hi">api.js</span> <span class="dim">— einzige Stelle mit fetch()</span></div>
+<div>│&nbsp;&nbsp;&nbsp;├── uebersicht.js</div>
+<div>│&nbsp;&nbsp;&nbsp;├── rezept.js</div>
+<div>│&nbsp;&nbsp;&nbsp;└── einkaufsliste.js</div>
+<div>├── data/recipes.json <span class="dim">— 150 Rezepte, Offline-Fallback (aktuell ungenutzt)</span></div>
+<div>├── data/images/ <span class="dim">— zugehörige Bilder, Offline-Fallback</span></div>
+<div>└── start-server.ps1 <span class="dim">— lokaler Webserver ohne Zusatz-Tools</span></div>
+      </div>
+    </section>
+
+    <section id="server">
+      <span class="eyebrow">3 · Vorher kurz geklärt</span>
+      <h2>Warum überhaupt ein Server?</h2>
+      <p><code>fetch()</code> auf eine lokale Datei (<code>file://…</code>) blockiert Chrome/Edge per CORS. Deshalb liegt <code>start-server.ps1</code> bei — ein kleiner Webserver ganz ohne Node/Python, gebaut mit <code>System.Net.HttpListener</code>. Er liefert die Dateien über <code>http://localhost:5500</code> aus, dort funktioniert <code>fetch()</code> normal.</p>
+    </section>
+
+    <section id="datenquelle">
+      <span class="eyebrow">4 · Die Datenquelle</span>
+      <h2><code>api.js</code> — die einzige Stelle, die die URL kennt</h2>
+      <p>Weder die Übersicht noch die Detailseite rufen <code>fetch()</code> direkt auf. Beide nutzen zwei Funktionen aus <code>api.js</code>. Dahinter steckt die echte API unter <code>recipes.digitalhumanities.io</code> — mit zwei Eigenheiten, auf die der Code eingeht.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>① Paginierung</h3>
+          <p style="margin:0;">Die Liste kommt seitenweise (20 Rezepte pro Seite, Feld <code>next</code> zeigt auf die nächste). Für 150 Rezepte braucht es also mehrere Anfragen, nicht eine.</p>
+        </div>
+        <div class="card">
+          <h3>② Liste ≠ Detail</h3>
+          <p style="margin:0;">Die Listen-Antwort enthält <em>keine</em> Zutaten/Schritte, nur Kurzinfos. Die gibt es erst über <code>.../rezepte/&lt;id&gt;/</code> — ein Grund mehr, den fetch-Aufruf zu kapseln.</p>
+        </div>
+      </div>
+
+      <div class="code">
+        <div class="code-tab">js/api.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">const</span> API_URL = <span class="s">"https://recipes.digitalhumanities.io/api/rezepte/"</span>;</code></pre></div>
+          <div class="ann-note">Konstante mit der Basis-Adresse — die <strong>einzige</strong> Stelle im ganzen Projekt, die diese URL kennt.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="c">// Alle Seiten nacheinander laden und zu einem Array zusammenfügen</span>
+<span class="k">function</span> ladeAlleRezepte() {
+  <span class="k">return</span> ladeSeite(API_URL, []);
+}</code></pre></div>
+          <div class="ann-note">Startet die Sammlung: ruft <code>ladeSeite()</code> mit der Basis-URL und einem leeren Array auf — „bisher gesammelt: nichts“.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">function</span> ladeSeite(url, bisherGesammelt) {</code></pre></div>
+          <div class="ann-note">Zwei Parameter: welche Seite gerade geladen wird (<code>url</code>) und was bisher an Rezepten gesammelt wurde.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  <span class="k">return</span> fetch(url)
+    .then(response => {
+      <span class="k">if</span> (!response.ok) {
+        <span class="k">throw new</span> Error(<span class="s">"Server antwortet mit Status "</span> + response.status);
+      }
+      <span class="k">return</span> response.json();
+    })</code></pre></div>
+          <div class="ann-note"><code>fetch(url)</code> schickt die Anfrage los. <code>response =&gt; {…}</code> läuft, sobald die Antwort da ist (<a href="#vokabular">siehe Vokabular</a>). <code>!response.ok</code> prüft auf Server-Fehler und <code>throw</code> „wirft“ dann einen Fehler, der später im <code>.catch()</code> ankommt. <code>response.json()</code> macht aus dem Antworttext ein JS-Objekt.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    .then(seite => {
+      <span class="k">const</span> alleBisher = bisherGesammelt.concat(seite.results);
+      <span class="k">return</span> seite.next ? ladeSeite(seite.next, alleBisher) : alleBisher;
+    });
+}</code></pre></div>
+          <div class="ann-note"><code>seite</code> ist jetzt <code>{count, next, results, …}</code>. <code>.concat()</code> hängt die neuen Ergebnisse ans bisherige Array. <code>seite.next ? A : B</code> heißt: gibt es eine nächste Seite, ruft sich die Funktion selbst nochmal auf — sonst ist <code>alleBisher</code> das fertige Ergebnis.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="c">// Für ein einzelnes Rezept gezielt den Detail-Endpunkt abrufen (mit Zutaten/Schritten)</span>
+<span class="k">function</span> ladeRezeptNachId(id) {
+  <span class="k">return</span> fetch(API_URL + id + <span class="s">"/"</span>).then(response => {</code></pre></div>
+          <div class="ann-note">Für die Detailseite reicht <strong>ein</strong> gezielter <code>fetch()</code> direkt auf <code>.../rezepte/&lt;id&gt;/</code> — kein Sammeln nötig.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    <span class="k">if</span> (response.status === 404) {
+      <span class="k">return null</span>; <span class="c">// kein Rezept mit dieser ID vorhanden</span>
+    }</code></pre></div>
+          <div class="ann-note">404 heißt „nicht gefunden“. Statt eines Fehlers wird bewusst <code>null</code> zurückgegeben, damit <code>rezept.js</code> sauber „kein Rezept gefunden“ anzeigen kann, statt abzustürzen.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    <span class="k">if</span> (!response.ok) {
+      <span class="k">throw new</span> Error(<span class="s">"Server antwortet mit Status "</span> + response.status);
+    }
+    <span class="k">return</span> response.json();
+  });
+}</code></pre></div>
+          <div class="ann-note">Alle anderen Fehler (Server down, Timeout …) landen weiter im <code>.catch()</code> der aufrufenden Seite.</div>
+        </div>
+      </div>
+
+      <p>Beide Funktionen behalten nach außen dieselbe „Signatur“ wie zuvor (<code>ladeAlleRezepte()</code> liefert ein Array, <code>ladeRezeptNachId(id)</code> ein Rezept oder <code>null</code>) — <code>uebersicht.js</code> und <code>rezept.js</code> mussten deshalb kaum angefasst werden.</p>
+      <p>Ein einzelnes Rezept vom Detail-Endpunkt sieht so aus (gekürzt):</p>
+      <div class="code">
+        <div class="code-tab">.../api/rezepte/53276/ (Ausschnitt)</div>
+        <pre><code>{
+  <span class="s">"id"</span>: <span class="s">"53276"</span>,
+  <span class="s">"titel"</span>: <span class="s">"Aprikosen-Turkish-Delight-Dessert"</span>,
+  <span class="s">"bild_url"</span>: <span class="s">"https://recipes.digitalhumanities.io/media/images/53276_….jpg"</span>,
+  <span class="s">"kategorie"</span>: <span class="s">"Dessert"</span>,
+  <span class="s">"kueche"</span>: <span class="s">"türkisch"</span>,
+  <span class="s">"portionen"</span>: 2,
+  <span class="s">"zutaten"</span>: [ { <span class="s">"name"</span>: <span class="s">"Mascarpone"</span>, <span class="s">"menge"</span>: 100, <span class="s">"einheit"</span>: <span class="s">"gr."</span> }, <span class="c">/* … */</span> ],
+  <span class="s">"schritte"</span>: { <span class="s">"vorbereitung"</span>: [ <span class="c">/* … */</span> ], <span class="s">"zubereitung"</span>: [ <span class="c">/* … */</span> ] }
+}</code></pre>
+      </div>
+      <p>Fast identisch zum ursprünglichen Platzhalter-JSON — nur <code>bild</code> heißt jetzt <code>bild_url</code> und ist bereits eine komplette Adresse statt eines relativen Pfads.</p>
+    </section>
+
+    <section id="kacheln">
+      <span class="eyebrow">5 · Übersichtsseite</span>
+      <h2>Aus JSON werden Kacheln</h2>
+      <p><code>uebersicht.js</code> ruft beim Laden <code>ladeAlleRezepte()</code> auf. Kommt die Antwort an, wird für jedes Rezept eine Bootstrap-Karte gebaut und in <code>#rezept-liste</code> eingehängt.</p>
+
+      <div class="code">
+        <div class="code-tab">js/uebersicht.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>ladeAlleRezepte()
+  .then(data => {
+    alleRezepte = data;
+    fuelleFilterOptionen(alleRezepte);
+    rezepteAnzeigen(alleRezepte);
+  })</code></pre></div>
+          <div class="ann-note"><code>ladeAlleRezepte()</code> liefert ein Promise. <code>data =&gt; {…}</code> läuft, sobald die Rezepte da sind — <code>data</code> ist dann das fertige Array. Es landet in der globalen Variable <code>alleRezepte</code> (für Filter/Suche später) und wird direkt angezeigt.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  .catch(error => {
+    console.error(<span class="s">"Fehler beim Laden der Rezepte:"</span>, error);
+    statusElement.textContent = <span class="s">"Die Rezepte konnten nicht geladen werden. Bitte später erneut versuchen."</span>;
+  });</code></pre></div>
+          <div class="ann-note">Nur <strong>ein</strong> <code>.catch()</code> für die ganze Kette: fängt jeden Fehler ab, egal ob er in <code>fetch()</code>, <code>response.json()</code> oder in <code>api.js</code> passiert ist.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="c">// Baut aus einem Rezept-Objekt eine Bootstrap-Card ("Kachel")</span>
+<span class="k">function</span> erzeugeKachel(rezept) {
+  <span class="k">const</span> spalte = document.createElement(<span class="s">"div"</span>);
+  spalte.className = <span class="s">"col"</span>;</code></pre></div>
+          <div class="ann-note"><code>document.createElement("div")</code> baut ein neues, noch unsichtbares HTML-Element im Speicher. <code>className</code> gibt ihm eine CSS-Klasse.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  spalte.innerHTML = <span class="s">`
+    &lt;a href="rezept.html?id=${rezept.id}" class="text-decoration-none"&gt;
+      &lt;div class="card recipe-card"&gt;
+        &lt;img src="${rezept.bild_url ?? "data/" + rezept.bild}" class="card-img-top" alt="${rezept.titel}"&gt;
+        &lt;div class="card-body"&gt;
+          &lt;span class="badge badge-kategorie mb-2"&gt;${rezept.kategorie}&lt;/span&gt;
+          &lt;h5 class="card-title"&gt;${rezept.titel}&lt;/h5&gt;
+          &lt;p class="card-text text-muted"&gt;${rezept.kurzbeschreibung}&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/a&gt;
+  `</span>;</code></pre></div>
+          <div class="ann-note">Template-String über mehrere Zeilen (Backticks): <code>${rezept.id}</code>, <code>${rezept.titel}</code> … werden durch die echten Werte ersetzt. <code>innerHTML</code> setzt diesen fertigen HTML-Text als Inhalt des Elements.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  <span class="k">return</span> spalte;
+}</code></pre></div>
+          <div class="ann-note">Gibt das fertige Karten-Element zurück, das anschließend ins DOM eingehängt wird.</div>
+        </div>
+      </div>
+      <p><code>rezept.id</code> landet automatisch im Link (<code>?id=${rezept.id}</code>) — niemand trägt IDs von Hand ein, das erfüllt genau das Kriterium „Navigation Übersicht → Detail funktioniert dynamisch“.</p>
+    </section>
+
+    <section id="rendern">
+      <span class="eyebrow">6 · Rendern</span>
+      <h2>Anzeigen — und der leere Fall</h2>
+      <p><code>rezepteAnzeigen()</code> leert zuerst die Liste, zeigt dann entweder die Kacheln oder eine Meldung, wenn nichts passt.</p>
+
+      <div class="code">
+        <div class="code-tab">js/uebersicht.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">function</span> rezepteAnzeigen(rezepte) {
+  listeElement.innerHTML = <span class="s">""</span>;</code></pre></div>
+          <div class="ann-note">Leert zuerst die bisherige Liste — sonst würden sich alte und neue Kacheln bei jedem Filterdurchlauf vermischen.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  <span class="k">if</span> (rezepte.length === 0) {
+    statusElement.textContent = <span class="s">"Keine Rezepte gefunden. Filter anpassen und erneut versuchen."</span>;
+    <span class="k">return</span>;
+  }</code></pre></div>
+          <div class="ann-note"><code>return</code> ohne Wert beendet die Funktion sofort — der Code danach (die Kacheln bauen) wird dann übersprungen.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  statusElement.textContent = <span class="s">""</span>;
+  rezepte.forEach(rezept => {
+    listeElement.appendChild(erzeugeKachel(rezept));
+  });
+}</code></pre></div>
+          <div class="ann-note"><code>.forEach()</code> ruft die Funktion für jedes Element im Array auf, ohne (anders als <code>.map()</code>) ein neues Array zu erzeugen. <code>appendChild</code> hängt ein Element tatsächlich sichtbar ins DOM.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="filter">
+      <span class="eyebrow">7 · Interaktion</span>
+      <h2>Filter & Suche — ohne Neuladen</h2>
+      <p>Alle Rezepte liegen bereits im Speicher (<code>alleRezepte</code>). Filter und Suche laufen deshalb komplett im Browser, mit <code>.filter()</code> auf drei Bedingungen gleichzeitig.</p>
+
+      <div class="code">
+        <div class="code-tab">js/uebersicht.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">function</span> filternUndAnzeigen() {
+  <span class="k">const</span> kategorie = filterKategorie.value;
+  <span class="k">const</span> kueche = filterKueche.value;
+  <span class="k">const</span> suchbegriff = filterSuche.value.trim().toLowerCase();</code></pre></div>
+          <div class="ann-note">Liest die aktuellen Werte der drei Formularfelder aus. <code>.trim()</code> entfernt Leerzeichen am Rand, <code>.toLowerCase()</code> macht Groß-/Kleinschreibung egal.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  <span class="k">const</span> gefiltert = alleRezepte.filter(rezept => {
+    <span class="k">const</span> passtKategorie = !kategorie || rezept.kategorie === kategorie;
+    <span class="k">const</span> passtKueche = !kueche || rezept.kueche === kueche;</code></pre></div>
+          <div class="ann-note"><code>.filter()</code> erzeugt ein <strong>neues</strong> Array mit nur den Elementen, für die die Funktion <code>true</code> zurückgibt — <code>alleRezepte</code> selbst bleibt unverändert. <code>!kategorie</code> ist true, wenn nichts ausgewählt ist („Alle Kategorien“) — dann passt automatisch alles.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    <span class="c">// rezept.zutaten gibt es in der Übersicht nicht (nur auf der Detailseite) -
+    // "?." verhindert einen Absturz und lässt die Titelsuche trotzdem funktionieren</span>
+    <span class="k">const</span> passtSuche =
+      !suchbegriff ||
+      rezept.titel.toLowerCase().includes(suchbegriff) ||
+      (rezept.zutaten?.some(zutat => zutat.name.toLowerCase().includes(suchbegriff)) ?? <span class="k">false</span>);
+
+    <span class="k">return</span> passtKategorie && passtKueche && passtSuche;
+  });</code></pre></div>
+          <div class="ann-note"><code>?.</code> (<a href="#vokabular">Optional Chaining</a>) verhindert einen Absturz, wenn <code>zutaten</code> gar nicht existiert. <code>?? false</code> sorgt dafür, dass am Ende garantiert <code>true</code>/<code>false</code> rauskommt, nie <code>undefined</code>.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  rezepteAnzeigen(gefiltert);
+}</code></pre></div>
+          <div class="ann-note">Zeigt nur die gefilterte Teilmenge an — die Originaldaten in <code>alleRezepte</code> bleiben für den nächsten Filterdurchlauf erhalten.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>filterKategorie.addEventListener(<span class="s">"change"</span>, filternUndAnzeigen);
+filterKueche.addEventListener(<span class="s">"change"</span>, filternUndAnzeigen);
+filterSuche.addEventListener(<span class="s">"input"</span>, filternUndAnzeigen);</code></pre></div>
+          <div class="ann-note"><code>change</code> feuert bei Dropdowns nach der Auswahl, <code>input</code> bei <strong>jedem</strong> Tastendruck im Suchfeld — deshalb reagiert die Suche sofort beim Tippen, ganz ohne Absenden-Button.</div>
+        </div>
+      </div>
+      <p>Die Zutatensuche (<code>rezept.zutaten?.some(...)</code>) würde bei der echten API in der Übersicht nie greifen, weil <code>zutaten</code> dort schlicht fehlt — <code>?.</code> sorgt dafür, dass daraus kein Fehler wird, sondern die Suche einfach nur auf dem Titel weiterläuft. Mit den lokalen Testdaten (die <code>zutaten</code> überall mitliefern) funktioniert die Zutatensuche weiterhin.</p>
+    </section>
+
+    <section id="verlinkung">
+      <span class="eyebrow">8 · Übergang</span>
+      <h2>Übersicht → Detail: die ID in der URL</h2>
+      <p>Der Link auf jeder Kachel zeigt auf <code>rezept.html?id=53276</code>. Die Detailseite liest genau diesen Query-Parameter mit der eingebauten <code>URLSearchParams</code>-API aus — kein manuelles String-Zerschneiden nötig.</p>
+
+      <div class="code">
+        <div class="code-tab">js/rezept.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">const</span> params = <span class="k">new</span> URLSearchParams(window.location.search);
+<span class="k">const</span> rezeptId = params.get(<span class="s">"id"</span>);</code></pre></div>
+          <div class="ann-note"><code>window.location.search</code> ist der Teil der URL ab dem <code>?</code>. <code>URLSearchParams</code> macht daraus ein Objekt, aus dem sich einzelne Parameter mit <code>.get("id")</code> auslesen lassen.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">if</span> (!rezeptId) {
+  statusElement.textContent = <span class="s">"Keine Rezept-ID angegeben. Bitte über die Übersicht ein Rezept auswählen."</span>;
+} <span class="k">else</span> {</code></pre></div>
+          <div class="ann-note">Ohne ID in der URL wird gar nicht erst versucht, etwas zu laden — direkt die Fehlermeldung.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  ladeRezeptNachId(rezeptId)
+    .then(rezept => {
+      aktuellesRezept = rezept;
+      <span class="k">if</span> (!aktuellesRezept) {
+        statusElement.textContent = <span class="s">"Kein Rezept mit dieser ID gefunden."</span>;
+        <span class="k">return</span>;
+      }
+      aktuellePortionen = aktuellesRezept.portionen;
+      rezeptAnzeigen(aktuellesRezept);
+      inhaltElement.classList.remove(<span class="s">"d-none"</span>);
+    });
+}</code></pre></div>
+          <div class="ann-note"><code>rezept</code> ist entweder das gefundene Objekt oder <code>null</code> (<a href="#datenquelle">siehe api.js</a>) — <code>if (!aktuellesRezept)</code> fängt beide „nichts gefunden“-Fälle gleich ab. <code>classList.remove("d-none")</code> blendet den vorbereiteten, bis dahin versteckten Inhalt ein.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="portionen">
+      <span class="eyebrow">9 · Herzstück der Detailseite</span>
+      <h2>Portionsrechner: Faktor statt Tabelle</h2>
+      <p>Es wird keine Mengen-Tabelle für jede Portionszahl gespeichert. Stattdessen: <strong>ein</strong> Faktor, mit dem jede Zutatenmenge live neu berechnet wird.</p>
+
+      <div class="formula">
+        <span class="line">Faktor</span>
+        <span class="num">=</span>
+        <span class="line">gewählte Portionen ÷ Grundportionen</span>
+        <span class="num">=</span>
+        <span class="line">4 ÷ 2</span>
+        <span class="result">= 2</span>
+        <span class="line" style="flex-basis:100%; margin-top:0.4rem;">Neue Menge = alte Menge × Faktor → 200 g Mehl × 2 = <strong>400 g</strong></span>
+      </div>
+
+      <div class="code">
+        <div class="code-tab">js/rezept.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">function</span> zutatenAnzeigen() {
+  <span class="k">const</span> faktor = aktuellePortionen / aktuellesRezept.portionen;
+  <span class="k">const</span> liste = document.getElementById(<span class="s">"zutaten-liste"</span>);
+  liste.innerHTML = <span class="s">""</span>;</code></pre></div>
+          <div class="ann-note">Reine Division zweier Zahlen — der ganze „Portionsrechner“ ist eigentlich nur diese eine Zeile.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  aktuellesRezept.zutaten.forEach(zutat => {
+    <span class="k">const</span> li = document.createElement(<span class="s">"li"</span>);
+    li.className = <span class="s">"list-group-item"</span>;
+    <span class="k">const</span> neueMenge = rundeMenge(zutat.menge * faktor);
+    li.innerHTML = <span class="s">`&lt;span&gt;${zutat.name}&lt;/span&gt;&lt;span&gt;${neueMenge} ${zutat.einheit}&lt;/span&gt;`</span>;
+    liste.appendChild(li);
+  });</code></pre></div>
+          <div class="ann-note">Für jede Zutat wird ein neues <code>&lt;li&gt;</code> gebaut, die Menge mit dem Faktor multipliziert und direkt eingehängt — deshalb erscheint die neue Menge sofort, ganz ohne Neuladen.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  document.getElementById(<span class="s">"portionen-anzahl"</span>).textContent = aktuellePortionen;
+}</code></pre></div>
+          <div class="ann-note"><code>textContent</code> ändert nur den Text eines Elements, ohne die ganze Seite neu zu laden.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>document.getElementById(<span class="s">"portionen-plus"</span>).addEventListener(<span class="s">"click"</span>, () => {
+  aktuellePortionen++;
+  zutatenAnzeigen(); <span class="c">// kein Neuladen — nur die Liste wird neu gebaut</span>
+});</code></pre></div>
+          <div class="ann-note"><code>() =&gt; {…}</code> ist eine Arrow-Funktion <strong>ohne</strong> Parameter (leere Klammern) — läuft bei jedem Klick auf den Plus-Button erneut.</div>
+        </div>
+      </div>
+      <p>Genau das erfüllt zwei Kriterien auf einmal: „Portionsanpassung mit Faktorberechnung“ und „Zutatenanzeige aktualisiert sich ohne Neuladen“.</p>
+    </section>
+
+    <section id="edgecase">
+      <span class="eyebrow">10 · Ein guter Lehrmoment</span>
+      <h2>Nicht jede Zutat hat eine feste Menge</h2>
+      <p>Echte Rezeptdaten sind unordentlich: „Salz, nach Geschmack“ hat keine sinnvolle Zahl. In <code>recipes.json</code> ist <code>menge</code> dann <code>null</code>, der Freitext steckt in <code>hinweis</code>. Ohne Abfangen würde <code>zutat.menge * faktor</code> zu <code>NaN</code> führen.</p>
+
+      <div class="code">
+        <div class="code-tab">js/rezept.js</div>
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">if</span> (zutat.menge === <span class="k">null</span>) {
+  <span class="c">// Zutaten ohne feste Menge (z. B. "nach Geschmack") werden nicht skaliert</span>
+  li.innerHTML = <span class="s">`&lt;span&gt;${zutat.name}&lt;/span&gt;&lt;span class="text-muted"&gt;${zutat.hinweis ?? ""}&lt;/span&gt;`</span>;
+} <span class="k">else</span> {
+  <span class="k">const</span> neueMenge = rundeMenge(zutat.menge * faktor);
+  li.innerHTML = <span class="s">`&lt;span&gt;${zutat.name}&lt;/span&gt;&lt;span&gt;${neueMenge} ${zutat.einheit}&lt;/span&gt;`</span>;
+}</code></pre></div>
+          <div class="ann-note"><code>=== null</code> prüft exakt auf den Wert <code>null</code> (statt <code>==</code>, um Verwechslungen mit <code>0</code> oder leerem Text zu vermeiden). <code>?? ""</code> liefert einen leeren Text, falls sogar <code>hinweis</code> fehlt.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="einkaufsliste-add">
+      <span class="eyebrow">11 · Zutaten sammeln</span>
+      <h2>Von der Detailseite in den Browser-Speicher</h2>
+      <p>Der Button „Zutaten zur Einkaufsliste hinzufügen“ schreibt die <em>aktuell skalierten</em> Mengen nach <code>localStorage</code>. Kommt dieselbe Zutat (gleicher Name + gleiche Einheit) schon vor, werden die Mengen addiert statt dupliziert:</p>
+
+      <div class="merge">
+        <div class="merge-box">Rezept A<br>200 g Mehl</div>
+        <span class="merge-plus">+</span>
+        <div class="merge-box">Rezept B<br>150 g Mehl</div>
+        <span class="merge-arrow">→</span>
+        <div class="merge-box result">Einkaufsliste<br>350 g Mehl</div>
+      </div>
+
+      <div class="code">
+        <div class="code-tab">js/rezept.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>document.getElementById(<span class="s">"btn-zur-einkaufsliste"</span>).addEventListener(<span class="s">"click"</span>, () => {
+  <span class="k">const</span> faktor = aktuellePortionen / aktuellesRezept.portionen;
+  <span class="k">const</span> vorhandeneListe = JSON.parse(localStorage.getItem(<span class="s">"einkaufsliste"</span>)) || [];</code></pre></div>
+          <div class="ann-note"><code>localStorage.getItem()</code> liefert Text (oder <code>null</code>, wenn noch nichts gespeichert wurde). <code>JSON.parse()</code> macht daraus wieder ein JS-Array. <code>|| []</code> fängt den Fall „noch nichts gespeichert“ ab.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  aktuellesRezept.zutaten.forEach(zutat => {
+    <span class="k">const</span> neuerEintrag = {
+      name: zutat.name,
+      menge: zutat.menge !== <span class="k">null</span> ? rundeMenge(zutat.menge * faktor) : <span class="k">null</span>,
+      einheit: zutat.einheit,
+      rezeptTitel: aktuellesRezept.titel
+    };</code></pre></div>
+          <div class="ann-note">Für jede Zutat wird ein einfaches Objekt gebaut — genau die Werte, die später in der Einkaufsliste angezeigt werden. Der Ternär (<code>? :</code>) skaliert nur, wenn wirklich eine Menge vorhanden ist.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    <span class="c">// Gleiche Zutat aus dem gleichen Rezept wird zusammengeführt statt dupliziert</span>
+    <span class="k">const</span> gleicheZutat = vorhandeneListe.find(eintrag =>
+      eintrag.name === neuerEintrag.name && eintrag.einheit === neuerEintrag.einheit
+    );</code></pre></div>
+          <div class="ann-note"><code>.find()</code> gibt das <strong>erste</strong> passende Element zurück (oder <code>undefined</code>, wenn keins passt) — anders als <code>.filter()</code>, das immer ein ganzes Array liefert.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    <span class="k">if</span> (gleicheZutat) {
+      gleicheZutat.menge = rundeMenge(gleicheZutat.menge + neuerEintrag.menge);
+    } <span class="k">else</span> {
+      vorhandeneListe.push(neuerEintrag);
+    }
+  });</code></pre></div>
+          <div class="ann-note"><code>.push()</code> hängt ein neues Element ans Ende eines Arrays an — nur wenn <em>kein</em> passender Eintrag gefunden wurde.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  localStorage.setItem(<span class="s">"einkaufsliste"</span>, JSON.stringify(vorhandeneListe));
+});</code></pre></div>
+          <div class="ann-note"><code>JSON.stringify()</code> macht aus dem JS-Array wieder Text — <code>localStorage</code> kann nämlich nur Text speichern, keine echten Objekte/Arrays.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="einkaufsliste-show">
+      <span class="eyebrow">12 · Einkaufsliste</span>
+      <h2>Anzeigen, bearbeiten, löschen — ganz ohne <code>fetch()</code></h2>
+      <p><code>einkaufsliste.html</code> braucht keine API: alle Daten kommen aus <code>localStorage</code>. Löschen funktioniert über den Index in der gespeicherten Liste.</p>
+
+      <div class="code">
+        <div class="code-tab">js/einkaufsliste.js</div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">function</span> listeAnzeigen() {
+  <span class="k">const</span> eintraege = JSON.parse(localStorage.getItem(<span class="s">"einkaufsliste"</span>)) || [];
+  listeElement.innerHTML = <span class="s">""</span>;
+
+  <span class="k">if</span> (eintraege.length === 0) {
+    statusElement.textContent = <span class="s">"Die Einkaufsliste ist noch leer. …"</span>;
+    <span class="k">return</span>;
+  }</code></pre></div>
+          <div class="ann-note">Gleiches Muster wie beim Speichern: Text aus <code>localStorage</code> lesen, mit <code>JSON.parse</code> zurück in ein Array verwandeln, <code>|| []</code> für den leeren Fall.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>  eintraege.forEach((eintrag, index) => {
+    <span class="k">const</span> li = document.createElement(<span class="s">"li"</span>);
+    li.innerHTML = <span class="s">`&lt;span&gt;${eintrag.name} – ${eintrag.menge} ${eintrag.einheit}&lt;/span&gt;
+      &lt;button&gt;Entfernen&lt;/button&gt;`</span>;</code></pre></div>
+          <div class="ann-note"><code>forEach((eintrag, index) =&gt; …)</code> kann neben dem Element auch den <strong>Index</strong> (die Position im Array, ab 0 gezählt) mitgeben — genau der Index, der gleich zum gezielten Löschen gebraucht wird.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>    li.querySelector(<span class="s">"button"</span>).addEventListener(<span class="s">"click"</span>, () => eintragEntfernen(index));
+    listeElement.appendChild(li);
+  });
+}</code></pre></div>
+          <div class="ann-note"><code>() =&gt; eintragEntfernen(index)</code> — kurze Arrow-Funktion ohne geschweifte Klammern. Wichtig: jeder Button „merkt“ sich seinen eigenen <code>index</code> (Closure) und weiß so, welchen Eintrag <em>er</em> löschen soll.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code><span class="k">function</span> eintragEntfernen(index) {
+  <span class="k">const</span> eintraege = JSON.parse(localStorage.getItem(<span class="s">"einkaufsliste"</span>)) || [];
+  eintraege.splice(index, 1);
+  localStorage.setItem(<span class="s">"einkaufsliste"</span>, JSON.stringify(eintraege));
+  listeAnzeigen();
+}</code></pre></div>
+          <div class="ann-note"><code>.splice(index, 1)</code> entfernt genau 1 Element ab Position <code>index</code> — direkt aus dem Array, nicht nur aus der Anzeige. <code>listeAnzeigen()</code> danach baut die komplette Liste neu auf.</div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-code"><pre><code>document.getElementById(<span class="s">"btn-liste-leeren"</span>).addEventListener(<span class="s">"click"</span>, () => {
+  localStorage.removeItem(<span class="s">"einkaufsliste"</span>);
+  listeAnzeigen();
+});</code></pre></div>
+          <div class="ann-note"><code>removeItem</code> löscht den kompletten gespeicherten Wert auf einen Schlag — anders als <code>splice</code>, das nur ein einzelnes Element entfernt.</div>
+        </div>
+      </div>
+      <p><code>localStorage</code> überlebt das Neuladen der Seite und sogar das Schließen des Browsers — genau das verlangt das Kriterium „Einkaufsliste speichern und laden“.</p>
+    </section>
+
+    <section id="fehler">
+      <span class="eyebrow">13 · Robustheit</span>
+      <h2>Wo Fehlerbehandlung passiert</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Situation</th><th>Wo im Code</th><th>Was der Nutzer sieht</th></tr></thead>
+          <tbody>
+            <tr><td>API/JSON nicht erreichbar</td><td><code>.catch()</code> in uebersicht.js &amp; rezept.js</td><td>Textmeldung statt leerer Seite</td></tr>
+            <tr><td>Keine ID in der URL</td><td><code>if (!rezeptId)</code> in rezept.js</td><td>„Keine Rezept-ID angegeben …“</td></tr>
+            <tr><td>ID existiert nicht</td><td><code>if (!aktuellesRezept)</code> in rezept.js</td><td>„Kein Rezept mit dieser ID gefunden.“</td></tr>
+            <tr><td>Filter/Suche ohne Treffer</td><td><code>if (rezepte.length === 0)</code> in uebersicht.js</td><td>„Keine Rezepte gefunden …“</td></tr>
+            <tr><td>Einkaufsliste leer</td><td><code>if (eintraege.length === 0)</code> in einkaufsliste.js</td><td>„Die Einkaufsliste ist noch leer …“</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="kriterien">
+      <span class="eyebrow">14 · Für die Bewertung</span>
+      <h2>Was diese Demo abdeckt — und was bewusst fehlt</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Kriterienkatalog</th><th>Status in dieser Demo</th></tr></thead>
+          <tbody>
+            <tr><td>Step 1 · HTML + Bootstrap</td><td><span class="pill done">umgesetzt</span></td></tr>
+            <tr><td>Step 2 · Filter, Suche, Portionen ohne Neuladen</td><td><span class="pill done">umgesetzt</span></td></tr>
+            <tr><td>Step 3 · fetch() + dynamische Anzeige + Fehlerbehandlung</td><td><span class="pill done">umgesetzt</span></td></tr>
+            <tr><td>Step 4 · Einkaufsliste & localStorage</td><td><span class="pill done">umgesetzt</span></td></tr>
+            <tr><td>Step 5 · Onboarding / Guided Tour</td><td><span class="pill todo">Übungsaufgabe</span></td></tr>
+            <tr><td>LLM-Anbindung / Kombi-Modus</td><td><span class="pill todo">Übungsaufgabe</span></td></tr>
+            <tr><td>Bonus (eigene Rezepte, Deployment, A11y-Feinschliff)</td><td><span class="pill todo">Übungsaufgabe</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+
+    <footer class="end">
+      CookWise-Demo · Referenzimplementierung für den Kriterienkatalog „Rezept- &amp; Koch-Webapp“ · Walkthrough 2.0
+    </footer>
+  </main>
+</div>

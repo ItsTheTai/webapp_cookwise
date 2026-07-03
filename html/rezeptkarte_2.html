@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookWise - Rezeptkarte</title>
+    
+    <!-- External Framework & Icon Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Core Application Stylesheet -->
+    <link rel="stylesheet" href="../css/rezeptkarte_2.css">
+</head>
+<body>
+
+    <div id="navbar"></div>
+
+    <!-- Main Content Area: Centered Grid Component Layout -->
+    <div class="recipe-container-wrapper">
+        <div class="recipe-card-layout">
+            
+            <!-- Left Grid Pane: Recipe Assets & Media Presentation -->
+            <div class="recipe-pane-left">
+                <div class="recipe-header-block">
+                    <span class="recipe-nav-back">
+                        <a href="../html/landing.html" class="text-decoration-none text-reset">&larr; <span class="recipe-title-detail">Linsen-Curry</span></a>
+                    </span>
+                </div>
+                <div class="recipe-photo-area">
+                    <img src="https://images.unsplash.com/photo-1582576163090-09d3b6f8a969?auto=format&fit=crop&w=500&q=80" alt="Linsen-Curry Cover Photo" class="recipe-photo">
+                </div>
+
+                <div class="recipe-image-actions">
+                    <a href="favoriten.html" class="action-btn btn-favorite" title="Zu Favoriten hinzufügen" aria-label="Favorit">
+                        <i class="bi bi-heart-fill"></i>
+                    </a>
+                    <a href="shoppinglist.html" class="action-btn btn-shopping" title="Zutaten auf die Einkaufsliste setzen" aria-label="Einkaufsliste">
+                        <i class="bi bi-cart-fill"></i>
+                    </a>
+                    <a href="ai_assistent.html" class="action-btn btn-timer" title="AI-Assistent" aria-label="Planer">
+                        <i class="bi bi-clock-fill"></i>
+                    </a>
+                </div>
+            </div> 
+            
+            <!-- Right Grid Pane: Tab Controls & Process Content Panels -->
+            <div class="recipe-pane-right">
+                <!-- Segmented Custom Controls (Process Navigation Pills) -->
+                <ul class="nav nav-pills process-tabs" id="recipeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="pill" data-bs-target="#info-pane" type="button" role="tab" aria-controls="info-pane" aria-selected="true">Info</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="prep-tab" data-bs-toggle="pill" data-bs-target="#prep-pane" type="button" role="tab" aria-controls="prep-pane" aria-selected="false">Prep</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="cook-tab" data-bs-toggle="pill" data-bs-target="#cook-pane" type="button" role="tab" aria-controls="cook-pane" aria-selected="false">Cook</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="serve-tab" data-bs-toggle="pill" data-bs-target="#serve-pane" type="button" role="tab" aria-controls="serve-pane" aria-selected="false">Serve</button>
+                    </li>
+                </ul>
+
+                <!-- Scrollable Tab Content Panels Area -->
+                <div class="recipe-info-scrollable">
+                    <div class="tab-content" id="recipeTabContent">
+                        
+                        <!-- General Recipe Metadata Pane -->
+                        <div class="tab-pane fade show active" id="info-pane" role="tabpanel" aria-labelledby="info-tab">
+                            <h5 class="tab-section-title">Allgemein</h5>
+                            <ul class="list-unstyled recipe-meta-list">
+                                <li><strong><i class="bi bi-hourglass-split me-2"></i>Kochdauer:</strong> <span id="kochdauer-value">35 Min.</span></li>
+                                <li><strong><i class="bi bi-layer-forward me-2"></i>Schwierigkeit:</strong> <span id="schwierigkeit-value">Leicht</span></li>
+                                <li><strong><i class="bi bi-egg-fried me-2"></i>Gerichttyp:</strong> <span id="gerichttyp-value">Hauptgericht</span></li>
+                                <li><strong><i class="bi bi-globe2 me-2"></i>Länderküche:</strong> <span id="kueche-value">Indisch</span></li>
+                            </ul>
+                            <div class="recipe-description-card">
+                                <p class="recipe-description recipe-description-text">Ein herrlich cremiges und aromatisches Linsen-Curry mit Kokosmilch. Perfekt für ein wärmendes Mittag- oder Abendessen.</p>
+                            </div>
+                        </div>
+
+                        <!-- Preparation & Ingredients Pane -->
+                        <div class="tab-pane fade" id="prep-pane" role="tabpanel" aria-labelledby="prep-tab">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="tab-section-title mb-0">Vorbereiten (Zutaten)</h5>
+                                
+                                <div class="portions-control d-flex align-items-center gap-3 rounded-pill px-3 py-1" style="height: 34px;">
+                                    <button type="button" class="btn p-0 border-0 text-hover-light d-flex align-items-center" id="btn-minus" aria-label="Portion verringern">
+                                        <i class="bi bi-dash-circle fs-5"></i>
+                                    </button>
+                                    <div class="d-flex align-items-baseline gap-1 select-none">
+                                        <span id="portions-count" class="fw-bold fs-5" style="line-height: 1; min-width: 14px; text-align: center;">4</span>
+                                        <span class="portions-label" style="font-size: 0.8rem;">Port.</span>
+                                    </div>
+                                    <button type="button" class="btn p-0 border-0 text-hover-light d-flex align-items-center" id="btn-plus" aria-label="Portion erhöhen">
+                                        <i class="bi bi-plus-circle fs-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                           
+                            <div id="ingredients-container">
+                            <!-- This static content serves as a fallback placeholder until the API data overwrites it -->
+                            <h6 class="recipe-sub-title">Basics:</h6>
+                            <ul class="ingredients-list list-unstyled m-0 p-0 mb-3">
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="50">200</strong> g Rote Linsen</span></li>
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="100">400</strong> ml Kokosmilch</span></li>
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="0.25">1</strong> Zwiebel & <strong class="ingredient-amount" data-base="0.5">2</strong> Knoblauchzehen</span></li>
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="0.25">1</strong> Dose gehackte Tomaten</span></li>
+                            </ul>
+
+                            <h6 class="recipe-sub-title">Gewürze:</h6>
+                            <ul class="ingredients-list list-unstyled m-0 p-0">
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="0.5">2</strong> TL Currypulver</span></li>
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="0.25">1</strong> TL Kreuzkümmel (Kumin)</span></li>
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span><strong class="ingredient-amount" data-base="0.25">1</strong> Stück frischer Ingwer</span></li>
+                                <li class="py-1 d-flex align-items-baseline"><i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> <span>Salz und Pfeffer</span></li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <!-- Cooking Instructions Step-by-Step Pane -->
+                        <div class="tab-pane fade" id="cook-pane" role="tabpanel" aria-labelledby="cook-tab">
+                            <h5 class="tab-section-title">Kochen</h5>
+                            <ol class="cooking-steps"> 
+                                <li>Zwiebel, Knoblauch und Ingwer fein würfeln und in etwas Öl in einem Topf andünsten.</li>
+                                <li>Die Gewürze hinzufügen und kurz mitrösten, bis sie duften.</li>
+                                <li>Die roten Linsen, gehackten Tomaten und Kokosmilch dazugeben. Alles gut umrühren.</li>
+                                <li>Bei mittlerer Hitze ca. 20-25 Minuten köcheln lassen, bis die Linsen weich sind. Gelegentlich umrühren.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Serving Guide Pane -->
+                        <div class="tab-pane fade" id="serve-pane" role="tabpanel" aria-labelledby="serve-tab">
+                            <h5 class="tab-section-title">Anrichten & Servieren</h5>
+                            <p class="recipe-text-block">Das Curry heiß mit frischem Koriander garnieren. Schmeckt hervorragend zu Basmati-Reis oder warmem Naan-Brot.</p>
+                        </div>
+
+                    </div> 
+                </div> 
+                
+                <!-- Bottom Stationary Panel: Ecological Sustainability Index Score -->
+                <div class="recipe-footer-panel">
+                    <span class="footer-label">Ökobilanz:</span>
+                    <div class="smiley-flex smiley-group-detail">
+                        <i class="bi bi-emoji-smile-fill active" title="Gut"></i>
+                        <i class="bi bi-emoji-neutral-fill" title="Neutral"></i>
+                        <i class="bi bi-emoji-frown-fill" title="Schlecht"></i>
+                    </div>
+                </div>
+                
+            </div> 
+        </div> 
+    </div> 
+
+    <!-- Core Runtime Scripts Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/load_components.js"></script>
+    <script src="../js/toggle_theme.js"></script>
+    <script src="../js/recipe_card.js"></script>
+    <script src="../js/api/api_rezeptkarte.js"></script>
+    
+</body>
+</html>
