@@ -164,4 +164,43 @@ function renderRecipeDetail(recipe) {
 
     console.log("API:", recipe);
     console.log("Recipe layout sync completed successfully.");
+
+    // ==========================================================================
+    // 6. FAVORITES ENGINE INTEGRATION
+    // ==========================================================================
+    const favoriteBtn = document.querySelector(".btn-favorite");
+    if (favoriteBtn) {
+        // Prevent default instantaneous redirect to favoriten.html
+        favoriteBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            // Retrieve existing favorites or initialize an empty array
+            let favorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
+
+            // Check if this recipe is already saved
+            const isAlreadyFavorite = favorites.some(fav => fav.id === recipeId);
+
+            if (!isAlreadyFavorite) {
+                // Add essential preview details into the storage object
+                favorites.push({
+                    id: recipeId,
+                    titel: recipe.titel,
+                    kurzbeschreibung: recipe.kurzbeschreibung,
+                    bild_url: recipe.bild_url
+                });
+
+                localStorage.setItem("recipe_favorites", JSON.stringify(favorites));
+                alert(`"${recipe.titel}" wurde zu deinen Favoriten hinzugefügt!`);
+            } else {
+                alert("Dieses Rezept ist bereits in deinen Favoriten.");
+            }
+            
+            // Optional: Redirect to favoriten.html after saving
+            // window.location.href = "favoriten.html";
+        });
+    }
+
+    console.log("API:", recipe);
+    console.log("Recipe layout sync completed successfully.");
+} // <--- This closes your existing renderRecipeDetail function
 }

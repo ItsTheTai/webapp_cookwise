@@ -64,42 +64,86 @@
 
     <main class="custom-center-container my-4">
         <h1 class="main-logo-font mb-4">Meine Favoriten</h1>
-        <div id="recipes"></div>
+        <div id="favorite-recipes-grid"></div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/toggle_theme.js"></script>
     <script src="../js/load_components.js"></script>
 
-    <script>
-        // Wait a brief moment for load_components.js to fetch and append the recipes.html content
+   <script>
         window.addEventListener('DOMContentLoaded', () => {
-            const checkExist = setInterval(() => {
-                const cards = document.querySelectorAll('.recipe-card');
+            // Target the unique wrapper ID to circumvent the load_components overwrite
+            const recipesContainer = document.getElementById('favorite-recipes-grid');
+            
+            function displayFavorites() {
+                const favorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
                 
-                if (cards.length > 0) {
-                    clearInterval(checkExist); // Stop looking once components are found
-                    
-                    cards.forEach(card => {
-                        // Create the button element
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'delete-recipe-btn';
-                        deleteBtn.title = 'Aus Favoriten entfernen';
-                        deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
-                        
-                        // Prevent clicking the delete button from triggering the recipe card link redirect
-                        deleteBtn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            // Visual mock delete effect
-                            card.closest('.col-custom-grid').style.opacity = '0.3'; 
-                        });
+                if (!recipesContainer) return;
 
-                        // Prepend it directly to the card container
-                        card.prepend(deleteBtn);
-                    });
+                if (favorites.length === 0) {
+                    recipesContainer.innerHTML = `
+                        <div class="text-center py-5">
+                            <p class="text-muted fs-5">Du hast noch keine Favoriten gespeichert.</p>
+                            <a href="../html/landing.html" class="btn btn-outline-primary rounded-pill">Rezepte entdecken</a>
+                        </div>`;
+                    return;
                 }
-            }, 100); // Check every 100ms
+
+                let htmlContent = '<div class="row row-cols-1 row-cols-md-3 g-4">';
+                
+                favorites.forEach((recipe, index) => {
+                    htmlContent += `
+                        <div class="col col-custom-grid">
+                            <div class="card h-100 recipe-card shadow-sm border-0 bg-dark text-light" style="border-radius: 15px; overflow: hidden;">
+                                <button class="delete-recipe-btn" title="Aus Favoriten entfernen" data-index="${index}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                
+                                <a href="rezeptkarte_2.html?id=${recipe.id}" class="text-decoration-none text-reset h-100 d-flex flex-column">
+                                    <img src="${recipe.bild_url}" class="card-img-top" alt="${recipe.titel}" style="height: 200px; object-fit: cover;">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title main-logo-font">${recipe.titel}</h5>
+                                        <p class="card-text text-muted small flex-grow-1">${recipe.kurzbeschreibung || ''}</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                htmlContent += '</div>';
+                recipesContainer.innerHTML = htmlContent;
+
+                attachDeleteListeners(favorites);
+            }
+
+            function attachDeleteListeners(favorites) {
+                const deleteButtons = document.querySelectorAll('.delete-recipe-btn');
+                deleteButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const indexToRemove = btn.getAttribute('data-index');
+                        const cardContainer = btn.closest('.col-custom-grid');
+                        
+                        if (cardContainer) {
+                            cardContainer.style.transition = 'opacity 0.3s ease';
+                            cardContainer.style.opacity = '0';
+                        }
+
+                        setTimeout(() => {
+                            favorites.splice(indexToRemove, 1);
+                            localStorage.setItem("recipe_favorites", JSON.stringify(favorites));
+                            displayFavorites();
+                        }, 300);
+                    });
+                });
+            }
+
+            // A small timeout ensures components load their layout dependencies first
+            setTimeout(displayFavorites, 150);
         });
     </script>
 
