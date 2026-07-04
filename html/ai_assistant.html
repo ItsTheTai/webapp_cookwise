@@ -33,12 +33,6 @@
                         <div class="msg-bubble msg-ai">
                             Hallo! Ich bin dein CookWise KI-Assistent. Frag mich alles rund um Rezepte, Zutaten-Ersatz oder Kochtechniken! 😊
                         </div>
-                        <div class="msg-bubble msg-user">
-                            Welches Gewürz passt am besten zu einem Linsen-Curry?
-                        </div>
-                        <div class="msg-bubble msg-ai">
-                            Zu einem Linsen-Curry passen Kreuzkümmel (Kumin), Kurkuma, Koriandersamen und etwas Garam Masala perfekt. Für eine frische Note kannst du am Ende frischen Ingwer und einen Spritzer Limettensaft hinzugeben!
-                        </div>
                     </div>
                     <div class="chat-input-area">
                         <div class="input-group">
@@ -58,19 +52,7 @@
                         <div class="planner-card-left">
                             <h3 class="h5 mb-3 fw-bold"><i class="bi bi-list-task text-cyan me-2"></i>Optimierte Kochschritte</h3>
                             <div class="scrollable-steps" id="ki-steps-container">
-                                <div class="step-item">
-                                    <div class="step-time">Minute 0 - 10</div>
-                                    <strong>Vorbereiten & Schnippeln:</strong> Gemüse für das Curry klein schneiden. Panko-Panierstraße für das Chicken aufbauen. Ofen vorheizen.
                                 </div>
-                                <div class="step-item">
-                                    <div class="step-time">Minute 10 - 25</div>
-                                    <strong>Simmern & Panieren:</strong> Linsen-Curry aufsetzen und köcheln lassen. Währenddessen das Hähnchen panieren.
-                                </div>
-                                <div class="step-item">
-                                    <div class="step-time">Minute 25 - 45</div>
-                                    <strong>Finale:</strong> Hähnchen knusprig ausbacken, während das Curry eindickt. Beides zeitgleich heiß servieren.
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -83,34 +65,10 @@
                                 </button>
                             </div>
                             
-                            <div class="recipe-select-list mb-3" id="selected-recipes-list">
-                                <div class="selected-recipe-item" data-recipe-id="1">
-                                    <span><i class="bi bi-check-circle-fill text-success me-2"></i>Linsen-Curry</span>
-                                    <button class="btn-remove-recipe" onclick="removeRecipe(this)"><i class="bi bi-x-circle"></i></button>
+                            <div id="selected-recipes-list" class="flex-grow-1 pe-1 spec-scroll-area mb-3">
                                 </div>
-                                <div class="selected-recipe-item" data-recipe-id="2">
-                                    <span><i class="bi bi-check-circle-fill text-success me-2"></i>Crispy Panko Chicken</span>
-                                    <button class="btn-remove-recipe" onclick="removeRecipe(this)"><i class="bi bi-x-circle"></i></button>
-                                </div>
-                            </div>
 
-                            <div class="pt-2 border-top border-secondary">
-                                <h4 class="h6 mb-2 text-secondary text-uppercase tracking-wider">Verfügbare Rezepte hinzufügen:</h4>
-                                <div id="available-pool">
-                                    <div class="available-recipe-badge" onclick="addRecipe('Bœuf Bourguignon')"><i class="bi bi-plus-lg"></i> Bœuf Bourguignon</div>
-                                    <div class="available-recipe-badge" onclick="addRecipe('Kürbis-Suppe')"><i class="bi bi-plus-lg"></i> Kürbis-Suppe</div>
-                                    <div class="available-recipe-badge" onclick="addRecipe('Buddha Bowl')"><i class="bi bi-plus-lg"></i> Buddha Bowl</div>
-                                    <div class="available-recipe-badge" onclick="addRecipe('Phở (Rind)')"><i class="bi bi-plus-lg"></i> Phở (Rind)</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </main>
+                        </div> </div> </div> </div> </div> </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/load_components.js"></script>

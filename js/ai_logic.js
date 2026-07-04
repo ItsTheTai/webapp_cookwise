@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btnPlanner.classList.remove('active');
             viewChat.classList.remove('d-none');
             viewPlanner.classList.add('d-none');
-            // FIXED: Keep the cyan planner background active on the chat view
         });
 
         btnPlanner.addEventListener('click', () => {
@@ -31,68 +30,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Das gesamte Menü im Kochplaner leeren
     if (btnClearAll) {
         btnClearAll.addEventListener('click', () => {
-            resetPlannerViews();
+            localStorage.removeItem("ai_planner_recipes");
+            renderPlannerRecipes();
         });
     }
+
+    // Initiale Beladung der gespeicherten Rezepte aus dem LocalStorage
+    renderPlannerRecipes();
 });
 
-function resetPlannerViews() {
-    const selectedRecipesList = document.getElementById('selected-recipes-list');
-    const kiStepsContainer = document.getElementById('ki-steps-container');
-
-    if (selectedRecipesList) {
-        selectedRecipesList.innerHTML = `
-            <p class="text-muted text-center py-3 my-0 small" id="no-recipes-msg">
-                <i class="bi bi-info-circle me-1"></i>Keine Rezepte ausgewählt. Wähle Rezepte aus dem Menü.
-            </p>`;
-    }
-    if (kiStepsContainer) {
-        kiStepsContainer.innerHTML = `
-            <p class="text-muted text-center py-4 small">
-                Wähle Rezepte aus, um optimierte KI-Kochschritte zu generieren.
-            </p>`;
-    }
-}
-
 /**
- * Entfernt ein einzelnes Rezept aus der Liste der ausgewählten Rezepte.
+ * Lädt Rezepte aus dem LocalStorage und rendert sie im Kochplaner
  */
-function removeRecipe(element) {
-    const item = element.closest('.selected-recipe-item');
-    if (item) {
-        const parent = item.parentNode;
-        item.remove();
-        
-        if (parent && parent.querySelectorAll('.selected-recipe-item').length === 0) {
-            resetPlannerViews();
-        } else {
-            updateMockSteps();
-        }
-    }
-}
-
-/**
- * Fügt ein neues Rezept aus dem verfügbaren Pool hinzu.
- */
-function addRecipe(recipeName) {
+function renderPlannerRecipes() {
     const list = document.getElementById('selected-recipes-list');
-    const msg = document.getElementById('no-recipes-msg');
-    if (msg) msg.remove();
+    if (!list) return;
 
-    // Prüfen mit .some() anstelle einer manuellen Schleife
-    const currentItems = Array.from(list.querySelectorAll('.selected-recipe-item span'));
-    if (currentItems.some(item => item.textContent.trim() === recipeName)) {
-        alert('Dieses Rezept ist bereits in deinem Menü!');
+    const plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
+
+    if (plannerRecipes.length === 0) {
+        list.innerHTML = `<p class="text-muted small text-center my-3">Keine Rezepte ausgewählt. Klicke auf das Uhr-Symbol in einer Rezeptkarte.</p>`;
+        updateMockSteps();
         return;
     }
 
-    const newItem = document.createElement('div');
-    newItem.className = 'selected-recipe-item';
-    newItem.innerHTML = `
-        <span><i class="bi bi-check-circle-fill text-success me-2"></i>${recipeName}</span>
-        <button class="btn-remove-recipe" onclick="removeRecipe(this)"><i class="bi bi-x-circle"></i></button>`;
-    
-    list.appendChild(newItem);
+    list.innerHTML = ''; // Clear fallback notifications
+
+    plannerRecipes.forEach((recipe, index) => {
+        const item = document.createElement('div');
+        item.className = 'selected-recipe-item';
+        item.innerHTML = `
+            <span><i class="bi bi-check-circle-fill text-success me-2"></i>${recipe.titel}</span>
+            <button class="btn-remove-recipe" data-index="${index}"><i class="bi bi-x-circle"></i></button>
+        `;
+        list.appendChild(item);
+    });
+
+    // Event Listener für Löschknöpfe anhängen
+    const removeButtons = list.querySelectorAll('.btn-remove-recipe');
+    removeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const indexToRemove = parseInt(btn.getAttribute('data-index'));
+            let currentRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
+            
+            currentRecipes.splice(indexToRemove, 1);
+            localStorage.setItem("ai_planner_recipes", JSON.stringify(currentRecipes));
+            
+            renderPlannerRecipes(); // UI neu zeichnen
+        });
+    });
+
+    // Generiert die gemischten Kochschritte auf Basis der ausgewählten Liste
     updateMockSteps();
 }
 
@@ -101,15 +89,20 @@ function addRecipe(recipeName) {
  */
 function updateMockSteps() {
     const steps = document.getElementById('ki-steps-container');
-    const items = Array.from(document.querySelectorAll('.selected-recipe-item span'));
+    const plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
     
     if (!steps) return;
-    if (items.length === 0) {
-        resetPlannerViews();
+    
+    if (plannerRecipes.length === 0) {
+        steps.innerHTML = `
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-robot fs-1 d-block mb-2"></i>
+                Wähle Rezepte aus, um einen kombinierten Zeitplan zu generieren.
+            </div>`;
         return;
     }
 
-    const names = items.map(el => el.textContent.trim()).join(' & ');
+    const names = plannerRecipes.map(r => r.titel).join(' & ');
 
     steps.innerHTML = `
         <div class="step-item">
@@ -118,10 +111,37 @@ function updateMockSteps() {
         </div>
         <div class="step-item">
             <div class="step-time">Minute 15 - 40</div>
-            <strong>Paralleles Kochen & Hitze-Management:</strong> Behalte die Garzeiten im Auge. Nutze Timer für die Hauptkomponenten.
+            <strong>Paralleles Kochen & Hitze-Management:</strong> Behalte die Garzeiten im Auge. Nutze Timer für die Hauptkomponenten der ausgewählten Rezepte.
         </div>
         <div class="step-item">
             <div class="step-time">Ab Minute 40</div>
-            <strong>Anrichten:</strong> Alles zeitgleich auf vorgewärmten Tellern servieren. Guten Appetit!
-        </div>`;
+            <strong>Anrichten:</strong> Alles ist perfekt getaktet fertig! Heiß servieren.
+        </div>
+    `;
 }
+
+/**
+ * Fügt ein Rezept aus dem verfügbaren Pool zum Kochplaner hinzu
+ */
+function addRecipe(recipeTitle) {
+    let plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
+
+    // Verhindern, dass dasselbe Rezept mehrfach hinzugefügt wird
+    const isAlreadyAdded = plannerRecipes.some(item => item.titel === recipeTitle);
+
+    if (!isAlreadyAdded) {
+        // Da hier nur der Titel übergeben wird, generieren wir eine temporäre ID oder nutzen den Titel
+        plannerRecipes.push({
+            id: 'mock-' + Date.now(),
+            titel: recipeTitle
+        });
+        localStorage.setItem("ai_planner_recipes", JSON.stringify(plannerRecipes));
+        renderPlannerRecipes(); // UI aktualisieren
+    } else {
+        alert(`"${recipeTitle}" befindet sich bereits im Kochplaner.`);
+    }
+}
+
+
+// Global freigeben für Kompatibilität mit Inline-Handlern falls nötig
+window.renderPlannerRecipes = renderPlannerRecipes;
