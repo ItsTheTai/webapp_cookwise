@@ -165,42 +165,40 @@ function renderRecipeDetail(recipe) {
     console.log("API:", recipe);
     console.log("Recipe layout sync completed successfully.");
 
-    // ==========================================================================
-    // 6. FAVORITES ENGINE INTEGRATION
+
+// ==========================================================================
+    // 6. FAVORITES STORAGE ENGINE
     // ==========================================================================
     const favoriteBtn = document.querySelector(".btn-favorite");
     if (favoriteBtn) {
-        // Prevent default instantaneous redirect to favoriten.html
         favoriteBtn.addEventListener("click", (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Stop immediate redirection to favoriten.html
 
-            // Retrieve existing favorites or initialize an empty array
+            // Load existing favorites or start a fresh array
             let favorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
 
-            // Check if this recipe is already saved
-            const isAlreadyFavorite = favorites.some(fav => fav.id === recipeId);
+            // Prevent duplicating the exact same recipe
+            const isAlreadyFavorite = favorites.some(fav => fav.id === recipe.id);
 
             if (!isAlreadyFavorite) {
-                // Add essential preview details into the storage object
+                // Save the data structure needed to rebuild the card template matches landing UI
                 favorites.push({
-                    id: recipeId,
+                    id: recipe.id,
                     titel: recipe.titel,
-                    kurzbeschreibung: recipe.kurzbeschreibung,
-                    bild_url: recipe.bild_url
+                    kategorie: recipe.kategorie,
+                    zubereitungszeit: recipe.zubereitungszeit?.gesamt_min || 0,
+                    bild_url: recipe.bild_url,
+                    oekobilanz: recipe.oekobilanz
                 });
 
                 localStorage.setItem("recipe_favorites", JSON.stringify(favorites));
-                alert(`"${recipe.titel}" wurde zu deinen Favoriten hinzugefügt!`);
-            } else {
-                alert("Dieses Rezept ist bereits in deinen Favoriten.");
             }
-            
-            // Optional: Redirect to favoriten.html after saving
-            // window.location.href = "favoriten.html";
+
+            // Redirect to the favorites panel after saving
+            //window.location.href = "favoriten.html";
         });
     }
 
     console.log("API:", recipe);
     console.log("Recipe layout sync completed successfully.");
-} // <--- This closes your existing renderRecipeDetail function
-}
+} // <--- Existing closing brace of renderRecipeDetail
