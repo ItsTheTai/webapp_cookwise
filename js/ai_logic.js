@@ -1,16 +1,38 @@
 /**
  * ai_logic.js
  * Steuert die Interaktionen auf der KI-Assistenten-Seite von CookWise.
+ * Integriert Google Gemini API für Chat und Rezept-Schritt-Optimierung.
  */
 
+// ==========================================================================
+// 1. KONFIGURATION (API-KEY)
+// ==========================================================================
+const GEMINI_API_KEY = ""; // No quotes or extra characters
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+
+
+
+// ==========================================================================
+// 2. DOM-ELEMENTE
+// ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Modus-Umschaltung
     const btnChat = document.getElementById('btn-mode-chat');
     const btnPlanner = document.getElementById('btn-mode-planner');
     const viewChat = document.getElementById('view-chat');
     const viewPlanner = document.getElementById('view-planner');
-    const btnClearAll = document.getElementById('btn-clear-all');
 
-    // 1. Umschalten zwischen Chat-Ansicht und Kochplaner-Ansicht
+    // Chat-Elemente
+    const chatInput = document.getElementById('chat-input');
+    const chatSendBtn = document.getElementById('chat-send-btn');
+    const chatMessagesBox = document.getElementById('chat-messages-box');
+
+    // Planner-Elemente
+    const btnClearAll = document.getElementById('btn-clear-all');
+    const btnOptimize = document.getElementById('btn-optimize');
+    const loadingSpinner = document.getElementById('loading-spinner');
+
+    // 2.1 Modus-Umschaltung
     if (btnChat && btnPlanner) {
         btnChat.addEventListener('click', () => {
             btnChat.classList.add('active');
@@ -27,7 +49,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Das gesamte Menü im Kochplaner leeren
+    // 2.2 Chat-Funktionalität
+    if (chatInput && chatSendBtn && chatMessagesBox) {
+        // Nachricht senden (Button oder Enter)
+        const sendMessage = () => {
+            const userMessage = chatInput.value.trim();
+            if (!userMessage) return;
+
+            // Benutzernachricht anzeigen
+            appendMessage(userMessage, 'user');
+            chatInput.value = '';
+
+            // API-Aufruf an Gemini
+            callGeminiAPI(userMessage, (response) => {
+                appendMessage(response, 'ai');
+            });
+        };
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    }
+
+    // 2.3 Planner-Funktionalität
     if (btnClearAll) {
         btnClearAll.addEventListener('click', () => {
             localStorage.removeItem("ai_planner_recipes");
@@ -35,12 +80,84 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initiale Beladung der gespeicherten Rezepte aus dem LocalStorage
+    if (btnOptimize) {
+        btnOptimize.addEventListener('click', () => {
+            optimizeRecipeSteps();
+        });
+    }
+
+    // Initiale Beladung
     renderPlannerRecipes();
 });
 
+// ==========================================================================
+// 3. CHAT-FUNKTIONEN
+// ==========================================================================
+
 /**
- * Lädt Rezepte aus dem LocalStorage und rendert sie im Kochplaner
+ * Fügt eine Nachricht zum Chat hinzu.
+ * @param {string} text - Der Nachrichtentext.
+ * @param {string} type - 'user' oder 'ai'.
+ */
+function appendMessage(text, type) {
+    const chatMessagesBox = document.getElementById('chat-messages-box');
+    if (!chatMessagesBox) return;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `msg-bubble msg-${type}`;
+    messageDiv.textContent = text;
+    chatMessagesBox.appendChild(messageDiv);
+
+    // Automatisch nach unten scrollen
+    chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+}
+
+/**
+ * Ruft die Google Gemini API auf.
+ * @param {string} prompt - Der Benutzer-Prompt.
+ * @param {function} callback - Rückruffunktion mit der API-Antwort.
+ */
+function callGeminiAPI(prompt, callback) {
+    const loadingSpinner = document.getElementById('loading-spinner');
+    if (loadingSpinner) loadingSpinner.classList.remove('d-none');
+
+    fetch(GEMINI_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': GEMINI_API_KEY
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{ text: prompt }]
+            }]
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`API-Fehler: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Keine Antwort erhalten.";
+        callback(aiResponse);
+    })
+    .catch(error => {
+        console.error("Fehler bei der API-Anfrage:", error);
+        callback(`Fehler: ${error.message}. Bitte überprüfe deine Internetverbindung oder den API-Key.`);
+    })
+    .finally(() => {
+        if (loadingSpinner) loadingSpinner.classList.add('d-none');
+    });
+}
+
+// ==========================================================================
+// 4. PLANNER-FUNKTIONEN
+// ==========================================================================
+
+/**
+ * Lädt Rezepte aus dem LocalStorage und rendert sie im Kochplaner.
  */
 function renderPlannerRecipes() {
     const list = document.getElementById('selected-recipes-list');
@@ -50,11 +167,10 @@ function renderPlannerRecipes() {
 
     if (plannerRecipes.length === 0) {
         list.innerHTML = `<p class="text-muted small text-center my-3">Keine Rezepte ausgewählt. Klicke auf das Uhr-Symbol in einer Rezeptkarte.</p>`;
-        updateMockSteps();
         return;
     }
 
-    list.innerHTML = ''; // Clear fallback notifications
+    list.innerHTML = '';
 
     plannerRecipes.forEach((recipe, index) => {
         const item = document.createElement('div');
@@ -72,76 +188,90 @@ function renderPlannerRecipes() {
         btn.addEventListener('click', (e) => {
             const indexToRemove = parseInt(btn.getAttribute('data-index'));
             let currentRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
-            
             currentRecipes.splice(indexToRemove, 1);
             localStorage.setItem("ai_planner_recipes", JSON.stringify(currentRecipes));
-            
-            renderPlannerRecipes(); // UI neu zeichnen
+            renderPlannerRecipes();
         });
     });
-
-    // Generiert die gemischten Kochschritte auf Basis der ausgewählten Liste
-    updateMockSteps();
 }
 
 /**
- * Simuliert das Aktualisieren der optimierten Kochschritte durch die KI
+ * Optimiert die Kochschritte der ausgewählten Rezepte mit KI.
  */
-function updateMockSteps() {
-    const steps = document.getElementById('ki-steps-container');
+function optimizeRecipeSteps() {
+    const stepsContainer = document.getElementById('ki-steps-container');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    if (!stepsContainer) return;
+
+    // Lade Rezepte aus LocalStorage
     const plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
-    
-    if (!steps) return;
-    
+
     if (plannerRecipes.length === 0) {
-        steps.innerHTML = `
+        stepsContainer.innerHTML = `
             <div class="text-center text-muted py-5">
                 <i class="bi bi-robot fs-1 d-block mb-2"></i>
                 Wähle Rezepte aus, um einen kombinierten Zeitplan zu generieren.
-            </div>`;
+            </div>
+        `;
         return;
     }
 
-    const names = plannerRecipes.map(r => r.titel).join(' & ');
-
-    steps.innerHTML = `
-        <div class="step-item">
-            <div class="step-time">Minute 0 - 15</div>
-            <strong>Zutaten vorbereiten für:</strong> ${names}. Alle Gemüse-Komponenten wie vorgeschrieben säubern und bereitstellen.
-        </div>
-        <div class="step-item">
-            <div class="step-time">Minute 15 - 40</div>
-            <strong>Paralleles Kochen & Hitze-Management:</strong> Behalte die Garzeiten im Auge. Nutze Timer für die Hauptkomponenten der ausgewählten Rezepte.
-        </div>
-        <div class="step-item">
-            <div class="step-time">Ab Minute 40</div>
-            <strong>Anrichten:</strong> Alles ist perfekt getaktet fertig! Heiß servieren.
+    // Zeige Ladeanimation
+    if (loadingSpinner) loadingSpinner.classList.remove('d-none');
+    stepsContainer.innerHTML = `
+        <div class="text-center text-muted py-3">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+            <span class="ms-2">Optimiert Kochschritte...</span>
         </div>
     `;
+
+    // Erstelle Prompt für die KI
+    const recipeNames = plannerRecipes.map(r => r.titel).join(', ');
+    const prompt = `
+        Kombiniere und optimiere die Kochschritte der folgenden Rezepte so, dass sie parallel ausgeführt werden können, wo es möglich ist.
+        Gib die Schritte in chronologischer Reihenfolge mit geschätzten Zeiten zurück.
+        Antworte nur mit den optimierten Schritten in diesem Format:
+
+        Minute 0-10: [Schritt 1]
+        Minute 10-20: [Schritt 2]
+        ...
+
+        Rezepte: ${recipeNames}
+    `;
+
+    // Rufe Gemini API auf
+    callGeminiAPI(prompt, (response) => {
+        stepsContainer.innerHTML = `
+            <div class="step-item">
+                <strong>Optimierte Kochschritte für: ${recipeNames}</strong>
+                <hr class="my-2">
+                ${response.split('\n').map(line => `<div class="mb-2">${line}</div>`).join('')}
+            </div>
+        `;
+    });
 }
 
 /**
- * Fügt ein Rezept aus dem verfügbaren Pool zum Kochplaner hinzu
+ * Fügt ein Rezept aus dem verfügbaren Pool zum Kochplaner hinzu.
+ * @param {string} recipeTitle - Titel des Rezepts.
  */
 function addRecipe(recipeTitle) {
     let plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
 
-    // Verhindern, dass dasselbe Rezept mehrfach hinzugefügt wird
     const isAlreadyAdded = plannerRecipes.some(item => item.titel === recipeTitle);
 
     if (!isAlreadyAdded) {
-        // Da hier nur der Titel übergeben wird, generieren wir eine temporäre ID oder nutzen den Titel
         plannerRecipes.push({
             id: 'mock-' + Date.now(),
             titel: recipeTitle
         });
         localStorage.setItem("ai_planner_recipes", JSON.stringify(plannerRecipes));
-        renderPlannerRecipes(); // UI aktualisieren
+        renderPlannerRecipes();
     } else {
         alert(`"${recipeTitle}" befindet sich bereits im Kochplaner.`);
     }
 }
 
-
-// Global freigeben für Kompatibilität mit Inline-Handlern falls nötig
+// Global freigeben für Kompatibilität mit Inline-Handlern
 window.renderPlannerRecipes = renderPlannerRecipes;
+window.addRecipe = addRecipe;
