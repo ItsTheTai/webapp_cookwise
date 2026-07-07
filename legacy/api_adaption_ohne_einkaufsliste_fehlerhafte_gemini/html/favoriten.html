@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookWise - Favoriten</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        /* 1. FIXES THE BACKGROUND CUTOFF */
+        html, body {
+            min-height: 100vh !important;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-favorites) !important;
+            background-attachment: fixed !important;
+        }
+
+        /* 2. MAKE SURE THE CARD CAN CONTAIN AN ABSOLUTE BUTTON */
+        .recipe-card {
+            position: relative !important;
+        }
+
+        /* 3. STYLING FOR THE DYNAMICALLY INJECTED BUTTON */
+        .delete-recipe-btn {
+            position: absolute !important;
+            top: 10px !important;
+            right: 10px !important;
+            z-index: 9999 !important; /* Forces it above the blurred background image */
+            
+            background-color: rgba(24, 24, 24, 0.8) !important;
+            border: 1px solid var(--prime-color3) !important;
+            color: var(--white) !important;
+            
+            width: 30px !important;
+            height: 30px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            cursor: pointer !important;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .delete-recipe-btn:hover {
+            background-color: var(--red) !important;
+            border-color: var(--red) !important;
+            color: #ffffff !important;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="navbar"></div>
+
+    <main class="custom-center-container my-4">
+        <h1 class="main-logo-font mb-4">Meine Favoriten</h1>
+        <div id="favorite-recipes-grid" class="row responsive-recipe-row"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/toggle_theme.js"></script>
+    <script src="../js/load_components.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const gridContainer = document.getElementById('favorite-recipes-grid');
+            
+            // Eco smiley mapping mapping tool context matching api logic
+            const ecoToSmiley = {
+                gut: `<i class="bi bi-emoji-smile-fill active"></i>`,
+                mittel: `<i class="bi bi-emoji-neutral-fill active"></i>`,
+                schlecht: `<i class="bi bi-emoji-frown-fill active"></i>`
+            };
+
+            function renderFavorites() {
+                const favorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
+                
+                if (!gridContainer) return;
+
+                if (favorites.length === 0) {
+                    gridContainer.innerHTML = `
+                        <div class="text-center w-100 py-5">
+                            <p class="text-muted fs-5">Du hast noch keine Favoriten gespeichert.</p>
+                            <a href="../html/landing.html" class="btn btn-outline-light rounded-pill px-4">Rezepte entdecken</a>
+                        </div>`;
+                    return;
+                }
+
+                let htmlContent = '';
+                
+                favorites.forEach((recipe, index) => {
+                    const smileyMarkup = ecoToSmiley[recipe.oekobilanz] || '';
+                    
+                    htmlContent += `
+                        <div class="col-custom-grid mb-3">
+                            <div class="recipe-card">
+                                <button class="delete-recipe-btn" title="Aus Favoriten entfernen" data-index="${index}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                
+                                <a href="rezeptkarte_2.html?id=${recipe.id}" class="text-decoration-none text-reset h-100 d-block">
+                                    <img class="recipe-bg" src="${recipe.bild_url}" alt="${recipe.titel}">
+                                    <div class="recipe-content">
+                                        <h3 class="recipe-title">${recipe.titel}</h3>
+                                        <div class="recipe-meta">
+                                            ${recipe.zubereitungszeit} Min. | ${recipe.kategorie}
+                                        </div>
+                                        <div class="smiley-group mt-2">
+                                            ${smileyMarkup}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                gridContainer.innerHTML = htmlContent;
+                attachDeleteEvents(favorites);
+            }
+
+            function attachDeleteEvents(favorites) {
+                const deleteBtns = document.querySelectorAll('.delete-recipe-btn');
+                deleteBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation(); // Stops routing navigation context click behavior
+
+                        const indexToRemove = btn.getAttribute('data-index');
+                        
+                        // Splice structure index entry sequence out
+                        favorites.splice(indexToRemove, 1);
+                        localStorage.setItem("recipe_favorites", JSON.stringify(favorites));
+                        
+                        // Re-render dashboard list UI structural nodes layout
+                        renderFavorites();
+                    });
+                });
+            }
+
+            // Execute rendering operations engine directly
+            renderFavorites();
+        });
+    </script>
+
+</body>
+
+</html>
