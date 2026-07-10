@@ -17,6 +17,24 @@ const ecoToSmiley = {
     `
 };
 
+let ingredients = []
+let recipeTitle = ""
+const btn = document.getElementById("shoppingListButton")
+btn.addEventListener("click", handleShoppingListButton)
+
+function handleShoppingListButton() {
+    const portionsCountEl = document.getElementById("portions-count");
+    const portions = parseInt(portionsCountEl.textContent);
+
+    for (let ingredient of ingredients) {
+        ingredient.amount = ingredient.baseAmount * portions;
+        ingredient.recipe = recipeTitle;
+    }
+    const currentList = JSON.parse(localStorage.getItem("shoppinglist")) || [];
+    currentList.push(...ingredients);
+    localStorage.setItem("shoppinglist", JSON.stringify(currentList));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
     const recipeId = urlParams.get('id');
@@ -82,7 +100,7 @@ function renderRecipeDetail(recipe) {
     try {
         const mainContainer = document.getElementById("ingredients-container");
         const portionsCountEl = document.getElementById("portions-count");
-        
+
         // Fetch the initial target serving size multiplier from the DOM layout
         const currentServings = portionsCountEl ? parseInt(portionsCountEl.textContent) : 1;
 
@@ -90,9 +108,9 @@ function renderRecipeDetail(recipe) {
             // Build the core unordered list structure from scratch dynamically
             mainContainer.innerHTML = '<ul class="ingredients-list list-unstyled m-0 p-0"></ul>';
             const ulElement = mainContainer.querySelector(".ingredients-list");
-            
+
             recipe.zutaten.forEach((item, index) => {
-                const amountOnOneServing = parseFloat(item.menge) || 0; 
+                const amountOnOneServing = parseFloat(item.menge) || 0;
                 const unit = item.einheit || '';
                 const name = item.name || item.zutat || '';
 
@@ -100,7 +118,7 @@ function renderRecipeDetail(recipe) {
                 const initialDisplayedAmount = amountOnOneServing ? Number((amountOnOneServing * currentServings).toFixed(2)) : '';
 
                 const li = document.createElement("li");
-                li.className = "py-1 d-flex align-items-baseline"; 
+                li.className = "py-1 d-flex align-items-baseline";
                 li.innerHTML = `
                     <i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> 
                     <span>
@@ -108,6 +126,10 @@ function renderRecipeDetail(recipe) {
                     </span>
                 `;
                 ulElement.appendChild(li);
+
+                let currentIngredient = { "name": name, "unit": unit, "baseAmount": amountOnOneServing, "recipe": recipe.titel }
+                recipeTitle = recipe.titel
+                ingredients.push(currentIngredient)
             });
             console.log("Prep tab rendered and synced with portions engine successfully.");
         }
@@ -119,7 +141,7 @@ function renderRecipeDetail(recipe) {
     try {
         const stepsContainer = document.querySelector(".cooking-steps");
         if (stepsContainer && recipe.schritte) {
-            stepsContainer.innerHTML = ""; 
+            stepsContainer.innerHTML = "";
 
             const vorbereitungSteps = recipe.schritte.vorbereitung || [];
             const zubereitungSteps = recipe.schritte.zubereitung || [];
@@ -195,7 +217,7 @@ function renderRecipeDetail(recipe) {
     // 7. AI PLANNER STORAGE ENGINE (Clock Button)
     // ==========================================================================
     const plannerBtn = document.querySelector(".btn-timer");
-                       
+
     if (plannerBtn) {
         // Initial Page-Load Check: Check if recipe is already in the AI Planner
         let plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
@@ -222,7 +244,7 @@ function renderRecipeDetail(recipe) {
             }
         });
     }
-        
+
     console.log("API:", recipe);
     console.log("Recipe layout sync completed successfully.");
 }
@@ -252,7 +274,7 @@ function showVisualFeedback(element, status, message) {
     const alertBox = document.createElement("div");
     const themeClass = status === "success" ? "alert-success text-success-emphasis" : "alert-warning text-warning-emphasis";
     const icon = status === "success" ? "bi-check-circle-fill" : "bi-exclamation-triangle-fill";
-    
+
     alertBox.className = `alert ${themeClass} alert-dismissible fade show shadow d-flex align-items-center mb-2`;
     alertBox.role = "alert";
     alertBox.style.cssText = "border-radius: 0.6rem; background-color: rgba(255,255,255,0.95); backdrop-filter: blur(4px);";
