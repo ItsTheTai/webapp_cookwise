@@ -13,24 +13,6 @@
     letter-spacing: -0.5px;
 }
 
-/* API Key Button - positioned left of mode toggle */
-#btn-api-key {
-    border: 1px solid var(--border-color);
-    color: var(--prime-color4);
-    background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
-    transition: all 0.2s ease-in-out;
-    font-weight: 600;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-}
-
-#btn-api-key:hover {
-    background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
-    color: var(--prime-color5);
-    border-color: var(--prime-color3);
-}
-
 /* View Switching Toggle Buttons */
 .btn-toggle-ai {
     border: 1px solid var(--prime-color3);
@@ -82,37 +64,6 @@
     padding: 1rem;
     border-top: 1px solid var(--border-color);
     background-color: color-mix(in srgb, var(--prime-color1) 98%, white);
-}
-
-/* Chat Input Field - Fix for dark mode visibility */
-.chat-input-area input.form-control {
-    color: var(--prime-color5) !important;
-    background-color: color-mix(in srgb, var(--prime-color1) 95%, white) !important;
-    border-color: var(--border-color) !important;
-}
-
-.chat-input-area input.form-control::placeholder {
-    color: var(--prime-color4) !important;
-    opacity: 0.7;
-}
-
-.chat-input-area input.form-control:focus {
-    color: var(--prime-color5) !important;
-    background-color: color-mix(in srgb, var(--prime-color1) 95%, white) !important;
-    border-color: var(--cyan) !important;
-    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--cyan) 30%, transparent);
-}
-
-/* Chat Input Area Buttons */
-.chat-input-area .btn {
-    color: var(--prime-color4) !important;
-    border-color: var(--border-color) !important;
-}
-
-.chat-input-area .btn:hover {
-    color: var(--prime-color5) !important;
-    background-color: color-mix(in srgb, var(--prime-color2) 50%, transparent) !important;
-    border-color: var(--prime-color3) !important;
 }
 
 .msg-bubble {

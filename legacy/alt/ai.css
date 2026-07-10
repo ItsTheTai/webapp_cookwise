@@ -13,24 +13,6 @@
     letter-spacing: -0.5px;
 }
 
-/* API Key Button - positioned left of mode toggle */
-#btn-api-key {
-    border: 1px solid var(--border-color);
-    color: var(--prime-color4);
-    background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
-    transition: all 0.2s ease-in-out;
-    font-weight: 600;
-    height: 40px;
-    display: inline-flex;
-    align-items: center;
-}
-
-#btn-api-key:hover {
-    background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
-    color: var(--prime-color5);
-    border-color: var(--prime-color3);
-}
-
 /* View Switching Toggle Buttons */
 .btn-toggle-ai {
     border: 1px solid var(--prime-color3);
@@ -50,11 +32,13 @@
     background-color: var(--cyan) !important;
     color: var(--white) !important;
     border-color: var(--cyan) !important;
+    /* Cleaned up hardcoded color to utilize theme variable */
     box-shadow: 0 4px 12px color-mix(in srgb, var(--cyan) 30%, transparent);
 }
 
 /* Chat-Fenster & Planer Panels */
 .chat-box-container, .planner-card-left, .planner-card-right {
+    /* Inherits the exact dashboard styling configuration from style.css */
     background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
     border: 1px solid var(--border-color);
     border-radius: 1.2rem;
@@ -82,37 +66,6 @@
     padding: 1rem;
     border-top: 1px solid var(--border-color);
     background-color: color-mix(in srgb, var(--prime-color1) 98%, white);
-}
-
-/* Chat Input Field - Fix for dark mode visibility */
-.chat-input-area input.form-control {
-    color: var(--prime-color5) !important;
-    background-color: color-mix(in srgb, var(--prime-color1) 95%, white) !important;
-    border-color: var(--border-color) !important;
-}
-
-.chat-input-area input.form-control::placeholder {
-    color: var(--prime-color4) !important;
-    opacity: 0.7;
-}
-
-.chat-input-area input.form-control:focus {
-    color: var(--prime-color5) !important;
-    background-color: color-mix(in srgb, var(--prime-color1) 95%, white) !important;
-    border-color: var(--cyan) !important;
-    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--cyan) 30%, transparent);
-}
-
-/* Chat Input Area Buttons */
-.chat-input-area .btn {
-    color: var(--prime-color4) !important;
-    border-color: var(--border-color) !important;
-}
-
-.chat-input-area .btn:hover {
-    color: var(--prime-color5) !important;
-    background-color: color-mix(in srgb, var(--prime-color2) 50%, transparent) !important;
-    border-color: var(--prime-color3) !important;
 }
 
 .msg-bubble {
@@ -210,35 +163,4 @@
 .available-recipe-badge:hover {
     background-color: color-mix(in srgb, var(--cyan) 20%, var(--prime-color2));
     border-color: var(--cyan);
-}
-
-/* Optimieren-Button Styling */
-#btn-optimize {
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    transition: all 0.2s ease;
-}
-
-#btn-optimize:hover {
-    background-color: var(--cyan);
-    color: var(--white);
-}
-
-/* Loading Spinner Overlay */
-.spinner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1050;
-}
-
-.spinner-overlay .spinner-border {
-    width: 3rem;
-    height: 3rem;
 }

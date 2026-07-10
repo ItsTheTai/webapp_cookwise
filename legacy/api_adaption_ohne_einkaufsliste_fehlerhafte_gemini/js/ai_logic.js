@@ -1,87 +1,19 @@
 /**
  * ai_logic.js
  * Steuert die Interaktionen auf der KI-Assistenten-Seite von CookWise.
- * Integriert Google Gemini API (generateContent) für Chat und Rezept-Schritt-Optimierung.
+ * Integriert Google Gemini API für Chat und Rezept-Schritt-Optimierung.
  */
 
 // ==========================================================================
 // 1. KONFIGURATION (API-KEY)
 // ==========================================================================
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
+const GEMINI_API_KEY = ""; // No quotes or extra characters
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
 
-// Funktion zum Abrufen des API-Keys aus sessionStorage
-function getApiKey() {
-    return sessionStorage.getItem('gemini_api_key');
-}
+
 
 // ==========================================================================
-// 2. HILFSFUNKTIONEN
-// ==========================================================================
-
-/**
- * Konvertiert Markdown-Text in HTML
- * @param {string} markdownText - Der Markdown-Text von der API
- * @returns {string} HTML-Formatierter Text
- */
-function markdownToHtml(markdownText) {
-    if (!markdownText) return "Keine Antwort erhalten.";
-    
-    // Ersetze Markdown-Formatierungen durch HTML
-    let html = markdownText
-        // Überschriften
-        .replace(/^# (.*$)/gm, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gm, '<h4>$1</h4>')
-        .replace(/^### (.*$)/gm, '<h5>$1</h5>')
-        
-        // Fett
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        
-        // Kursiv
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        
-        // Durchgestrichen
-        .replace(/~~(.*?)~~/g, '<s>$1</s>')
-        
-        // Aufzählungen (mit * oder -)
-        .replace(/^\* (.*$)/gm, '<li>$1</li>')
-        .replace(/^\- (.*$)/gm, '<li>$1</li>')
-        
-        // Numerierte Listen
-        .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
-        
-        // Code-Blöcke
-        .replace(/`(.*?)`/g, '<code>$1</code>')
-        
-        // Horizontale Linie
-        .replace(/^---$/gm, '<hr>')
-        
-        // Links
-        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>')
-        
-        // Zeilenumbrüche: Leere Zeilen in <p>-Tags umwandeln
-        .replace(/\n\n+/g, '</p><p>')
-        .replace(/\n/g, '<br>')
-        
-        // Aufzählungen in <ul>-Tags umwandeln
-        .replace(/(<li>.*<\/li>)+/g, (match) => {
-            return `<ul>${match}</ul>`;
-        })
-        
-        // Numerierte Listen in <ol>-Tags umwandeln
-        .replace(/(<li>\d+\. .*<\/li>)+/g, (match) => {
-            return `<ol>${match.replace(/<li>\d+\. /g, '<li>')}</ol>`;
-        });
-    
-    // Standard <p>-Tag hinzufügen, wenn nicht vorhanden
-    if (!html.startsWith('<') && !html.includes('<p>')) {
-        html = `<p>${html}</p>`;
-    }
-    
-    return html;
-}
-
-// ==========================================================================
-// 3. DOM-ELEMENTE
+// 2. DOM-ELEMENTE
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
     // Modus-Umschaltung
@@ -95,15 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatSendBtn = document.getElementById('chat-send-btn');
     const chatMessagesBox = document.getElementById('chat-messages-box');
 
-    // API Key Button
-    const btnApiKey = document.getElementById('btn-api-key');
-
     // Planner-Elemente
     const btnClearAll = document.getElementById('btn-clear-all');
     const btnOptimize = document.getElementById('btn-optimize');
     const loadingSpinner = document.getElementById('loading-spinner');
 
-    // 3.1 Modus-Umschaltung
+    // 2.1 Modus-Umschaltung
     if (btnChat && btnPlanner) {
         btnChat.addEventListener('click', () => {
             btnChat.classList.add('active');
@@ -120,18 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3.2 API Key Button
-    if (btnApiKey) {
-        btnApiKey.addEventListener('click', () => {
-            const apiKey = prompt("Bitte gib deinen Google Gemini API Key ein:");
-            if (apiKey) {
-                sessionStorage.setItem('gemini_api_key', apiKey.trim());
-                appendMessage("Google Gemini API Key gespeichert! \u2705 Du kannst jetzt mit der KI chatten.", 'ai');
-            }
-        });
-    }
-
-    // 3.3 Chat-Funktionalität
+    // 2.2 Chat-Funktionalität
     if (chatInput && chatSendBtn && chatMessagesBox) {
         // Nachricht senden (Button oder Enter)
         const sendMessage = () => {
@@ -142,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             appendMessage(userMessage, 'user');
             chatInput.value = '';
 
-            // API-Aufruf an Google Gemini
+            // API-Aufruf an Gemini
             callGeminiAPI(userMessage, (response) => {
                 appendMessage(response, 'ai');
             });
@@ -154,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3.4 Planner-Funktionalität
+    // 2.3 Planner-Funktionalität
     if (btnClearAll) {
         btnClearAll.addEventListener('click', () => {
             localStorage.removeItem("ai_planner_recipes");
@@ -173,12 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================================================
-// 4. CHAT-FUNKTIONEN
+// 3. CHAT-FUNKTIONEN
 // ==========================================================================
 
 /**
  * Fügt eine Nachricht zum Chat hinzu.
- * @param {string} text - Der Nachrichtentext (kann Markdown enthalten).
+ * @param {string} text - Der Nachrichtentext.
  * @param {string} type - 'user' oder 'ai'.
  */
 function appendMessage(text, type) {
@@ -187,15 +105,7 @@ function appendMessage(text, type) {
 
     const messageDiv = document.createElement('div');
     messageDiv.className = `msg-bubble msg-${type}`;
-    
-    // Für AI-Nachrichten: Markdown in HTML umwandeln
-    if (type === 'ai') {
-        messageDiv.innerHTML = markdownToHtml(text);
-    } else {
-        // Für Benutzernachrichten: Normalen Text verwenden
-        messageDiv.textContent = text;
-    }
-    
+    messageDiv.textContent = text;
     chatMessagesBox.appendChild(messageDiv);
 
     // Automatisch nach unten scrollen
@@ -209,20 +119,13 @@ function appendMessage(text, type) {
  */
 function callGeminiAPI(prompt, callback) {
     const loadingSpinner = document.getElementById('loading-spinner');
-    const apiKey = getApiKey();
-
-    if (!apiKey) {
-        callback("Fehler: Bitte gib zuerst deinen Google Gemini API Key ein (\u2699\uFE0F-Symbol).");
-        return;
-    }
-
     if (loadingSpinner) loadingSpinner.classList.remove('d-none');
 
     fetch(GEMINI_API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey
+            'x-goog-api-key': GEMINI_API_KEY
         },
         body: JSON.stringify({
             contents: [{
@@ -232,36 +135,12 @@ function callGeminiAPI(prompt, callback) {
     })
     .then(response => {
         if (!response.ok) {
-            return response.json().then(err => {
-                const errorMsg = err.message || response.statusText;
-                throw new Error(`API-Fehler: ${response.status} - ${errorMsg}`);
-            }).catch(() => {
-                throw new Error(`API-Fehler: ${response.status} - ${response.statusText}`);
-            });
+            throw new Error(`API-Fehler: ${response.status} ${response.statusText}`);
         }
         return response.json();
     })
     .then(data => {
-        // Try to extract the response text from multiple possible paths
-        let aiResponse = "Keine Antwort erhalten.";
-        
-        // Standard generateContent response format
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-            aiResponse = data.candidates[0].content.parts?.[0]?.text || "Keine Antwort erhalten.";
-        }
-        // Alternative response format
-        else if (data.content && Array.isArray(data.content)) {
-            aiResponse = data.content[0]?.text || "Keine Antwort erhalten.";
-        }
-        // Check for output_text (Interactions API format)
-        else if (data.output_text) {
-            aiResponse = data.output_text;
-        }
-        // Check for message.content format
-        else if (data.message && data.message.content) {
-            aiResponse = data.message.content[0]?.text || "Keine Antwort erhalten.";
-        }
-        
+        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Keine Antwort erhalten.";
         callback(aiResponse);
     })
     .catch(error => {
@@ -274,7 +153,7 @@ function callGeminiAPI(prompt, callback) {
 }
 
 // ==========================================================================
-// 5. PLANNER-FUNKTIONEN
+// 4. PLANNER-FUNKTIONEN
 // ==========================================================================
 
 /**
@@ -360,13 +239,13 @@ function optimizeRecipeSteps() {
         Rezepte: ${recipeNames}
     `;
 
-    // Rufe Google Gemini API auf
+    // Rufe Gemini API auf
     callGeminiAPI(prompt, (response) => {
         stepsContainer.innerHTML = `
             <div class="step-item">
                 <strong>Optimierte Kochschritte für: ${recipeNames}</strong>
                 <hr class="my-2">
-                ${markdownToHtml(response)}
+                ${response.split('\n').map(line => `<div class="mb-2">${line}</div>`).join('')}
             </div>
         `;
     });
