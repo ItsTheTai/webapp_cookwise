@@ -46,10 +46,11 @@ function filterBy(key, value) {
     console.log("Staged filters:", activeFilters);
 }
 
+
 // Main search function triggered when clicking the magnifying glass
 async function sendSearchRequest() {
     const searchInput = document.querySelector('input[type="search"]')?.value || '';
-    activeFilters.zutat = searchInput.trim();
+    activeFilters.search = searchInput.trim();
 
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(activeFilters)) {
@@ -59,23 +60,68 @@ async function sendSearchRequest() {
     let nextUrl = `${baseUrl}?${params.toString()}`;
     let allRecipes = [];
 
-    while (nextUrl) {
-        const response = await fetch(nextUrl);
-        const data = await response.json();
+    // 1. Wrap the API call in a try/catch block to handle network/server errors
+    try {
+        while (nextUrl) {
+            const response = await fetch(nextUrl);
 
-        const pageResults = data.results || data;
-        allRecipes = allRecipes.concat(pageResults);
+            // Check if the server responded with an error status (e.g., 404, 500)
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
 
-        nextUrl = data.next || null;
-    }
+            const data = await response.json();
+            const pageResults = data.results || data;
+            allRecipes = allRecipes.concat(pageResults);
 
-    if (typeof renderRecipes === 'function') {
-        renderRecipes(allRecipes);
-    } else {
-        console.error("renderRecipes() function is missing.");
+            nextUrl = data.next || null;
+        }
+
+        // 2. Check if any recipes were found
+        if (allRecipes.length === 0) {
+            displayNoResultsMessage();
+            return; // Stop execution here
+        }
+
+        // If we have recipes, render them normally
+        if (typeof renderRecipes === 'function') {
+            renderRecipes(allRecipes);
+        } else {
+            console.error("renderRecipes() function is missing.");
+        }
+
+    } catch (error) {
+        // 3. This block runs if the API is offline, or a network error occurs
+        console.error("API Call failed:", error);
+        displayErrorMessage();
     }
 }
 
+// Call this when the API returns an empty array
+function displayNoResultsMessage() {
+    const container = document.getElementById('recipe-container'); // Change to your actual container ID
+    if (container) {
+        container.innerHTML = `
+            <div class="main-logo-font">
+                <h3>Keine Rezepte gefunden</h3>
+                <p>Gib einen anderen Suchbegriff ein oder passe deine Filter an.</p>
+            </div>
+        `;
+    }
+}
+
+// Call this when fetch fails entirely (API offline, network disconnected)
+function displayErrorMessage() {
+    const container = document.getElementById('recipe-container'); // Change to your actual container ID
+    if (container) {
+        container.innerHTML = `
+            <div class="main-logo-font">
+                <h3>Verbindung fehlgeschlagen</h3>
+                <p>Das Kochbuch ist zurzeit nicht erreichbar. Bitte versuche es später noch einmal.</p>
+            </div>
+        `;
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     // Find the search input element on the page
