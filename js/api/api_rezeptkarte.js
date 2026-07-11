@@ -17,6 +17,10 @@ const ecoToSmiley = {
     `
 };
 
+/*This section sets the onClick-function for the 'add to shopping list'-Button
+When pressed, the button gets the ingredients, title and selected portion amount of the current recipe and saves it to localStorage in a JSON-Object.
+LocalStorage is then used in shoppinglist.js to render the recipes into the shoppinglist
+*/
 let ingredients = []
 let recipeTitle = ""
 const btn = document.getElementById("shoppingListButton")
@@ -34,6 +38,8 @@ function handleShoppingListButton() {
     currentList.push(...ingredients);
     localStorage.setItem("shoppinglist", JSON.stringify(currentList));
 }
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -127,6 +133,7 @@ function renderRecipeDetail(recipe) {
                 `;
                 ulElement.appendChild(li);
 
+                //Builds a JSON-Object for every ingredient and saves it into the ingredient variable that is then stored in localStorage
                 let currentIngredient = { "name": name, "unit": unit, "baseAmount": amountOnOneServing, "recipe": recipe.titel }
                 recipeTitle = recipe.titel
                 ingredients.push(currentIngredient)
