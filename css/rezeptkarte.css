@@ -18,7 +18,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 5rem;
+    padding-top: 1.5rem;
     box-sizing: border-box;
     overflow-y: auto;
 }

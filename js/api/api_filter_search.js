@@ -67,7 +67,7 @@ async function sendSearchRequest() {
 
             // Check if the server responded with an error status (e.g., 404, 500)
             if (!response.ok) {
-                throw new Error(`Server responded with status: ${response.status}`);
+                throw new Error(`Server Response mit Status: ${response.status}`);
             }
 
             const data = await response.json();
@@ -92,9 +92,20 @@ async function sendSearchRequest() {
 
     } catch (error) {
         // 3. This block runs if the API is offline, or a network error occurs
-        console.error("API Call failed:", error);
+        console.error("API Call fehlgeschlagen:", error);
         displayErrorMessage();
     }
+}
+
+// Doing search using enter key
+const searchInputField = document.querySelector('input[type="search"]');
+
+if (searchInputField) {
+    searchInputField.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            sendSearchRequest();
+        }
+    });
 }
 
 // Call this when the API returns an empty array

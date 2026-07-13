@@ -33,23 +33,3 @@ function fetchAllPages(url) {
 
 // Kick off the initial request
 fetchAllPages(startUrl);
-
-function updateCarousel(recipes) {
-    // Filter for recipes with images, shuffle them quickly, and grab the first 3
-    const randomRecipes = recipes
-        .filter(r => r.bild_url)
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
-
-    // Find the 3 existing images and titles currently in your HTML
-    const images = document.querySelectorAll('.carousel-hero-img');
-    const titles = document.querySelectorAll('.carousel-caption h2');
-
-    // Overwrite their sources and text with the new API data
-    randomRecipes.forEach((recipe, i) => {
-        if (images[i] && titles[i]) {
-            images[i].src = recipe.bild_url;
-            titles[i].innerText = recipe.titel;
-        }
-    });
-}
