@@ -60,7 +60,7 @@ async function sendSearchRequest() {
     let nextUrl = `${baseUrl}?${params.toString()}`;
     let allRecipes = [];
 
-    // 1. Wrap the API call in a try/catch block to handle network/server errors
+    // Wrap the API call in a try/catch block to handle network/server errors
     try {
         while (nextUrl) {
             const response = await fetch(nextUrl);
@@ -77,7 +77,7 @@ async function sendSearchRequest() {
             nextUrl = data.next || null;
         }
 
-        // 2. Check if any recipes were found
+        // Check if any recipes were found
         if (allRecipes.length === 0) {
             displayNoResultsMessage();
             return; // Stop execution here
@@ -91,7 +91,7 @@ async function sendSearchRequest() {
         }
 
     } catch (error) {
-        // 3. This block runs if the API is offline, or a network error occurs
+        // This block runs if the API is offline, or a network error occurs
         console.error("API Call fehlgeschlagen:", error);
         displayErrorMessage();
     }
@@ -134,21 +134,23 @@ function displayErrorMessage() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Find the search input element on the page
-    const searchInput = document.querySelector('input[type="search"]');
+// Listen to the whole document for any key presses
+document.addEventListener('keydown', function (event) {
 
-    // Make sure the input actually exists before adding the listener
-    if (searchInput) {
-        searchInput.addEventListener("keydown", (event) => {
-            // Check if the key pressed was 'Enter'
-            if (event.key === "Enter") {
-                // Prevent the default browser behavior (like reloading the page)
-                event.preventDefault();
+    // Check if the key pressed was 'Enter'
+    if (event.key === 'Enter') {
 
-                // Run your existing search function!
-                sendSearchRequest();
-            }
-        });
+        // Find out exactly which element the user is typing in right now
+        const activeElement = document.activeElement;
+
+        // Check if they are focused on specific search input.
+        if (activeElement && activeElement.matches('input[type="search"].search-custom')) {
+
+            // Stop the browser from refreshing the page if it's inside a form
+            event.preventDefault();
+
+            // Fire search function
+            sendSearchRequest();
+        }
     }
 });
