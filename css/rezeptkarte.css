@@ -10,33 +10,31 @@
 /* ==========================================================================
    6. MAIN RECIPE DISPLAY (TWO-COLUMN GRID CARD)
    ========================================================================== */
-
 .recipe-container-wrapper {
     flex-grow: 1;
-    min-height: calc(100vh - 46px);
-    /* Clean management of remaining window viewport height */
+    height: calc(100vh - 60px); 
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding-top: 1.5rem;
+    padding: 1.5rem; 
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden; 
 }
 
 .recipe-card-layout {
     background-color: var(--prime-color1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.8rem;
-
-    max-width: 95vw;
-    width: 100%;
-    height: calc(100vh - 150px);
-    min-height: 550px;
-    max-height: calc(100vh - 80px);
-
+    border-radius: 0.8rem; 
+    
+    max-width: 95vw; 
+    width: 1300px;
+    height: 75vh;
+    min-height: 480px;
+    max-height: 750px;
+    
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 50% 50%; 
     overflow: hidden;
 }
 
@@ -118,6 +116,7 @@
     flex-direction: column;
     justify-content: flex-start;
     height: 100%;
+    min-height: 0;
 }
 
 /* Segmented Custom Controls (Process Navigation Pills) */
@@ -158,6 +157,7 @@
     margin-bottom: 0.8rem;
     overflow-y: auto;
     flex-grow: 1;
+    min-height: 0;
 }
 
 /* ==========================================================================
@@ -217,8 +217,6 @@
     padding-left: 1.1rem;
     list-style-type: decimal;
     flex-grow: 1;
-    overflow-y: auto;
-    /* scrolling */
     padding-right: 1rem;
 }
 
@@ -246,6 +244,7 @@
     padding-top: 0.6rem;
     margin-top: auto;
     color: var(--prime-color5);
+    flex-shrink: 0;
 }
 
 .footer-label {
