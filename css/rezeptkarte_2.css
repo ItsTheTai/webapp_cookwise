@@ -40,6 +40,14 @@
     --bg-planner: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--cyan) 90%, darkgray));
     --bg-shopping: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--yellow) 80%, dimgray));
     --bg-settings: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--mid-gray) 50%, white));
+
+    /* ==========================================
+       Typography Scale (Desktop Defaults) 
+       ========================================== */
+    --fs-h4: 1.5rem;
+    --fs-title: 1.1rem;
+    --fs-body: 1.1rem;
+    --fs-pills: 1rem;
 }
 
 /* --- Light Mode Inversion Overrides --- */
@@ -238,13 +246,13 @@ body {
 
 .recipe-container-wrapper {
     flex-grow: 1;
-    min-height: calc(100vh - 46px); /* Clean management of remaining window viewport height */
+    height: calc(100vh - 60px); 
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding: 5rem;
+    padding: 1.5rem; 
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow: hidden; 
 }
 
 .recipe-card-layout {
@@ -254,10 +262,10 @@ body {
     border-radius: 0.8rem; 
     
     max-width: 95vw; 
-    width: 100%;
-    height: calc(100vh - 150px);
-    min-height: 550px;
-    max-height: calc(100vh - 80px);
+    width: 1300px;
+    height: 75vh;
+    min-height: 480px;
+    max-height: 750px; /* ИСПРАВЛЕНО: добавлено px. Теперь свойство работает! */
     
     display: grid;
     grid-template-columns: 50% 50%; 
@@ -330,6 +338,7 @@ body {
 .recipe-info-block h4 {
     color: var(--prime-color5);
     font-weight: 700;
+    font-size: var(--fs-h4);
 }
 
 /* ==========================================================================
@@ -364,14 +373,14 @@ body {
 
 .process-tabs .nav-link {
     color: var(--prime-color4);
-    font-weight: 600;
-    font-size: 1rem; 
+    font-weight: 600; 
     border-radius: 30px;
     padding: 10px 15px;
     text-align: center;
     width: 100%;
     border: none;
     background: none;
+    font-size: var(--fs-pills);
 }
 
 .process-tabs .nav-link.active {
@@ -390,7 +399,7 @@ body {
    ========================================================================== */
 
 .tab-section-title {
-    font-size: 1rem; 
+    font-size: var(--fs-title); 
     font-weight: 700;
     text-transform: uppercase;
     color: var(--violet);
@@ -401,12 +410,12 @@ body {
 
 .recipe-meta-list li {
     padding: 6px 0; 
-    font-size: 1.1rem; 
+    font-size: var(--fs-body); 
     color: var(--prime-color5);
 }
 
 .recipe-meta-list li i {
-    font-size: 1.2rem;
+    font-size: var(--fs-body);
     color: var(--prime-color3);
 }
 
@@ -416,13 +425,13 @@ body {
     background-color: color-mix(in srgb, var(--prime-color2) 20%, transparent);
     border: 1px solid var(--prime-color3);
     border-radius: 0.6rem;
-    font-size: 1rem; 
+    font-size: var(--fs-body); 
     color: var(--prime-color5);
     line-height: 1.5;
 }
 
 .recipe-sub-title {
-    font-size: 1.1rem; 
+    font-size: var(--fs-title); 
     font-weight: 700;
     margin-top: 0.6rem;
     margin-bottom: 0.25rem;
@@ -434,7 +443,7 @@ body {
     padding-left: 2.1rem !important;
     list-style: none;
     margin: 0;
-    font-size: 1.1rem;
+    font-size: var(--fs-body);
     color: var(--prime-color5);
 }
 
@@ -451,7 +460,7 @@ body {
 }
 
 .recipe-text-block {
-    font-size: 1.1rem; 
+    font-size: var(--fs-body);
     color: var(--prime-color5);
     margin: 0;
     line-height: 1.4;
@@ -472,7 +481,7 @@ body {
 }
 
 .footer-label {
-    font-size: 1.1rem; 
+    font-size: var(--fs-body); 
     font-weight: 700;
     color: var(--prime-color5);
 }
@@ -603,6 +612,13 @@ body {
    ========================================================================== */
 
 @media (max-width: 768px) {
+    :root {
+        --fs-h4: 1.25rem;
+        --fs-title: 0.95rem;
+        --fs-body: 0.95rem;
+        --fs-pills: 0.85rem;
+    }
+    
     /* 1. Remove strict viewport height limits from wrapper to allow vertical layout scrolling */
     .recipe-container-wrapper {
         height: auto;
