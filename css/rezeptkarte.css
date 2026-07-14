@@ -12,29 +12,29 @@
    ========================================================================== */
 .recipe-container-wrapper {
     flex-grow: 1;
-    height: calc(100vh - 60px); 
-    display: flex;
+    height: calc(100vh - 60px);
+    /* display: flex; */
     align-items: center;
     justify-content: center;
-    padding: 1.5rem; 
+    padding: 1.5rem;
     box-sizing: border-box;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 .recipe-card-layout {
     background-color: var(--prime-color1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.8rem; 
-    
-    max-width: 95vw; 
+    border-radius: 0.8rem;
+
+    max-width: 95vw;
     width: 1300px;
     height: 75vh;
     min-height: 480px;
     max-height: 750px;
-    
+
     display: grid;
-    grid-template-columns: 50% 50%; 
+    grid-template-columns: 50% 50%;
     overflow: hidden;
 }
 
