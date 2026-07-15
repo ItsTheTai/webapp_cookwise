@@ -1,8 +1,6 @@
 .table-container {
     width: 100%;
     box-sizing: border-box;
-    width: 100%;
-    box-sizing: border-box;
     background: #1f1f1f;
     border-radius: 12px;
     padding: 10px 15px;
@@ -21,13 +19,11 @@
 
 table {
     width: 100%;
-    border-collapse: collapse;
     background: transparent;
 }
 
 thead th {
     text-align: left;
-
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     font-weight: 600;
 }
@@ -52,7 +48,7 @@ td input {
 }
 
 td,th {
-    padding: 12px 16px;
+    padding: 12px 4px 12px 4px;
 }
 
 .amount-inputs {
