@@ -12,11 +12,11 @@
    ========================================================================== */
 .recipe-container-wrapper {
     flex-grow: 1;
-    height: calc(100vh - 60px);
-    /* display: flex; */
+    /* height: calc(100vh - 60px); */
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding-top: 1.5rem;
     box-sizing: border-box;
     overflow: hidden;
 }

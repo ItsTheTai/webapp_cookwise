@@ -33,6 +33,7 @@
     --recipe-hero: grayscale(10%) brightness(40%);
     --smiley-color: var(--light-gray);
     --color-smiley-active: color-mix(in srgb, var(--pale-gray) 90%, white);
+    --navbar-toggler-icon: none;
 
     /* Dynamic Landing Gradients */
     --bg-landing: linear-gradient(to bottom, var(--dark-gray) 0%, var(--dark-gray) 5%, color-mix(in srgb, var(--violet) 100%, white));
@@ -59,6 +60,7 @@
     --recipe-hero: brightness(70%);
     --smiley-color: color-mix(in srgb, var(--pale-gray) 10%, lightgray);
     --color-smiley-active: color-mix(in srgb, var(--pale-gray) 10%, lightgray);
+    --navbar-toggler-icon: invert(1);
 
     /* Light Mode Landing Gradient */
     --bg-landing: linear-gradient(to bottom, color-mix(in srgb, var(--pale-gray) 30%, white) 0%, color-mix(in srgb, var(--pale-gray) 30%, white) 5%, color-mix(in srgb, var(--violet) 90%, white));
@@ -120,6 +122,14 @@ body {
 
 .nav-link-icon:hover {
     color: var(--prime-color5);
+}
+
+.navbar-toggler-icon {
+    filter: var(--navbar-toggler-icon);
+}
+
+.navbar-toggler {
+    border-color: var(--border-color) !important;
 }
 
 /* ==========================================================================
