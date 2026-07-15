@@ -23,8 +23,8 @@ LocalStorage is then used in shoppinglist.js to render the recipes into the shop
 */
 let ingredients = []
 let recipeTitle = ""
-const btn = document.getElementById("shoppingListButton")
-btn.addEventListener("click", handleShoppingListButton)
+const shoppinglistBtn = document.getElementById("shoppingListButton")
+shoppinglistBtn.addEventListener("click", handleShoppingListButton)
 
 function handleShoppingListButton() {
     const portionsCountEl = document.getElementById("portions-count");
@@ -37,6 +37,7 @@ function handleShoppingListButton() {
     const currentList = JSON.parse(localStorage.getItem("shoppinglist")) || [];
     currentList.push(...ingredients);
     localStorage.setItem("shoppinglist", JSON.stringify(currentList));
+    showVisualFeedback(shoppinglistBtn, "success", `"${recipeTitle}" zur Einkaufsliste hinzugefügt!`);
 }
 
 
