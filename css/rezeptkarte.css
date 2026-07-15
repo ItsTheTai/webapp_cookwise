@@ -58,6 +58,7 @@
     z-index: 2;
     margin: 0;
     padding: 0;
+    max-width: calc(100% - 80px);
 }
 
 .recipe-nav-back {
@@ -67,10 +68,18 @@
     font-weight: 600;
     font-size: 1.1rem;
     padding: 6px 22px;
-    border-radius: 30px;
+    border-radius: 20px;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     transition: opacity 0.2s ease;
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.recipe-nav-back a {
+    display: inline-block;
+    width: 100%;
 }
 
 .recipe-nav-back:hover {
