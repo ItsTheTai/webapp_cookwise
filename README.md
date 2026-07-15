@@ -30,7 +30,7 @@ Link zur gehosteten Seite: https://itsthetai.github.io/webapp_cookwise/
 
 - **Einkaufsliste:** Erstellen und Verwalten einer persönlichen Einkaufsliste
 
-- **KI-Kochplander:** Unterstützung bei Rezeptfragen bzw. der Rezeptsuche. Der KI-Kochplaner nutzt eine externe KI-API, um Nutzeranfragen zu Rezepten und Kochthemen zu beantworten. Da für den Zugriff auf diese API ein persönlicher API-Key erforderlich ist, ist ein Feld implementiert, in dem man einen gültigen API-Key eingeben kann.
+- **KI-Kochplaner:** Unterstützung bei Rezeptfragen bzw. der Rezeptsuche. Der KI-Kochplaner nutzt eine externe KI-API, um Nutzeranfragen zu Rezepten und Kochthemen zu beantworten. Da für den Zugriff auf diese API ein persönlicher API-Key erforderlich ist, ist ein Feld implementiert, in dem man einen gültigen API-Key eingeben kann.
 
 - **Dark-/Light-Mode:** Umschalten zwischen verschiedenen Designs
 
@@ -111,13 +111,13 @@ bereit.
 
 Diese lädt HTML-Dateien per `fetch()` und fügt sie an der gewünschten Stelle in das DOM ein.
 
-Beispielsweise werden beim Laden einer Seite automatisch folgende Komponenten eingebunden:
+Beispielsweise werden beim Laden der Startseite automatisch folgende Komponenten eingebunden:
 
 - Navigation (`navbar_api.html`)
 - Rezept-Karussell (`carousel.html`)
 - Rezeptübersicht (`recipes_api.html`)
 
-Dadurch muss beispielsweise die Navigation nur einmal gepflegt werden und steht auf allen Seiten in derselben Version zur Verfügung.
+Dadurch muss insbesondere die Navigation nur einmal gepflegt werden und steht auf allen Seiten in derselben Version zur Verfügung.
 
 # Seitenübergreifende API-Einbindung
 Die Kommunikation mit der Rezeptdatenbank erfolgt zentral über JavaScript.
