@@ -138,6 +138,10 @@ body {
     border: 0.08rem solid var(--prime-color3);
 }
 
+.border-custom-fav {
+    border-color: var(--prime-color5);
+}
+
 .slider-icon {
     color: var(--prime-color3);
 }
