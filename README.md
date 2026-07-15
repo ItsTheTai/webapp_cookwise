@@ -117,12 +117,8 @@ Beispielsweise werden beim Laden einer Seite automatisch folgende Komponenten ei
 
 Dadurch muss beispielsweise die Navigation nur einmal gepflegt werden und steht auf allen Seiten in derselben Version zur Verfügung.
 
----
-
 # Seitenübergreifende API-Einbindung
-
 Die Kommunikation mit der Rezeptdatenbank erfolgt zentral über JavaScript.
-
 Die Datei
 
 ```
