@@ -6,8 +6,7 @@ const activeFilters = {
     oekobilanz: '',
     max_zeit: '',
     min_portionen: '',
-    max_portionen: '',
-    zutat: ''
+    max_portionen: ''
 };
 
 const baseUrl = "https://recipes.digitalhumanities.io/api/rezepte/";
@@ -46,66 +45,76 @@ function filterBy(key, value) {
     console.log("Staged filters:", activeFilters);
 }
 
+async function fetchSearchPages(url) {
+
+    // Store all recipes from all pages here
+    let results = [];
+    let nextUrl = url;
+
+    // Continue as long as the API gives us another page
+    while (nextUrl) {
+        const response = await fetch(nextUrl);
+
+        if (!response.ok) {
+            throw new Error(`Server Response mit Status: ${response.status}`);
+        }
+
+        // Convert the JSON response into a JavaScript object
+        const data = await response.json();
+
+        results = results.concat(data.results || data);
+
+        nextUrl = data.next || null;
+    }
+
+    return results;
+}
 
 // Main search function triggered when clicking the magnifying glass
 async function sendSearchRequest() {
-    const searchInput = document.querySelector('input[type="search"]')?.value || '';
-    activeFilters.search = searchInput.trim();
 
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(activeFilters)) {
-        if (value) params.append(key, value);
-    }
+    // Define search input from the input field
+    const searchInput = document.querySelector('input[type="search"]')
+        ?.value.trim() || '';
 
-    let nextUrl = `${baseUrl}?${params.toString()}`;
-    let allRecipes = [];
-
-    // Wrap the API call in a try/catch block to handle network/server errors
     try {
-        while (nextUrl) {
-            const response = await fetch(nextUrl);
+        const params = new URLSearchParams();
 
-            // Check if the server responded with an error status (e.g., 404, 500)
-            if (!response.ok) {
-                throw new Error(`Server Response mit Status: ${response.status}`);
+        // Add all active filters
+        for (const [key, value] of Object.entries(activeFilters)) {
+            if (value) {
+                params.append(key, value);
             }
-
-            const data = await response.json();
-            const pageResults = data.results || data;
-            allRecipes = allRecipes.concat(pageResults);
-
-            nextUrl = data.next || null;
         }
 
-        // Check if any recipes were found
-        if (allRecipes.length === 0) {
+        const searchUrl = `${baseUrl}?${params.toString()}&search=${encodeURIComponent(searchInput)}`;
+        const zutatUrl = `${baseUrl}?${params.toString()}&zutat=${encodeURIComponent(searchInput)}`;
+
+        // Run requests for zutat and search at the same time
+        const [searchResults, zutatResults] = await Promise.all([
+            fetchSearchPages(searchUrl),
+            fetchSearchPages(zutatUrl)
+        ]);
+
+        // Merge results and remove duplicates
+        const allResults = Array.from(
+            new Map(
+                [...searchResults, ...zutatResults]
+                    .map(recipe => [recipe.id, recipe])
+            ).values()
+        );
+
+        if (allResults.length === 0) {
             displayNoResultsMessage();
-            return; // Stop execution here
+            return;
         }
 
-        // If we have recipes, render them normally
-        if (typeof renderRecipes === 'function') {
-            renderRecipes(allRecipes);
-        } else {
-            console.error("renderRecipes() function is missing.");
-        }
+        renderRecipes(allResults);
 
     } catch (error) {
-        // This block runs if the API is offline, or a network error occurs
         console.error("API Call fehlgeschlagen:", error);
         displayErrorMessage();
     }
-}
-
-// Doing search using enter key
-const searchInputField = document.querySelector('input[type="search"]');
-
-if (searchInputField) {
-    searchInputField.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-            sendSearchRequest();
-        }
-    });
 }
 
 // Call this when the API returns an empty array
@@ -134,7 +143,7 @@ function displayErrorMessage() {
     }
 }
 
-// Listen to the whole document for any key presses
+// Doing search using enter key
 document.addEventListener('keydown', function (event) {
 
     // Check if the key pressed was 'Enter'
