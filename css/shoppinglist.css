@@ -1,14 +1,14 @@
 .table-container {
     width: 100%;
-    padding: 0 20px;
     box-sizing: border-box;
     width: 100%;
-    padding: 0 20px;
     box-sizing: border-box;
     background: #1f1f1f;
     border-radius: 12px;
     padding: 10px 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    overflow-x: auto
+
 }
 
 .delete-btn {
@@ -39,6 +39,7 @@ tbody td {
 
 tbody tr {
     transition: background 0.2s ease;
+    
 }
 
 tbody tr:hover {
