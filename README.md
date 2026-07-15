@@ -36,7 +36,7 @@ Link zur gehosteten Seite: https://itsthetai.github.io/webapp_cookwise/
 
 # Projektstruktur
 
-Das Projekt ist in die drei Hauptordner **html**, **css** und **js** gegliedert.
+Das Projekt ist in die drei Hauptordner **html**, **css** und **js** gegliedert. Für das Hosting der Anwendung über GitHub Pages befindet sich im Root-Projektverzeichnis zusätzlich eine `index.html`. Diese dient als Einstiegspunkt der Website, da GitHub Pages standardmäßig nach einer Datei mit diesem Namen sucht. Die `index.html` fungiert dabei als Weiterleitung auf die eigentliche Startseite der Anwendung (`landing.html`). Dadurch kann das Projekt ohne weitere Konfiguration über GitHub Pages bereitgestellt werden, während die eigentliche Seitenstruktur im Ordner `html/` organisiert bleibt.
 
 ## html/
 
