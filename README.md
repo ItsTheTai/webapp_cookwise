@@ -7,7 +7,7 @@
 
 # Kernfunktionen
 - **Rezeptübersicht**
-  - Abruf aller Rezepte über eine externe REST-API
+  - Abruf aller Rezepte über eine externe API
   - Anzeige als Rezeptkarten
   - zufälliges Rezept-Karussell auf der Startseite
 
