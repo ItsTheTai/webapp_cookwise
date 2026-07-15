@@ -5,6 +5,8 @@
 ## Projektbeschreibung
 **CookWise** ist eine webbasierte Rezeptplattform, die Rezepte über eine externe API bereitstellt. Die Anwendung ermöglicht das Durchsuchen, Filtern und Anzeigen von Rezepten sowie das Verwalten einer Einkaufsliste und die Nutzung eines KI-Assistenten. Die Anwendung basiert auf HTML, CSS und JavaScript und setzt auf eine modulare Struktur mit wiederverwendbaren Seitenkomponenten.
 
+Link zur gehosteten Seite: https://itsthetai.github.io/webapp_cookwise/
+
 # Kernfunktionen
 - **Rezeptübersicht**
   - Abruf aller Rezepte über eine externe API
