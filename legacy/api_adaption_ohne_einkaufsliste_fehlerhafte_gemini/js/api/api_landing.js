@@ -18,7 +18,7 @@ const ecoToSmiley = {
 
 function createRecipeCard(recipe) {
     return `
-        <a href="rezeptkarte_2.html?id=${recipe.id}" class="col-custom-grid text-decoration-none">
+        <a href="html/rezeptkarte_2.html?id=${recipe.id}" class="col-custom-grid text-decoration-none">
             <div class="recipe-card">
                 <img src="${recipe.bild_url}" class="recipe-bg" alt="${recipe.titel}">
                 <div class="recipe-content">

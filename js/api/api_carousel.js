@@ -35,7 +35,7 @@ function updateCarousel(recipes) {
             titles[i].innerText = recipe.titel;
 
             // Set the clickable URL using the recipe ID
-            links[i].href = `rezeptkarte_2.html?id=${recipe.id}`;
+            links[i].href = `/html/rezeptkarte_2.html?id=${recipe.id}`;
         }
     });
 }

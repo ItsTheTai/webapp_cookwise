@@ -10,12 +10,12 @@ function includeHTML(selector, file, callback) {
         });
 }
 
-includeHTML("#navbar", "./components/navbar_api.html", function () {
+includeHTML("#navbar", "html/components/navbar_api.html", function () {
 
     if (typeof initializeThemeToggle === "function") {
         initializeThemeToggle();
     }
 
-    includeHTML("#carousel", "./components/carousel.html");
-    includeHTML("#recipes", "./components/recipes_api.html");
+    includeHTML("#carousel", "html/components/carousel.html");
+    includeHTML("#recipes", "html/components/recipes_api.html");
 });

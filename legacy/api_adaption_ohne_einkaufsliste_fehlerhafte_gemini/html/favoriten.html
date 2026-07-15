@@ -11,7 +11,8 @@
 
     <style>
         /* 1. FIXES THE BACKGROUND CUTOFF */
-        html, body {
+        html,
+        body {
             min-height: 100vh !important;
             margin: 0;
             padding: 0;
@@ -32,12 +33,13 @@
             position: absolute !important;
             top: 10px !important;
             right: 10px !important;
-            z-index: 9999 !important; /* Forces it above the blurred background image */
-            
+            z-index: 9999 !important;
+            /* Forces it above the blurred background image */
+
             background-color: rgba(24, 24, 24, 0.8) !important;
             border: 1px solid var(--prime-color3) !important;
             color: var(--white) !important;
-            
+
             width: 30px !important;
             height: 30px !important;
             border-radius: 50% !important;
@@ -74,7 +76,7 @@
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             const gridContainer = document.getElementById('favorite-recipes-grid');
-            
+
             // Eco smiley mapping mapping tool context matching api logic
             const ecoToSmiley = {
                 gut: `<i class="bi bi-emoji-smile-fill active"></i>`,
@@ -84,23 +86,23 @@
 
             function renderFavorites() {
                 const favorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
-                
+
                 if (!gridContainer) return;
 
                 if (favorites.length === 0) {
                     gridContainer.innerHTML = `
                         <div class="text-center w-100 py-5">
                             <p class="text-muted fs-5">Du hast noch keine Favoriten gespeichert.</p>
-                            <a href="../html/landing.html" class="btn btn-outline-light rounded-pill px-4">Rezepte entdecken</a>
+                            <a href="landing.html" class="btn btn-outline-light rounded-pill px-4">Rezepte entdecken</a>
                         </div>`;
                     return;
                 }
 
                 let htmlContent = '';
-                
+
                 favorites.forEach((recipe, index) => {
                     const smileyMarkup = ecoToSmiley[recipe.oekobilanz] || '';
-                    
+
                     htmlContent += `
                         <div class="col-custom-grid mb-3">
                             <div class="recipe-card">
@@ -124,7 +126,7 @@
                         </div>
                     `;
                 });
-                
+
                 gridContainer.innerHTML = htmlContent;
                 attachDeleteEvents(favorites);
             }
@@ -137,11 +139,11 @@
                         e.stopPropagation(); // Stops routing navigation context click behavior
 
                         const indexToRemove = btn.getAttribute('data-index');
-                        
+
                         // Splice structure index entry sequence out
                         favorites.splice(indexToRemove, 1);
                         localStorage.setItem("recipe_favorites", JSON.stringify(favorites));
-                        
+
                         // Re-render dashboard list UI structural nodes layout
                         renderFavorites();
                     });
