@@ -80,7 +80,8 @@ function renderRecipeFilters() {
         button.classList.add(
             "btn",
             "btn-outline-success",
-            "btn-sm"
+            "btn-sm",
+            "rounded-pill"
         );
 
         button.textContent = recipe;
