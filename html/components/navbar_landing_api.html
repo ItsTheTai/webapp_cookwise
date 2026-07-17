@@ -11,7 +11,24 @@
         <div class="collapse navbar-collapse" id="navbarContent">
 
             <div class="d-flex flex-column ms-lg-4 my-3 my-lg-0 me-auto search-filter-wrapper pe-3"
-                style="max-width: 380px; width: 100%;"></div>
+                style="max-width: 380px; width: 100%;">
+                <div class="input-group">
+                    <button
+                        class="btn btn-outline-secondary input-group-text search-custom border-custom text-secondary rounded-pill rounded-end-0"
+                        id="search-addon" onclick="sendSearchRequest()">
+                        <i class="bi bi-search search-icon"></i>
+                    </button>
+                    <input class="form-control search-custom border-custom rounded-0" type="search" placeholder=""
+                        aria-label="Search" aria-describedby="search-addon">
+
+                    <button
+                        class="btn btn-outline-secondary search-custom border-custom rounded-pill rounded-start-0 px-3 text-light"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#filterDashboard" aria-expanded="false"
+                        aria-controls="filterDashboard">
+                        <i class="bi bi-sliders slider-icon"></i>
+                    </button>
+                </div>
+            </div>
 
             <ul class="navbar-nav d-flex align-items-lg-center gap-2">
                 <li class="nav-item"><a class="nav-link nav-link-icon" href="../html/favoriten.html"><i
