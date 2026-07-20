@@ -1,4 +1,4 @@
-// Dictionary for mapping eco balance values onto Bootstrap Icon smiley bundles
+// Dictionary für das Mapping von Ökobilanz-Werten auf Bootstrap-Icon Smiley-Bundles
 const ecoToSmiley = {
     gut: `
         <i class="bi bi-emoji-smile-fill active"></i>
@@ -17,55 +17,199 @@ const ecoToSmiley = {
     `
 };
 
-/*This section sets the onClick-function for the 'add to shopping list'-Button
-When pressed, the button gets the ingredients, title and selected portion amount of the current recipe and saves it to localStorage in a JSON-Object.
-LocalStorage is then used in shoppinglist.js to render the recipes into the shoppinglist
-*/
-let ingredients = []
-let recipeTitle = ""
-const shoppinglistBtn = document.getElementById("shoppingListButton")
-shoppinglistBtn.addEventListener("click", handleShoppingListButton)
+// Globale Variablen für den Portionsrechner
+let aktuellesRezept = null;
+let aktuellePortionen = 1;
 
+// Logik für die Einkaufsliste
+let ingredients = [];
+let recipeTitle = "";
+
+// Event-Listener für den Einkaufslisten-Button
+const shoppinglistBtn = document.getElementById("shoppingListButton");
+if (shoppinglistBtn) {
+    shoppinglistBtn.addEventListener("click", handleShoppingListButton);
+}
+
+// Fügt die aktuellen Zutaten zur Einkaufsliste im LocalStorage hinzu
 function handleShoppingListButton() {
-    const portionsCountEl = document.getElementById("portions-count");
-    const portions = parseInt(portionsCountEl.textContent);
+    if (!ingredients.length) return;
 
-    for (let ingredient of ingredients) {
-        ingredient.amount = ingredient.baseAmount * portions;
-        ingredient.recipe = recipeTitle;
-    }
     const currentList = JSON.parse(localStorage.getItem("shoppinglist")) || [];
     currentList.push(...ingredients);
     localStorage.setItem("shoppinglist", JSON.stringify(currentList));
     showVisualFeedback(shoppinglistBtn, "success", `"${recipeTitle}" zur Einkaufsliste hinzugefügt!`);
 }
 
+// -----------------------------------------------------------------------------
+// PORTIONSRECHNER LOGIK
+// -----------------------------------------------------------------------------
 
+// Mapping für englische Einheiten und Hinweise auf Deutsch
+const unitTranslations = {
+    'chopped': 'gehackt',
+    'parts': 'Teile',
+    'part': 'Teil',
+    'large': 'groß',
+    'small': 'klein',
+    'tblsp': 'EL',
+    'tblsp.': 'EL',
+    'tbsp': 'EL',
+    'tbsp.': 'EL',
+    'tbls': 'EL',
+    'tsp': 'TL',
+    'tsp.': 'TL',
+    'to serve': 'zum Servieren',
+    'st.': 'Stk',
+    'st': 'Stk',
+    'el.': 'EL',
+    'el': 'EL',
+    'tl.': 'TL',
+    'tl': 'TL',
+    'gr.': 'g',
+    'gr': 'g'
+};
+
+// Hilfsfunktion: Ersetzt englische Begriffe im gesamten Text
+function translateUnit(text) {
+    if (!text) return "";
+    let translated = text.toString().trim();
+
+    // Geht alle Wörter im Mapping durch und ersetzt sie (unabhängig von Groß-/Kleinschreibung)
+    Object.keys(unitTranslations).forEach(englishWord => {
+        const germanWord = unitTranslations[englishWord];
+        // \b sorgt dafür, dass nur ganze Wörter ersetzt werden
+        const regex = new RegExp(`\\b${englishWord}\\b`, 'gi');
+        translated = translated.replace(regex, germanWord);
+    });
+
+    return translated;
+}
+
+// Hilfsfunktion zum Runden von Mengenwerten auf zwei Nachkommastellen
+function rundeMenge(menge) {
+  if (menge === null || menge === undefined || isNaN(menge)) return "";
+  return Number(menge.toFixed(2));
+}
+
+// Hauptfunktion: Rendert die dynamische Zutatenliste im DOM
+function zutatenAnzeigen() {
+  if (!aktuellesRezept || !aktuellesRezept.zutaten) return;
+
+  const basisPortionen = aktuellesRezept.portionen || 1;
+  const faktor = aktuellePortionen / basisPortionen;
+
+  // Suche nach dem UL-Element innerhalb des Containers oder direkt per ID
+  const container = document.getElementById("ingredients-container");
+  const liste = container ? container.querySelector("ul.ingredients-list") || container.querySelector("ul") : document.getElementById("zutaten-liste");
+  
+  if (!liste) return;
+
+  // Zurücksetzen und Vorbereiten der Liste
+  liste.className = "ingredients-list list-unstyled m-0 p-0 mb-3";
+  liste.innerHTML = "";
+  ingredients = []; // Synchronisation mit der Einkaufsliste
+
+  aktuellesRezept.zutaten.forEach(zutat => {
+    const li = document.createElement("li");
+    li.className = "py-1 d-flex align-items-center";
+
+    const name = zutat.zutat || zutat.name || "";
+    const rawUnit = zutat.einheit || "";
+    const unit = translateUnit(rawUnit);
+    const baseAmount = parseFloat(zutat.menge);
+
+    let calculatedAmount = null;
+    let rightContent = "";
+
+    // Behandlung von Zutaten ohne feste Mengenangabe (z. B. "nach Geschmack" oder "To serve")
+    if (zutat.menge === null || zutat.menge === undefined || isNaN(baseAmount)) {
+      const rawNote = zutat.hinweis || rawUnit || "";
+      const note = translateUnit(rawNote);
+      rightContent = `<span class="ingredient-note">${note}</span>`;
+    } else {
+      calculatedAmount = rundeMenge(baseAmount * faktor);
+      rightContent = `
+        <span class="ingredient-amount-wrap">
+          <strong class="ingredient-amount">${calculatedAmount}</strong> ${unit}
+        </span>
+      `;
+    }
+
+    // Schlankes HTML-Markup ohne duplizierten Code
+    li.innerHTML = `
+      <i class="bi bi-circle"></i>
+      <span class="ingredient-name">${name}</span>
+      ${rightContent}
+    `;
+
+    liste.appendChild(li);
+
+    // Datenobjekt für die Einkaufsliste speichern
+    ingredients.push({
+      name: name,
+      unit: unit,
+      amount: calculatedAmount,
+      recipe: aktuellesRezept.titel
+    });
+  });
+
+  // Aktualisierung der Portionsanzeige im DOM
+  const portionenEl = document.getElementById("portionen-anzahl") || document.getElementById("portions-count");
+  if (portionenEl) {
+    portionenEl.textContent = aktuellePortionen;
+  }
+}
+// -----------------------------------------------------------------------------
+// API & INITIALISIERUNG
+// -----------------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const recipeId = urlParams.get('id');
+    // Event-Listener für die Portionsrechner-Buttons (+ / -)
+    const btnPlus = document.getElementById("portionen-plus") || document.getElementById("btn-plus");
+    const btnMinus = document.getElementById("portionen-minus") || document.getElementById("btn-minus");
 
-    if (!recipeId) {
-        console.error("Recipe ID not found in URL");
-        return;
+    if (btnPlus) {
+        btnPlus.addEventListener("click", () => {
+            aktuellePortionen++;
+            zutatenAnzeigen();
+        });
     }
+
+    if (btnMinus) {
+        btnMinus.addEventListener("click", () => {
+            if (aktuellePortionen > 1) {
+                aktuellePortionen--;
+                zutatenAnzeigen();
+            }
+        });
+    }
+
+    // Rezept-ID aus der URL auslesen (mit Fallback auf ID '1')
+    const urlParams = new URLSearchParams(window.location.search);
+    const recipeId = urlParams.get('id') || '1';
 
     const detailUrl = `https://recipes.digitalhumanities.io/api/rezepte/${recipeId}/?format=json`;
 
+    // Rezeptdaten von der REST-API abrufen
     fetch(detailUrl)
         .then(response => {
-            if (!response.ok) throw new Error("Error loading the recipe data");
+            if (!response.ok) throw new Error("Fehler beim Laden der Rezeptdaten");
             return response.json();
         })
         .then(recipe => renderRecipeDetail(recipe))
-        .catch(error => console.error("Failed to fetch recipe details:", error));
+        .catch(error => console.error("Fehler beim Abrufen der Rezeptdetails:", error));
 });
 
+// Befüllt die Seite dynamisch mit den Daten aus der API
 function renderRecipeDetail(recipe) {
+    aktuellesRezept = recipe;
+    recipeTitle = recipe.titel;
+    aktuellePortionen = recipe.portionen || 1;
+
     document.title = recipe.titel;
 
-    // 1. Map simple metadata values directly onto HTML elements via IDs
+    // 1. Text-Zuordnungen für einfache Werte
     const textMappings = {
         "kochdauer-value": `${recipe.zubereitungszeit?.gesamt_min || 0} Min.`,
         "schwierigkeit-value": recipe.schwierigkeitsgrad,
@@ -78,79 +222,35 @@ function renderRecipeDetail(recipe) {
         if (el) el.textContent = value;
     }
 
-    // 2. Map structural values via CSS class selectors
+    // 2. Strukturelle Werte (Titel und Beschreibung)
     const titleEl = document.querySelector(".recipe-title-detail");
     if (titleEl) titleEl.textContent = recipe.titel;
 
-    // Update the recipe description text dynamically
     const descEl = document.querySelector(".recipe-description-text");
     if (descEl) descEl.textContent = recipe.kurzbeschreibung;
 
-    // 3. Inject matching eco-smiley bundle from the dictionary layout
+    // 3. Ökobilanz-Smiley anzeigen
     const ecoContainer = document.querySelector(".smiley-group-detail");
     if (ecoContainer && recipe.oekobilanz) {
         ecoContainer.innerHTML = ecoToSmiley[recipe.oekobilanz];
     }
 
-    // 4. Handle core image component attributes
+    // 4. Rezeptbild setzen
     const imgEl = document.querySelector(".recipe-card-layout img");
     if (imgEl) {
         imgEl.src = recipe.bild_url;
         imgEl.alt = recipe.titel;
     }
 
-    // ==========================================================================
-    // 5. DYNAMIC TAB CONTENT GENERATION (Prep, Cook, Serve)
-    // ==========================================================================
+    // 5. Dynamischer Tab-Inhalt
+    // A. PREP-TAB (Zutaten anzeigen)
+    zutatenAnzeigen();
 
-    // --- A. PREP TAB (Ingredients) ---
-    try {
-        const mainContainer = document.getElementById("ingredients-container");
-        const portionsCountEl = document.getElementById("portions-count");
-
-        // Fetch the initial target serving size multiplier from the DOM layout
-        const currentServings = portionsCountEl ? parseInt(portionsCountEl.textContent) : 1;
-
-        if (mainContainer && recipe.zutaten) {
-            // Build the core unordered list structure from scratch dynamically
-            mainContainer.innerHTML = '<ul class="ingredients-list list-unstyled m-0 p-0"></ul>';
-            const ulElement = mainContainer.querySelector(".ingredients-list");
-
-            recipe.zutaten.forEach((item, index) => {
-                const amountOnOneServing = parseFloat(item.menge) || 0;
-                const unit = item.einheit || '';
-                const name = item.name || item.zutat || '';
-
-                // Calculate the initial display volume relative to the active target serving size
-                const initialDisplayedAmount = amountOnOneServing ? Number((amountOnOneServing * currentServings).toFixed(2)) : '';
-
-                const li = document.createElement("li");
-                li.className = "py-1 d-flex align-items-baseline";
-                li.innerHTML = `
-                    <i class="bi bi-circle me-2" style="font-size: 0.8rem;"></i> 
-                    <span>
-                        <strong class="ingredient-amount" data-base="${amountOnOneServing}">${initialDisplayedAmount} ${unit}</strong> ${name}
-                    </span>
-                `;
-                ulElement.appendChild(li);
-
-                //Builds a JSON-Object for every ingredient and saves it into the ingredient variable that is then stored in localStorage
-                let currentIngredient = { "name": name, "unit": unit, "baseAmount": amountOnOneServing, "recipe": recipe.titel }
-                recipeTitle = recipe.titel
-                ingredients.push(currentIngredient)
-            });
-            console.log("Prep tab rendered and synced with portions engine successfully.");
-        }
-    } catch (e) {
-        console.error("Error rendering Prep tab:", e);
-    }
-
-    // --- B. COOK TAB (Steps) ---
+    // B. COOK-TAB (Zubereitungsschritte)
     try {
         const stepsContainer = document.querySelector(".cooking-steps");
         if (stepsContainer && recipe.schritte) {
             stepsContainer.innerHTML = "";
-
             const vorbereitungSteps = recipe.schritte.vorbereitung || [];
             const zubereitungSteps = recipe.schritte.zubereitung || [];
             const allSteps = [...vorbereitungSteps, ...zubereitungSteps];
@@ -162,16 +262,15 @@ function renderRecipeDetail(recipe) {
                     li.textContent = typeof step === 'string' ? step : (step.beschreibung || step.text || "");
                     stepsContainer.appendChild(li);
                 });
-                console.log("Cook tab rendered successfully.");
             } else {
                 stepsContainer.innerHTML = "<li>Keine Schritte verfügbar.</li>";
             }
         }
     } catch (e) {
-        console.error("Error in Cook tab block:", e);
+        console.error("Fehler im Cook-Tab-Block:", e);
     }
 
-    // --- C. SERVE TAB (Serving Suggestion) ---
+    // C. SERVE-TAB (Serviervorschlag)
     try {
         const servePane = document.getElementById("serve-pane");
         if (servePane && recipe.serviervorschlag) {
@@ -179,26 +278,21 @@ function renderRecipeDetail(recipe) {
                 <h5 class="tab-section-title">Anrichten & Servieren</h5>
                 <p class="recipe-text-block">${recipe.serviervorschlag}</p>
             `;
-            console.log("Serve tab rendered successfully.");
         }
     } catch (e) {
-        console.error("Error rendering Serve tab:", e);
+        console.error("Fehler beim Rendern des Serve-Tabs:", e);
     }
 
-    // ==========================================================================
-    // 6. FAVORITES STORAGE ENGINE (Heart Button)
-    // ==========================================================================
+    // 6. Favoriten-Funktionalität
     const favoriteBtn = document.querySelector(".btn-favorite");
     if (favoriteBtn) {
-        // Initial Page-Load Check: Check if recipe is already favorited
         let favorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
         if (favorites.some(fav => fav.id === recipe.id)) {
-            favoriteBtn.style.color = "#dc3545"; // Keep it visibly red if already stored
+            favoriteBtn.style.color = "#dc3545";
         }
 
         favoriteBtn.addEventListener("click", (e) => {
-            e.preventDefault(); // Stop any redirection or page-jump
-
+            e.preventDefault();
             let currentFavorites = JSON.parse(localStorage.getItem("recipe_favorites")) || [];
             const isAlreadyFavorite = currentFavorites.some(fav => fav.id === recipe.id);
 
@@ -211,9 +305,8 @@ function renderRecipeDetail(recipe) {
                     bild_url: recipe.bild_url,
                     oekobilanz: recipe.oekobilanz
                 });
-
                 localStorage.setItem("recipe_favorites", JSON.stringify(currentFavorites));
-                favoriteBtn.style.color = "#dc3545"; // Change heart icon color directly
+                favoriteBtn.style.color = "#dc3545";
                 showVisualFeedback(favoriteBtn, "success", `"${recipe.titel}" zu Favoriten hinzugefügt!`);
             } else {
                 showVisualFeedback(favoriteBtn, "warning", "Bereits in Favoriten vorhanden!");
@@ -221,64 +314,47 @@ function renderRecipeDetail(recipe) {
         });
     }
 
-    // ==========================================================================
-    // 7. AI PLANNER STORAGE ENGINE (Clock Button)
-    // ==========================================================================
+    // 7. KI-Kochplaner-Funktionalität
     const plannerBtn = document.querySelector(".btn-timer");
-
     if (plannerBtn) {
-        // Initial Page-Load Check: Check if recipe is already in the AI Planner
         let plannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
         if (plannerRecipes.some(item => item.id === recipe.id)) {
-            plannerBtn.style.color = "#0dcaf0"; // Highlight with AI accent color (cyan) if already added
+            plannerBtn.style.color = "#0dcaf0";
         }
 
         plannerBtn.addEventListener("click", (e) => {
-            e.preventDefault(); // Stop redirection
-
+            e.preventDefault();
             let currentPlannerRecipes = JSON.parse(localStorage.getItem("ai_planner_recipes")) || [];
             const isAlreadyAdded = currentPlannerRecipes.some(item => item.id === recipe.id);
 
             if (!isAlreadyAdded) {
-                currentPlannerRecipes.push({
-                    id: recipe.id,
-                    titel: recipe.titel
-                });
+                currentPlannerRecipes.push({ id: recipe.id, titel: recipe.titel });
                 localStorage.setItem("ai_planner_recipes", JSON.stringify(currentPlannerRecipes));
-                plannerBtn.style.color = "#0dcaf0"; // Update color immediately
+                plannerBtn.style.color = "#0dcaf0";
                 showVisualFeedback(plannerBtn, "success", `"${recipe.titel}" zum Kochplaner hinzugefügt!`);
             } else {
                 showVisualFeedback(plannerBtn, "warning", "Bereits im Kochplaner vorhanden!");
             }
         });
     }
-
-    console.log("API:", recipe);
-    console.log("Recipe layout sync completed successfully.");
 }
 
-/**
- * Shared Helper Function: Generates floating visual notification banners without blocking UI flow
- */
+// Erstellt und zeigt dynamische Toast-Benachrichtigungen für Nutzer-Feedback
 function showVisualFeedback(element, status, message) {
-    // 1. Temporary color flash animation directly on the clicked action button
     const originalColor = element.style.color;
     if (status === "warning") {
-        element.style.color = "#ffc107"; // Warning flash
+        element.style.color = "#ffc107";
         setTimeout(() => { element.style.color = originalColor; }, 1000);
     }
 
-    // 2. Look for or create the global toast layout fixed window viewport anchor container
     let container = document.getElementById("feedback-toast-container");
     if (!container) {
         container = document.createElement("div");
         container.id = "feedback-toast-container";
-        // Fixed mounting coordinates securely on top of layouts
         container.style.cssText = "position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;";
         document.body.appendChild(container);
     }
 
-    // 3. Assemble custom alert block
     const alertBox = document.createElement("div");
     const themeClass = status === "success" ? "alert-success text-success-emphasis" : "alert-warning text-warning-emphasis";
     const icon = status === "success" ? "bi-check-circle-fill" : "bi-exclamation-triangle-fill";
@@ -294,7 +370,6 @@ function showVisualFeedback(element, status, message) {
 
     container.appendChild(alertBox);
 
-    // 4. Clean notification component cleanly from live stack tree structure after 3 seconds
     setTimeout(() => {
         alertBox.classList.remove("show");
         setTimeout(() => alertBox.remove(), 250);
