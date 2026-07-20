@@ -1,12 +1,11 @@
 .table-container {
     width: 100%;
     box-sizing: border-box;
-    background: #1f1f1f;
+    background: var(--prime-color1);
     border-radius: 12px;
     padding: 10px 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     overflow-x: auto
-
 }
 
 .delete-btn {
@@ -35,7 +34,7 @@ tbody td {
 
 tbody tr {
     transition: background 0.2s ease;
-    
+
 }
 
 tbody tr:hover {
@@ -47,7 +46,8 @@ td input {
     box-sizing: border-box;
 }
 
-td,th {
+td,
+th {
     padding: 12px 4px 12px 4px;
 }
 
@@ -65,6 +65,7 @@ body {
     background: var(--bg-shopping);
     background-attachment: fixed;
     background-repeat: no-repeat;
+    color: var(--prime-color5);
 }
 
 h5 {
