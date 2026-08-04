@@ -7,7 +7,7 @@
 // ==========================================================================
 // 1. KONFIGURATION (API-KEY)
 // ==========================================================================
-const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
+const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-3.6-flash:generateContent";
 
 // Funktion zum Abrufen des API-Keys aus sessionStorage
 function getApiKey() {
