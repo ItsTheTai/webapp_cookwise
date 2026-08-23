@@ -1,3 +1,4 @@
+// Same content as in 'load_components_landing.js'
 function includeHTML(selector, file, callback) {
     const container = document.querySelector(selector);
     if (!container) return;

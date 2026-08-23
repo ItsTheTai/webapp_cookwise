@@ -1,3 +1,6 @@
+// Mapping of eco-balance values ("gut", "mittel", "schlecht")
+// to the corresponding emoji icons. The "active" class highlights
+// the icon that represents the recipe's eco rating.
 const ecoToSmiley = {
     gut: `
         <i class="bi bi-emoji-smile-fill active"></i>
@@ -16,6 +19,7 @@ const ecoToSmiley = {
     `
 };
 
+// Creates a single recipe card HTML block.
 function createRecipeCard(recipe) {
     return `
         <a href="rezeptkarte_2.html?id=${recipe.id}" class="col-custom-grid text-decoration-none">
@@ -35,13 +39,15 @@ function createRecipeCard(recipe) {
     `;
 }
 
+// Renders a list of recipes into the #recipe-container element.
 function renderRecipes(recipes) {
     const container = document.getElementById("recipe-container");
+    // Build all recipe cards into one HTML string
     let recipesHtml = "";
     for (let recipe of recipes) {
         recipesHtml += createRecipeCard(recipe);
     }
-
+    // Insert the cards inside a responsive row wrapper
     container.innerHTML = `
         <div class="row responsive-recipe-row">
             ${recipesHtml}

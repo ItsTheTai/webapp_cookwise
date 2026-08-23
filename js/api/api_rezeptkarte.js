@@ -17,9 +17,7 @@ const ecoToSmiley = {
     `
 };
 
-/*This section sets the onClick-function for the 'add to shopping list'-Button
-When pressed, the button gets the ingredients, title and selected portion amount of the current recipe and saves it to localStorage in a JSON-Object.
-LocalStorage is then used in shoppinglist.js to render the recipes into the shoppinglist
+/*This section sets the onClick-function for the 'add to shopping list'-Button When pressed, the button gets the ingredients, title and selected portion amount of the current recipe and saves it to localStorage in a JSON-Object. LocalStorage is then used in shoppinglist.js to render the recipes into the shoppinglist
 */
 let ingredients = []
 let recipeTitle = ""
@@ -99,10 +97,7 @@ function renderRecipeDetail(recipe) {
         imgEl.alt = recipe.titel;
     }
 
-    // ==========================================================================
     // 5. DYNAMIC TAB CONTENT GENERATION (Prep, Cook, Serve)
-    // ==========================================================================
-
     // --- A. PREP TAB (Ingredients) ---
     try {
         const mainContainer = document.getElementById("ingredients-container");
@@ -185,9 +180,7 @@ function renderRecipeDetail(recipe) {
         console.error("Error rendering Serve tab:", e);
     }
 
-    // ==========================================================================
-    // 6. FAVORITES STORAGE ENGINE (Heart Button)
-    // ==========================================================================
+    //6. FAVORITES STORAGE ENGINE (Heart Button)
     const favoriteBtn = document.querySelector(".btn-favorite");
     if (favoriteBtn) {
         // Initial Page-Load Check: Check if recipe is already favorited
@@ -221,9 +214,7 @@ function renderRecipeDetail(recipe) {
         });
     }
 
-    // ==========================================================================
-    // 7. AI PLANNER STORAGE ENGINE (Clock Button)
-    // ==========================================================================
+    //7. AI PLANNER STORAGE ENGINE (Clock Button)
     const plannerBtn = document.querySelector(".btn-timer");
 
     if (plannerBtn) {
@@ -257,9 +248,7 @@ function renderRecipeDetail(recipe) {
     console.log("Recipe layout sync completed successfully.");
 }
 
-/**
- * Shared Helper Function: Generates floating visual notification banners without blocking UI flow
- */
+/*Shared Helper Function: Generates floating visual notification banners without blocking UI flow*/
 function showVisualFeedback(element, status, message) {
     // 1. Temporary color flash animation directly on the clicked action button
     const originalColor = element.style.color;

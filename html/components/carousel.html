@@ -1,14 +1,21 @@
+<!-- Recipe Hero Carousel Wrapper -->
+<!-- data-bs-ride="carousel" enables automatic sliding -->
+<!-- data-bs-interval="4500" sets slide duration to 4.5 seconds -->
 <div id="recipeHeroCarousel" class="carousel slide custom-center-container my-4" data-bs-ride="carousel"
     data-bs-interval="4500">
+
+    <!-- Carousel Indicators (the small dots below the carousel) -->
     <div class="carousel-indicators">
+        <!-- Each button jumps to a specific slide -->
         <button type="button" data-bs-target="#recipeHeroCarousel" data-bs-slide-to="0" class="active"
             aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#recipeHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#recipeHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
 
+    <!-- Carousel Inner: contains all slides -->
     <div class="carousel-inner custom-carousel-inner">
-
+        <!-- Slide 1 (active slide shown first) -->
         <div class="carousel-item active">
             <a href="#" class="carousel-link text-decoration-none text-white">
                 <img class="d-block w-100 carousel-hero-img" src="" alt="Recipe Image">
@@ -18,7 +25,7 @@
                 </div>
             </a>
         </div>
-
+        <!-- Slide 2 -->
         <div class="carousel-item">
             <a href="#" class="carousel-link text-decoration-none text-white">
                 <img class="d-block w-100 carousel-hero-img" src="" alt="Recipe Image">
@@ -28,7 +35,7 @@
                 </div>
             </a>
         </div>
-
+        <!-- Slide 3 -->
         <div class="carousel-item">
             <a href="#" class="carousel-link text-decoration-none text-white">
                 <img class="d-block w-100 carousel-hero-img" src="" alt="Recipe Image">
