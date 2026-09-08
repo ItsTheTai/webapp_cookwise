@@ -12,6 +12,50 @@
 
 <body>
 
+    <!-- Floating Guided Tour Button -->
+    <button id="start-guided-tour" class="btn btn-primary rounded-pill shadow-lg" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 10px 20px;
+    font-weight: 600;
+">
+        <i class="bi bi-question-circle me-2"></i> Guided Tour
+    </button>
+
+    <!-- Guided Tour Overlay -->
+    <div id="guided-tour-overlay" class="d-none" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    pointer-events: none;
+"></div>
+
+    <!-- Guided Tour Tooltip -->
+    <div id="guided-tour-tooltip" class="d-none" style="
+    position: absolute;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    z-index: 10000;
+    pointer-events: auto;
+">
+        <h5 id="tooltip-title" class="mb-2"></h5>
+        <p id="tooltip-description" class="mb-0"></p>
+        <div class="d-flex justify-content-between mt-3">
+            <button id="prev-step" class="btn btn-sm btn-secondary">Zurück</button>
+            <button id="next-step" class="btn btn-sm btn-primary">Weiter</button>
+            <button id="cancel-tour" class="btn btn-sm btn-danger">Abbruch</button>
+        </div>
+    </div>
+
     <div id="navbar"></div>
 
     <div id="carousel"></div>
@@ -27,6 +71,7 @@
     <script src="../js/api/api_navbar.js"></script>
     <script src="../js/api/api_landing.js"></script>
     <script src="../js/api/api_carousel.js"></script>
+    <script src="../js/guided_tour.js"></script>
 
 </body>
 
