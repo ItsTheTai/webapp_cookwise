@@ -1,182 +1,227 @@
-/* ==========================================================================
-   AI COMPONENTS (EXTENDS STYLE.CSS SYSTEM)
-   ========================================================================== */
+/* CSS für KI-Assistent Seite (als Erweiterung für STYLE.CSS )
+####   
+*/
 
+/* Header Container/Klasse für den KI-Titel */
 .ai-title-container {
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1rem;
+    /* Nutzt die allgemeine Rahmenfarbe aus style.css */
+    border-bottom: 1px solid var(--border-color);   /* 1 Pixel breite Linie unten */
+    padding-bottom: 1rem; /*Abstand Unten */
 }
 
+/* Hauptüberschrift des KI-Bereichs */
 .ai-heading {
-    color: var(--prime-color5);
-    font-weight: 800;
-    letter-spacing: -0.5px;
+    /* Greift auf den in style.css definierten Textfarbwert zu (wechselt bei Light/Dark Theme) */
+    color: var(--prime-color5); 
+    font-weight: 800; /* font art sehr fett */
+    letter-spacing: -0.5px; /* verkleinerung des Abstands zwischen den buchstaben */
 }
 
-/* API Key Button - positioned left of mode toggle */
+
+
+/* 
+   API-Key Button
+   -------------------------------------------------------------------------- */
 #btn-api-key {
     border: 1px solid var(--border-color);
     color: var(--prime-color4);
+    /* Farbmischung aus Hauptfarbe 1 (z. B. Dunkelgrau) und 5% Weiß für dezente Abhebung */
     background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
-    transition: all 0.2s ease-in-out;
-    font-weight: 600;
+    transition: all 0.2s ease-in-out; /* sanfter farbwechsel statt sehr apprupten */
+    font-weight: 600; /* bold */
     height: 40px;
-    display: inline-flex;
+    display: inline-flex; /* Inhalt wird flexibel angeordnet und vertikal zentriert (align-items: center) */
     align-items: center;
 }
 
+/* Hover-Effekt für den API-Key Button 
+Hintergrund, Text und Rahmenfarbeänderung basierend auf style.css */
 #btn-api-key:hover {
     background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
     color: var(--prime-color5);
     border-color: var(--prime-color3);
 }
 
-/* View Switching Toggle Buttons */
+
+
+/* 
+   Umschaltbuttons (Chat vs. Kochplaner)
+   -------------------------------------------------------------------------- */
 .btn-toggle-ai {
     border: 1px solid var(--prime-color3);
     color: var(--prime-color4);
     background-color: transparent;
     transition: all 0.2s ease-in-out;
     font-weight: 600;
-}
+}         /* farben festlegen,  auch bei hover */
 
 .btn-toggle-ai:hover {
     background-color: color-mix(in srgb, var(--prime-color5) 10%, transparent);
     color: var(--prime-color5);
     border-color: var(--prime-color3);
-}
+} /* Farbänderung bei hover */
 
+/* Aktiver Zustand des gewählten Umschalt-Buttons. 
+    !important, um Bootstrap-Standardfarben zu überschreiben. */
 .btn-toggle-ai.active {
     background-color: var(--cyan) !important;
     color: var(--white) !important;
     border-color: var(--cyan) !important;
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--cyan) 30%, transparent);
-}
+    /* Soft erzeugter Cyan-Schatten */
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--cyan) 30%, transparent); /* weicher Schatten um den button */
+} /* cyan als farbvariable aus style.css - kann dort bei Bedarf angepasst werden*/
 
-/* Chat-Fenster & Planer Panels */
+
+
+
+/* 
+   Chat-Fenster & Kochplaner-Panels
+   -------------------------------------------------------------------------- */
+/* Gemeinsame Karten-Stile für Chat-Box und beide Planer-Spalten  (für alle 3 klassen) */
 .chat-box-container, .planner-card-left, .planner-card-right {
     background-color: color-mix(in srgb, var(--prime-color1) 95%, white);
     border: 1px solid var(--border-color);
-    border-radius: 1.2rem;
+    border-radius: 1.2rem; /*abgerundete ecken */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(10px);
-    display: flex;
-    flex-direction: column;
+    backdrop-filter: blur(10px); /* leicht unscharfer Hintergrund */
+    display: flex; /* flexbox aktivieren */
+    flex-direction: column; /* inhalte werden untereinander angeordnet ; standard wäre nebeneinander */
     height: 550px;
-    padding: 1.5rem;
+    padding: 1.5rem; /* innenabstand */
     color: var(--prime-color5);
 }
 
+
+/* Spezifische Anpassung für das Chat-Fenster */
 .chat-box-container {
-    padding: 0;
-    overflow: hidden;
+    padding: 0; /* Padding wird in den inneren Elementen gesetzt */
+    overflow: hidden; /* Verhindert das Überstehen abgerundeter Ecken */
 }
-
+/* Nachrichten-Anzeigebereich */
 .chat-messages {
-    flex: 1;
+    flex: 1; /* Nimmt den gesamten verfügbaren vertikalen Platz ein */
     padding: 1.5rem;
-    overflow-y: auto;
+    overflow-y: auto; /* Erzeugt Scrollbalken bei vielen Nachrichten */
 }
-
+/* Unterer Eingabebereich des Chats */
 .chat-input-area {
     padding: 1rem;
     border-top: 1px solid var(--border-color);
     background-color: color-mix(in srgb, var(--prime-color1) 98%, white);
 }
 
-/* Chat Input Field - Fix for dark mode visibility */
+
+/* Überschreiben für bootstrap form-control - form-control wichtig für das chat eingabefenster - vorgefertigter bootstrap
+   Garantiert Text- und Hintergrundfarben im Chat-Eingabefeld bei Theme-Wechseln */
 .chat-input-area input.form-control {
     color: var(--prime-color5) !important;
     background-color: color-mix(in srgb, var(--prime-color1) 95%, white) !important;
     border-color: var(--border-color) !important;
 }
-
-.chat-input-area input.form-control::placeholder {
+.chat-input-area input.form-control::placeholder { /* Platzhaltertext im Eingabefeld gestalten - farbe und durchsichtigkeit */
     color: var(--prime-color4) !important;
     opacity: 0.7;
 }
-
+/* Zustand bei Fokus (wenn Nutzer in das Eingabefeld klickt) */
 .chat-input-area input.form-control:focus {
     color: var(--prime-color5) !important;
     background-color: color-mix(in srgb, var(--prime-color1) 95%, white) !important;
     border-color: var(--cyan) !important;
-    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--cyan) 30%, transparent);
+    box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--cyan) 30%, transparent); /* leuchtenden/weichen cyanfarbener Rand */
 }
 
-/* Chat Input Area Buttons */
+
+/* Button im Eingabebereich - farbe und hover festlegen*/
 .chat-input-area .btn {
     color: var(--prime-color4) !important;
     border-color: var(--border-color) !important;
 }
-
 .chat-input-area .btn:hover {
     color: var(--prime-color5) !important;
     background-color: color-mix(in srgb, var(--prime-color2) 50%, transparent) !important;
     border-color: var(--prime-color3) !important;
 }
 
+
+
+
+/* 
+   Chat-Sprechblasen / Message Bubbles
+   -------------------------------------------------------------------------- */
 .msg-bubble {
-    max-width: 75%;
-    padding: 0.8rem 1.2rem;
-    border-radius: 1.2rem;
-    margin-bottom: 1rem;
-    line-height: 1.4;
+    max-width: 75%; /* Begrenzt die Breite der Blase auf 75% des Fensters */
+    padding: 0.8rem 1.2rem; /* innenabstand zum Text */
+    border-radius: 1.2rem; /* runde ecken */
+    margin-bottom: 1rem; /* Abstand zur nächsten Nachricht. */
+    line-height: 1.4; /* abstand zwischen den Textzeilen */
 }
 
+/* Styling für Antworten der KI (links ausgerichtet) */
 .msg-ai {
     background-color: color-mix(in srgb, var(--prime-color2) 80%, white);
     color: var(--prime-color5);
-    border-bottom-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem; /* Typische Sprechblasen-Ecke - untere linke ecke wird weniger stark abgerundet*/
     border: 1px solid var(--border-color);
 }
 
+/* Styling für Fragen/Eingaben des Nutzers (rechts ausgerichtet) */
 .msg-user {
     background-color: var(--cyan);
     color: var(--white);
-    border-bottom-right-radius: 0.3rem;
-    margin-left: auto;
+    border-bottom-right-radius: 0.3rem; /* Typische Sprechblasen-Ecke - rechts */
+    margin-left: auto; /* Schiebt die Blase an den rechten Rand */
 }
 
-/* Kochplaner-Komponenten */
-.scrollable-steps, .recipe-select-list {
-    flex: 1;
-    overflow-y: auto;
+
+
+
+/* 
+   Kochplaner-Komponenten
+   -------------------------------------------------------------------------- */
+/* Scrollbare Bereiche für Schritte & Auswahllisten */
+.scrollable-steps, .recipe-select-list { 
+    flex: 1; /* Bereich nimmt den verfügbaren Platz ein */
+    overflow-y: auto; /* falls inhalt zu groß, gib es vertikale scrollbar */
 }
 
 .scrollable-steps {
-    padding-right: 5px;
+    padding-right: 5px; /* Inhalt bekommt 5 Pixel Abstand zum rechten Rand und damit zur Scrollbar */
 }
 
+/* Einzelner optimierter Kochschritt */
 .step-item {
-    border-left: 3px solid var(--cyan);
-    padding-left: 1rem;
-    margin-bottom: 1.25rem;
+    border-left: 3px solid var(--cyan); /* Cyan-Farblinie links als Akzent */
+    padding-left: 1rem; /* Abstand zwischen Linie und Text */
+    margin-bottom: 1.25rem; /* Abstand zum nächsten Kochchritt */
     color: var(--prime-color5);
 }
 
+/* Zeitangaben innerhalb der Kochschritte */
 .step-time {
     font-size: 0.8rem;
     color: var(--cyan);
     font-weight: bold;
 }
 
+/* Ausgewähltes Rezept in der rechten Liste des Kochplaners */
 .selected-recipe-item {
     background-color: color-mix(in srgb, var(--prime-color2) 50%, transparent);
-    border: 1px solid var(--border-color);
-    border-radius: 0.8rem;
-    padding: 0.75rem 1rem;
-    margin-bottom: 0.75rem;
-    display: flex;
+    border: 1px solid var(--border-color); /* dünner Rahmen */
+    border-radius: 0.8rem; /* abgerundete Ecken */
+    padding: 0.75rem 1rem; /* 0.75rem → oben und unten; 1rem → links und rechts */
+    margin-bottom: 0.75rem; /* abstand zum nächsten rezept */
+    display: flex; /* Inhalte werden mit möglichst viel Abstand verteilt */
     align-items: center;
     justify-content: space-between;
     color: var(--prime-color5);
-    transition: all 0.2s ease;
+    transition: all 0.2s ease; /* Änderungen werden innerhalb von 0,2 Sekunden weich animiert */
 }
 
 .selected-recipe-item:hover {
-    border-color: var(--prime-color4);
+    border-color: var(--prime-color4); /* hoverfarbe der umrandung */
 }
 
+/* Button zum Entfernen eines Rezepts aus der Liste */
 .btn-remove-recipe {
     background: transparent;
     border: none;
@@ -184,13 +229,16 @@
     font-size: 1.2rem;
     padding: 0;
     line-height: 1;
-    cursor: pointer;
+    cursor: pointer; /* Mauszeiger wird zur Hand */
 }
 
 .btn-remove-recipe:hover {
-    opacity: 0.7;
+    opacity: 0.7; /* beim hovern wird der button leicht durchsichtig */
 }
 
+/* HINWEIS: Badge-Styling für verfügbare Rezept-Auswahl 
+   Aktuell unbenutzt!! wird in ai_logic.js nicht aktiv gerendert
+   kann aber für zukünftige Klick-Auswahllisten genutzt werden. */
 .available-recipe-badge {
     background-color: color-mix(in srgb, var(--prime-color2) 90%, white);
     border: 1px solid var(--border-color);
@@ -207,38 +255,42 @@
     font-size: 0.85rem;
 }
 
-.available-recipe-badge:hover {
+.available-recipe-badge:hover { /* farbanpassung bei hover über verfügbaren rezept */
     background-color: color-mix(in srgb, var(--cyan) 20%, var(--prime-color2));
     border-color: var(--cyan);
 }
 
-/* Optimieren-Button Styling */
+/* Optimieren-Button Styling im Planer */
 #btn-optimize {
     border: 1px solid var(--cyan);
     color: var(--cyan);
     transition: all 0.2s ease;
 }
-
 #btn-optimize:hover {
     background-color: var(--cyan);
     color: var(--white);
 }
 
-/* Loading Spinner Overlay */
-.spinner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1050;
-}
 
-.spinner-overlay .spinner-border {
+
+/* 
+   Loading Spinner Overlay
+   -------------------------------------------------------------------------- */
+/* Dunkles Overlay über den gesamten Bildschirm während eines API-Aufrufs */
+.spinner-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0; /* start oben links in der ecke */
+    width: 100%;
+    height: 100%; /* ganzer bildschirm */
+    background-color: rgba(0, 0, 0, 0.5); /* schwarzer hintergrund mit 50% durchichtigkeit */
+    display: flex; /* aktiviert flexbox */
+    justify-content: center;  /*inhalt horizontal zentriert */
+    align-items: center; /*inhalt vertikal zentriert */
+    z-index: 1050; /* Überlagert alle übrigen HTML-Elemente */
+}
+/* ladekreis */ 
+.spinner-overlay .spinner-border { 
     width: 3rem;
     height: 3rem;
 }

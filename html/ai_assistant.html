@@ -3,90 +3,141 @@
 
 <head>
     <meta charset="UTF-8">
+    
+    <!-- Responsive Design - korrekte Darstellung und Skalierung auf verschiedenen Geräten, auch mobil | Breite wird auf die Bildschirmbreite gesetzt, mit einem zoom/skallierung von 100%-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>KI-Assistent - CookWise</title>
+    
+    <!-- CSS-Bootstrap -->
+    <!-- Bootstrap Framework – Basis-Styling und Layout-Grids -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap für simple Icons/Symbole (Schlüssel, Senden, Roboter...) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- eigenen CSS-Dateien: -->
+    <!-- style.css legt globale Stile und Theme-Variablen fest -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- ai.css: Anpassungen der CSS spezziell für ki-assistenten - überschreibt und ergänzt z.T. Stile -->
     <link rel="stylesheet" href="../css/ai.css">
 </head>
 
+<!-- CSS-Variable für Hintergrund ; Hintergrund bleibt beim Scrolling fixiert -->
 <body style="background: var(--bg-planner); background-attachment: fixed;">
 
+    <!-- Dynamisches Laden der Navigationsleiste – siehe JavaScript (load_components.js) -->
     <div id="navbar"></div>
 
+    <!-- custom-center-container: legt Abstände und Positionierung fest (siehe style.css) ; my-1: Klasse aus bootstrap für Abstände-->
     <main class="custom-center-container my-1">
         
-        <!-- Optimierter, responsiver Titel-Container gegen Überlagerungen auf Mobilgeräten -->
+        <!-- header des ki-assistenten – automatische Anpassung an Bildschirm (Haupttitel,  API-Key Button und Umschalt zwischen chat und kochplaner)
+         d-flex: aktiviert Flexbox; flex-column: Elemente untereinander anordnen bei kleinem bildschirm; flex-sm-row: elemente falls möglich nebeneinander; justify-content-between: dynamische abstände;
+         align-items-start/align-items-sm-center: start/allignment für bildschirmgröße; gap3: abstand zwischen elementen; mb-4: abstand unten;
+        -->
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 ai-title-container mb-4">
+            
             <h1 class="ai-heading h2 m-0">KI-Assistent</h1>
+            
+            <!-- Rechter Steuerungsbereich (API-Schlüssel & Modus-Umschalter)
+             allign center: vertikal zentriert, gap3: Elementabstand, ms-auto: automatisch abstand links aufgefüllt -> rechtsorientierung außer bei größe sm (ms-sm-0) -->
             <div class="d-flex align-items-center gap-3 ms-auto ms-sm-0">
-                <!-- API Key Button - moved here, visible in both views -->
+                
+                <!-- Button (schlüsselsymbol) für Google Gemini API-Schlüssel
+                 search-custom border-custom: siehe style.css, px-3: horizontale Abstände links/rechts
+                 bi-key: Schlüsselsybol zeigen
+                -->
                 <button id="btn-api-key" class="btn btn-outline-secondary search-custom border-custom px-3" type="button" title="Google Gemini API Key eingeben">
                     <i class="bi bi-key"></i>
                 </button>
                 
-                <!-- Mode Toggle Buttons -->
+                <!-- Umschalten zwischen Chat und Kochplaner
+                btn-group: buttons als eine gruppe; aria-label für screen reader 
+                -->
                 <div class="btn-group ai-toggle-group" role="group" aria-label="KI Modus Auswahl">
+                    <!-- Buttons für chat und kochplaner, btn-toggle: buttons können gewchselt werden; chat button ist standardmäßig ausgewählt ("active")-->
                     <button type="button" id="btn-mode-chat" class="btn btn-toggle-ai px-4 active">Chat</button>
                     <button type="button" id="btn-mode-planner" class="btn btn-toggle-ai px-4">Kochplaner</button>
                 </div>
             </div>
         </div>
 
+
+
+
+        <!-- hauptcontainer - 2 display Ansichten möglich  -->
         <div id="ai-content-wrapper">
 
-            <!-- Chat View -->
+            <!-- 1. chat ansicht (standard) -->
             <div id="view-chat" class="ai-view">
+                
+                <!-- Hauptbox für das Chatfenster -->
                 <div class="chat-box-container">
+                    
+                    <!-- Bereich für die Chat-Nachrichten (mit automatischem Scrollbalken) -->
                     <div class="chat-messages" id="chat-messages-box">
+                        <!-- Willkommensnachricht der KI; msg-bubble: Nachrichtenblase; msg-ai: Formatierung der blase als ki (vs nutzer) -->
                         <div class="msg-bubble msg-ai">
                             Hallo! Ich bin dein CookWise KI-Assistent mit Google Gemini. Frag mich alles rund um Rezepte, Zutaten-Ersatz oder Kochtechniken!<br>
                             <span class="text-muted small">Hinweis: Klicke auf den Schlüssel oben, um deinen Google Gemini API Key einzugeben.</span>
                         </div>
                     </div>
+                    
+                    <!-- Eingabebereich für den Nutzer (unterer Rand der Chatbox) -->
                     <div class="chat-input-area">
-                        <div class="input-group">
+                        <div class="input-group"> <!--gruppieren von chatfenster und button absenden -->
+                            <!-- Texteingabefeld -->
                             <input type="text" id="chat-input" class="form-control search-custom border-custom" placeholder="Frage an die Koch-KI eingeben..." aria-label="KI Nachricht">
+                            <!-- Absende-Button -->
                             <button id="chat-send-btn" class="btn btn-outline-secondary search-custom border-custom px-4" type="button">
-                                <i class="bi bi-send"></i>
+                                <i class="bi bi-send"></i> <!-- zeigt das symbol zum senden-->
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Planner View -->
+            <!-- 2. Kochplaner ansicht (Standardmäßig versteckt mit "d-none") -->
             <div id="view-planner" class="ai-view d-none">
+                <!-- Bootstrap Grid erzeugen (row); g4: Abstände innerhalb des grids |  2 Spalten bei großen Displays - gleichmäßige aufteilung 50/50 -->
                 <div class="row g-4">
                     
-                    <div class="col-md-6">
+                    <!-- Linke Spalte: Ausgabebereich für die KI-optimierten Kochschritte -->
+                    <div class="col-md-6"> <!-- Anlegen eines grids innerhalb der linken spalte für Bildschirmgröße md - 12 spalten - aufgeteilt in 6/6 also 50%-->
                         <div class="planner-card-left">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="h5 m-0 fw-bold"><i class="bi bi-list-task text-cyan me-2"></i>Optimierte Kochschritte</h3>
-                                <button id="btn-optimize" class="btn btn-sm btn-outline-success rounded-pill px-3">
-                                    <i class="bi bi-lightning-charge me-1"></i>Optimieren
+                            <div class="d-flex justify-content-between align-items-center mb-3"> <!-- justify-content-between: möglichst große Distanz zwischen linkem und rechtem element; vertikal zentiert + Abstände -->
+                                <h3 class="h5 m-0 fw-bold"><i class="bi bi-list-task text-cyan me-2"></i>Optimierte Kochschritte</h3> <!--h5: durch bootstrap darstellen wie h5 statt h3; m-0: keine Abstände (margins); fw-bold:Schrifttyp bold
+                                                                    bi bi-list-task: listensymbol; text-cyan: Farb css; me-2: Abstand rechts vom icon zum Text-->
+                               
+                                <!-- Button für die KI-Optimierung -->
+                                <button id="btn-optimize" class="btn btn-sm btn-outline-success rounded-pill px-3"> <!-- btn-sm: kleiner button; Umrandung Knopf; abgerundet "pill shape"; px-3: innenabstände links/rechts-->
+                                    <i class="bi bi-lightning-charge me-1"></i>Optimieren <!-- bi bi-lightning-charge: blitzsymbol; me-1: Abstand zum text, rechts von icon-->
                                 </button>
                             </div>
+                            <!-- Scrollbarer Container für die generierten Schritte, falls zu groß für aktuelle bildschirmgröße-->
                             <div class="scrollable-steps" id="ki-steps-container">
-                                <div class="text-center text-muted py-5">
-                                    <i class="bi bi-robot fs-1 d-block mb-2"></i>
-                                    Wähle Rezepte aus und klicke auf "Optimieren".
+                                <div class="text-center text-muted py-5"> <!-- text-center: zentriert, text-muted: text mehr light/dezenter als der restliche Text; py-5: innenabstand oben/unten-->
+                                    <i class="bi bi-robot fs-1 d-block mb-2"></i> <!-- bi bi-robot: roboter icon; fs-1: große Schrift; d-block icon wird zu blockelement, damit einzeilig; mb-2: kleiner abstand nach unten-->
+                                    Wähle Rezepte aus und klicke auf "Optimieren". <!-- Startmeldung-->
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <!-- Rechte Spalte: Verwaltung der ausgewählten Rezepte für den Planer -->
+                    <div class="col-md-6"> <!-- Bootstrap-Grid hat 12 Spalten, 6von12 also 50% links,rechts (bei bildschim md)-->
                         <div class="planner-card-right">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="h5 m-0 fw-bold"><i class="bi bi-journal-check text-warning me-2"></i>Aktuelles Menü</h3>
-                                <button id="btn-clear-all" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                    <i class="bi bi-trash3 me-1"></i>Alles leeren
+                            <div class="d-flex justify-content-between align-items-center mb-3"> <!-- justify-content-between: Überschrift links, Button rechts; vertikal zentriert, abstand unten (mb-3)-->
+                                <h3 class="h5 m-0 fw-bold"><i class="bi bi-journal-check text-warning me-2"></i>Aktuelles Menü</h3> <!--h5, ohne abstand, fett | bi bi-journal-check: checklistensymbol; warnfarbe; me-2: abstand rechts von icon -->
+                                
+                                <!-- Button zum Leeren aller ausgewählten Rezepte aus dem Speicher -->
+                                <button id="btn-clear-all" class="btn btn-sm btn-outline-danger rounded-pill px-3"> <!-- kleiner button mit roter umrandung rund, abstände innen horizontal (px-3)-->
+                                    <i class="bi bi-trash3 me-1"></i>Alles leeren <!-- alle rezepte aus der liste löschen-->
                                 </button>
                             </div>
                             
-                            <div id="selected-recipes-list" class="flex-grow-1 pe-1 spec-scroll-area mb-3">
+                            <!-- Liste für die vom Benutzer gewählten Rezepte (wird via JavaScript gefüllt) -->
+                            <div id="selected-recipes-list" class="flex-grow-1 pe-1 spec-scroll-area mb-3"> <!-- flex-grow-1: größe kann dynamisch zunehmen falls Platz; pe-1: abstand rechte seite; mb-3: abstand unten -->
                             </div>
 
                         </div> 
@@ -96,18 +147,24 @@
         </div> 
     </main>
 
-    <!-- Loading Spinner (hidden by default) -->
+    <!-- loading spinner beim Laden - angezeigt, während im Hintergrund eine Anfrage an die Gemini-API läuft.
+         Standardmäßig mit Bootstrap 'd-none' versteckt. -->
     <div id="loading-spinner" class="d-none">
         <div class="spinner-overlay">
-            <div class="spinner-border text-light" role="status">
-                <span class="visually-hidden">Lädt...</span>
+            <div class="spinner-border text-light" role="status"> <!-- spinner-border: drehender lade kreis; text-light: hellere farbe; Kennzeichnet den Bereich als Statusanzeige.-->
+                <span class="visually-hidden">Lädt...</span> <!-- „Lädt...“ für screen reader-->
             </div>
         </div>
     </div>
 
+    <!-- JavaScript-Dateien -->
+    <!-- Bootstrap JS-Bundle für interaktive Komponenten -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Lädt allgemeine Komponenten z.B. Navbar/Footer -->
     <script src="../js/load_components.js"></script>
+    <!-- Logik zur Umschaltung von Light/Dark Mode -->
     <script src="../js/toggle_theme.js"></script>
+    <!-- Spezifische Anwendungslogik für die KI-Seite (Chat, Gemini-API, Planer) -->
     <script src="../js/ai_logic.js"></script>
 </body>
 
