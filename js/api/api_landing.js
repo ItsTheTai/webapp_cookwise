@@ -35,10 +35,23 @@ function createRecipeCard(recipe) {
     `;
 }
 
+// Renders a list of recipes into the #recipe-container element.
 function renderRecipes(recipes) {
     const container = document.getElementById("recipe-container");
+    if (!container) return;
+
+    // Direct client-side duplicate filter right before DOM injection
+    const seenTitles = new Set();
+    const uniqueRecipes = recipes.filter(recipe => {
+        if (!recipe || !recipe.titel) return false;
+        const normalizedTitle = recipe.titel.trim().toLowerCase();
+        if (seenTitles.has(normalizedTitle)) return false;
+        seenTitles.add(normalizedTitle);
+        return true;
+    });
+
     let recipesHtml = "";
-    for (let recipe of recipes) {
+    for (let recipe of uniqueRecipes) {
         recipesHtml += createRecipeCard(recipe);
     }
 
