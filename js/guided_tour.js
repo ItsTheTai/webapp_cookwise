@@ -72,10 +72,29 @@ function initGuidedTour() {
     const nextButton = document.getElementById("next-step");
     const cancelButton = document.getElementById("cancel-tour");
 
-    // Create the highlight element
+    // Ensure overlay and tooltip start hidden on load
+    overlay.classList.add("d-none");
+    tooltip.classList.add("d-none");
+
+    // Create and hide the highlight element before appending
     const highlight = document.createElement("div");
     highlight.id = "guided-tour-highlight";
+    highlight.style.display = "none";
     document.body.appendChild(highlight);
+
+    // const startButton = document.getElementById("start-guided-tour");
+    // const overlay = document.getElementById("guided-tour-overlay");
+    // const tooltip = document.getElementById("guided-tour-tooltip");
+    // const tooltipTitle = document.getElementById("tooltip-title");
+    // const tooltipDescription = document.getElementById("tooltip-description");
+    // const prevButton = document.getElementById("prev-step");
+    // const nextButton = document.getElementById("next-step");
+    // const cancelButton = document.getElementById("cancel-tour");
+
+    // // Create the highlight element
+    // const highlight = document.createElement("div");
+    // highlight.id = "guided-tour-highlight";
+    // document.body.appendChild(highlight);
 
     // Start the Tour
     startButton.addEventListener("click", () => {
