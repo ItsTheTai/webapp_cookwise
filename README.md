@@ -1,6 +1,6 @@
 # CookWise
 - **Seminar:** Webtechnologien (SS26), Michael Achmann-Denkler & Clara Helmig
-- **Projektmitglieder:** Andreas Baierl, Alvaro Dill (2288031), Sofia Sapronova (2677165), Tai Nguyen (2234715)
+- **Projektmitglieder:** Andreas Baierl (2170400), Alvaro Dill (2288031), Sofia Sapronova (2677165), Tai Nguyen (2234715)
 
 ## Projektbeschreibung
 **CookWise** ist eine webbasierte Rezeptplattform, die Rezepte über eine externe API bereitstellt. Die Anwendung ermöglicht das Durchsuchen, Filtern und Anzeigen von Rezepten sowie das Verwalten einer Einkaufsliste und die Nutzung eines KI-Assistenten. Die Anwendung basiert auf HTML, CSS und JavaScript und setzt auf eine modulare Struktur mit wiederverwendbaren Seitenkomponenten.
